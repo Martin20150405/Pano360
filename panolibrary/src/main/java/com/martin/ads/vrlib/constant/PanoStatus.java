@@ -5,6 +5,6 @@ package com.martin.ads.vrlib.constant;
  */
 public enum PanoStatus
 {
-    LOADED, PLAYING, PAUSED_BY_USER, PAUSED, STOPPED, COMPLETE, ERROR
+    IDLE, PREPARED,BUFFERING, PLAYING, PAUSED_BY_USER, PAUSED, STOPPED, COMPLETE, ERROR
 }
 

@@ -4,22 +4,21 @@ import android.content.pm.ActivityInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.CheckBox;
 
-import com.martin.ads.vrlib.PanoVideoView;
+import com.martin.ads.vrlib.PanoViewWrapper;
 import com.martin.ads.vrlib.constant.PanoFilter;
+import com.martin.ads.vrlib.utils.Logger;
 
 /**
  * Created by Ads on 2016/6/25.
  */
-public class PlayVideoActivity extends AppCompatActivity {
-    private PanoVideoView panoVideoView;
+public class DemoWithGLSurfaceView extends AppCompatActivity {
+    private PanoViewWrapper panoViewWrapper;
 
-    public static String TAG = "PlayVideoActivity";
+    public static String TAG = "DemoWithGLSurfaceView";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,16 +36,18 @@ public class PlayVideoActivity extends AppCompatActivity {
 
     private void init(){
 
-
         String videoPath=getIntent().getStringExtra("videoPath");
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        if (getIntent().getBooleanExtra("checked",false))
-            panoVideoView =new PanoVideoView(this,videoPath, glSurfaceView, PanoFilter.GRAY_SCALE);
-        else panoVideoView =new PanoVideoView(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
+        String filter=getIntent().getStringExtra("filter");
+        if (filter.equals("NORMAL"))
+            panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
+        else if (filter.equals("GRAY_SCALE")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.GRAY_SCALE);
+        else if (filter.equals("INVERSE_COLOR")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.INVERSE_COLOR);
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return panoVideoView.handleTouchEvent(event);
+                //Logger.logTouchEvent(v,event);
+                return panoViewWrapper.handleTouchEvent(event);
             }
         });
     }
@@ -54,20 +55,20 @@ public class PlayVideoActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        panoVideoView.onPause();
+        panoViewWrapper.onPause();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
 
-        panoVideoView.onResume();
+        panoViewWrapper.onResume();
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        panoVideoView.releaseResources();
+        panoViewWrapper.releaseResources();
     }
 
 }

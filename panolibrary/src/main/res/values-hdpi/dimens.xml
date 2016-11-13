@@ -1,0 +1,10 @@
+<resources>
+
+    <dimen name="little_spacing">3dp</dimen>
+    <dimen name="small_spacing">5dp</dimen>
+    <dimen name="middle_spacing">10dp</dimen>
+    <dimen name="large_spacing">15dp</dimen>
+    <dimen name="voide_tool_middle">6dp</dimen>
+    <dimen name="voide_tool_large">12dp</dimen>
+
+</resources>

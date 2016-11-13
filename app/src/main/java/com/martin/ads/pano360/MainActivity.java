@@ -4,38 +4,68 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.martin.ads.vrlib.PanoPlayerActivity;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CheckBox checkBox;
+    private Button playURL;
+    private Button playDemo;
+    private EditText url;
+    private Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        checkBox= (CheckBox) findViewById(R.id.checkBox);
+        spinner= (Spinner) findViewById(R.id.filter_spinner);
+        playURL=(Button)findViewById(R.id.play_url);
+        url= (EditText) findViewById(R.id.edit_text_url);
+        url.setText("http://cache.utovr.com/201508270528174780.m3u8");
+        playURL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String filePath= url.getText().toString();
+                Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
+                intent.putExtra("videoPath",filePath);
+                Log.d("lalala",spinner.getSelectedItem().toString());
+                intent.putExtra("filter",spinner.getSelectedItem().toString());
+                startActivity(intent);
+            }
+        });
+
+        playDemo=(Button)findViewById(R.id.play_local_demo);
+        playDemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
+                Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
+                intent.putExtra("videoPath",filePath);
+                intent.putExtra("filter",spinner.getSelectedItem().toString());
+                startActivity(intent);
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
 //                String filePath= Environment.getExternalStorageDirectory().getPath()+"/360Video/video.mp4";
-//                Intent intent=new Intent(MainActivity.this,PlayVideoActivity.class);
+//                Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
 //                intent.putExtra("videoPath",filePath);
 //                startActivity(intent);
 
@@ -74,9 +104,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            Intent intent=new Intent(MainActivity.this,PlayVideoActivity.class);
+            Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
+            //Intent intent=new Intent(MainActivity.this,DemoWithGLSurfaceView.class);
             intent.putExtra("videoPath",filePath);
-            intent.putExtra("checked",checkBox.isChecked());
+            intent.putExtra("filter",spinner.getSelectedItem().toString());
             startActivity(intent);
         }
     }

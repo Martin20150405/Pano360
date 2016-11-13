@@ -15,13 +15,77 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="点右下角按钮选择文件播放"
-        android:id="@+id/textView" />
+        android:text="You can Play Online"
+        android:textSize="20dp"
+        android:id="@+id/hint1"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/url_filed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hint1">
 
-    <CheckBox
+        <EditText
+            android:id="@+id/edit_text_url"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="Play"
+            android:id="@+id/play_url"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+
+
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/demo_filed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/url_filed">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Or play demo video"
+            android:layout_weight="4"
+            android:textSize="20dp"
+            android:id="@+id/local_demo_text"/>
+        <Button
+            android:text="DEMO"
+            android:id="@+id/play_local_demo"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="使用黑白滤镜"
-        android:id="@+id/checkBox"
-        android:layout_below="@+id/textView"/>
+        android:text="Or Click the blue button to select local files"
+        android:id="@+id/select_text"
+        android:textSize="20dp"
+        android:layout_below="@id/demo_filed"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You can choose real-time filter here"
+        android:id="@+id/filter_text"
+        android:textSize="20dp"
+        android:layout_below="@id/select_text"/>
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/filter_spinner"
+        android:entries="@array/filter_type"
+        android:background="@color/colorPrimaryLight"
+        android:layout_below="@id/filter_text" />
 </RelativeLayout>

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
-import android.text.method.Touch;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.martin.ads.vrlib.constant.PanoFilter;
@@ -14,16 +12,16 @@ import com.martin.ads.vrlib.constant.PanoStatus;
 import com.martin.ads.vrlib.utils.StatusHelper;
 
 
-public class PanoVideoView {
+public class PanoViewWrapper {
 
-    public static String TAG = "PanoVideoView";
+    public static String TAG = "PanoViewWrapper";
     private PanoRender mRenderer;
-    private PanoVideoPlayer mPnoVideoPlayer;
+    private PanoMediaPlayerWrapper mPnoVideoPlayer;
     private StatusHelper statusHelper;
     private GLSurfaceView glSurfaceView;
     private TouchHelper touchHelper;
 
-    public PanoVideoView(Context context, String videoPath, GLSurfaceView glSurfaceView,PanoFilter panoFilter) {
+    public PanoViewWrapper(Context context, String videoPath, GLSurfaceView glSurfaceView, PanoFilter panoFilter) {
         this.glSurfaceView=glSurfaceView;
         init(context,videoPath,panoFilter);
     }
@@ -38,21 +36,22 @@ public class PanoVideoView {
 
         statusHelper=new StatusHelper(context);
 
-        mRenderer = new PanoRender(statusHelper,panoFilter);
-
-        mPnoVideoPlayer = new PanoVideoPlayer();
+        mPnoVideoPlayer = new PanoMediaPlayerWrapper();
         mPnoVideoPlayer.setStatusHelper(statusHelper);
-        mPnoVideoPlayer.setMediaPlayerFromUri(uri);
-        mPnoVideoPlayer.setRenderCallBack(new PanoVideoView.RenderCallBack() {
+        if (uri.toString().startsWith("http"))
+            mPnoVideoPlayer.openRemoteFile(uri.toString());
+        else mPnoVideoPlayer.setMediaPlayerFromUri(uri);
+        mPnoVideoPlayer.setRenderCallBack(new PanoViewWrapper.RenderCallBack() {
             @Override
             public void renderImmediately() {
                 glSurfaceView.requestRender();
             }
         });
 
-        mRenderer.setPanoVideoPlayer(mPnoVideoPlayer);
+        mRenderer = new PanoRender(statusHelper,panoFilter,mPnoVideoPlayer);
+
         glSurfaceView.setRenderer(mRenderer);
-        glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
         //使得onTouch能够监听ACTION_DOWN以外的事件
         //也可以写return panoVideoView.handleTouchEvent(event) || true;
@@ -65,7 +64,8 @@ public class PanoVideoView {
         statusHelper.setPanoInteractiveMode(PanoMode.MOTION);
 
         touchHelper=new TouchHelper(statusHelper,mRenderer);
-
+        statusHelper.setPanoStatus(PanoStatus.IDLE);
+        mPnoVideoPlayer.prepare();
     }
 
     public void onPause(){
@@ -90,7 +90,7 @@ public class PanoVideoView {
         mRenderer.getSensorEventHandler().releaseResources();
     }
 
-    public PanoVideoPlayer getMediaPlayer(){
+    public PanoMediaPlayerWrapper getMediaPlayer(){
         return mPnoVideoPlayer;
     }
 
@@ -110,4 +110,7 @@ public class PanoVideoView {
         return touchHelper.handleTouchEvent(event);
     }
 
+    public TouchHelper getTouchHelper() {
+        return touchHelper;
+    }
 }

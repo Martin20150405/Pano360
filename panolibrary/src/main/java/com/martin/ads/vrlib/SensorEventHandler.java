@@ -18,7 +18,7 @@ import com.martin.ads.vrlib.utils.StatusHelper;
  */
 public class SensorEventHandler implements SensorEventListener {
 
-    public static String TAG = "PanoVideoPlayer";
+    public static String TAG = "PanoMediaPlayerWrapper";
 
     private float[] rotationMatrix = new float[16];
 

@@ -3,11 +3,11 @@ package com.martin.ads.vrlib;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.example.panolibrary.R;
 import com.martin.ads.vrlib.constant.PanoFilter;
 import com.martin.ads.vrlib.constant.PanoMode;
-import com.martin.ads.vrlib.constant.PanoStatus;
 import com.martin.ads.vrlib.object.Sphere;
 import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.martin.ads.vrlib.utils.StatusHelper;
@@ -25,7 +25,7 @@ public class PanoRender
     public static String TAG = "PanoRender";
 
     private StatusHelper statusHelper;
-    private PanoVideoPlayer panoVideoPlayer;
+    private PanoMediaPlayerWrapper panoMediaPlayerWrapper;
     private SensorEventHandler sensorEventHandler;
     private GLProgram glProgram;
     private int width,height;
@@ -48,6 +48,7 @@ public class PanoRender
     //Touch Control
     private float mDeltaX;
     private float mDeltaY;
+    private float mScale;
 
     //i.e. GLES11Ext.GL_TEXTURE_EXTERNAL_OES
     private static int GL_TEXTURE_EXTERNAL_OES = 0x8D65;
@@ -55,8 +56,10 @@ public class PanoRender
     private Sphere sphere;
 
     private boolean saveImg;
-    public PanoRender(StatusHelper statusHelper,PanoFilter panoFilter) {
+
+    public PanoRender(StatusHelper statusHelper,PanoFilter panoFilter,PanoMediaPlayerWrapper panoMediaPlayerWrapper) {
         this.statusHelper=statusHelper;
+        this.panoMediaPlayerWrapper = panoMediaPlayerWrapper;
         init(panoFilter);
     }
 
@@ -64,13 +67,10 @@ public class PanoRender
     private void init(PanoFilter panoFilter){
         saveImg=false;
         mDeltaX=mDeltaY=0;
-
+        mScale=1;
         sphere=new Sphere(18,75,150);
 
         Matrix.setIdentityM(mSTMatrix, 0);
-
-
-        statusHelper.setPanoStatus(PanoStatus.LOADED);
 
         sensorEventHandler=new SensorEventHandler();
         sensorEventHandler.setStatusHelper(statusHelper);
@@ -84,7 +84,9 @@ public class PanoRender
 
         if (panoFilter==PanoFilter.GRAY_SCALE)
             glProgram=new GLProgram(statusHelper.getContext(), R.raw.vertex_shader,R.raw.fragment_shader_gray_scale);
-        else glProgram=new GLProgram(statusHelper.getContext());
+        else if (panoFilter==PanoFilter.NORMAL) glProgram=new GLProgram(statusHelper.getContext());
+        else  if (panoFilter==PanoFilter.INVERSE_COLOR)
+            glProgram=new GLProgram(statusHelper.getContext(), R.raw.vertex_shader,R.raw.fragment_shader_inverse_color);
         initMatrix();
 
     }
@@ -108,7 +110,7 @@ public class PanoRender
                 GLES20.GL_LINEAR);
 
 
-        panoVideoPlayer.setSurface(mTextureID);
+        panoMediaPlayerWrapper.setSurface(mTextureID);
 
 
         //------------------//
@@ -121,13 +123,6 @@ public class PanoRender
         sphere.uploadTexCoordinateBuffer(glProgram.getMaTextureHandle());
         sphere.uploadVerticesBuffer(glProgram.getMaPositionHandle());
 
-
-        if (statusHelper.getPanoStatus()==PanoStatus.LOADED) {
-            //videoPlayer是在主线程创建的，此时在GL线程中初始化并开始播放
-            panoVideoPlayer.prepare();
-            panoVideoPlayer.start();
-        }
-        //-----------------------//
     }
 
 
@@ -135,8 +130,7 @@ public class PanoRender
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-
-        panoVideoPlayer.doTextureUpdate(mSTMatrix);
+        panoMediaPlayerWrapper.doTextureUpdate(mSTMatrix);
         /*
             content of getTransformMatrix(mSTMatrix) in col-major order
             1.0 0.0 0.0 0.0
@@ -147,10 +141,10 @@ public class PanoRender
         //Matrix.setIdentityM(mSTMatrix,0);
 
         //视角从90度到14度
+        float currentDegree= (float) (Math.toDegrees(Math.atan(mScale))*2);
         if(statusHelper.getPanoDisPlayMode()==PanoMode.DUAL_SCREEN)
-            Matrix.perspectiveM(projectionMatrix, 0, 90f, ratio/2, 1f, 500f);
-        else Matrix.perspectiveM(projectionMatrix, 0, 90f, ratio, 1f, 500f);
-
+            Matrix.perspectiveM(projectionMatrix, 0, currentDegree, ratio/2, 1f, 500f);
+        else Matrix.perspectiveM(projectionMatrix, 0, currentDegree, ratio, 1f, 500f);
         /**
          *如果要使用更小的视角，下面两种方法基本等价
          *perspectiveM视角从70度到14度对应frustumM近平面从0.7到4.0
@@ -218,11 +212,6 @@ public class PanoRender
         GLES20.glViewport(0,0,width,height);
     }
 
-
-    public void setPanoVideoPlayer(PanoVideoPlayer panoVideoPlayer){
-        this.panoVideoPlayer=panoVideoPlayer;
-    }
-
     public interface SensorHandlerCallback{
         void updateSensorMatrix(float[] sensorMatrix);
     }
@@ -260,5 +249,10 @@ public class PanoRender
 
     public void saveImg(){
         saveImg=true;
+    }
+
+    public void updateScale(float scaleFactor){
+        mScale=mScale+(1.0f-scaleFactor);
+        mScale=Math.max(0.122f,Math.min(1.0f,mScale));
     }
 }

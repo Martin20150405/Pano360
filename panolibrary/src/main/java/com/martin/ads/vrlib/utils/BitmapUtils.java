@@ -17,45 +17,49 @@ import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Ads on 2016/11/8.
  */
 public class BitmapUtils {
+
+
     public static void sendImage(int width, int height, Context context) {
-        ByteBuffer rgbaBuf = ByteBuffer.allocateDirect(width * height * 4);
-        rgbaBuf.position(0);
+        final IntBuffer pixelBuffer = IntBuffer.allocate(width * height);
+
         //about 20-50ms
         long start = System.nanoTime();
-        rgbaBuf.order(ByteOrder.LITTLE_ENDIAN);
         GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
-                rgbaBuf);
-        rgbaBuf.rewind();
+                pixelBuffer);
         long end = System.nanoTime();
 
         Log.d("TryOpenGL", "glReadPixels time: " + (end - start)/1000000+" ms");
 
         //about 700-4000ms
         //it will consume large memory and may take a long time, depends on the phone
-        new SaveBitmapTask(rgbaBuf,width,height,context).execute();
+        new SaveBitmapTask(pixelBuffer,width,height,context).execute();
     }
 
     static class SaveBitmapTask extends AsyncTask<Void, Integer, Boolean>{
         long start;
 
-        ByteBuffer rgbaBuf;
+        IntBuffer rgbaBuf;
         int width, height;
         Context context;
 
         String filePath;
 
-        public SaveBitmapTask(ByteBuffer rgbaBuf, int width, int height, Context context) {
+        public SaveBitmapTask(IntBuffer rgbaBuf, int width, int height, Context context) {
             this.rgbaBuf = rgbaBuf;
             this.width = width;
             this.height = height;
             this.context = context;
-            filePath=Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + "/Pano360_ScreenShot_" +  +width + "_" + height + "_" + System.currentTimeMillis()+".png";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+            String filename="/PanoScreenShot_" +width + "_" + height + "_" + simpleDateFormat.format(new Date())+".png";
+            filePath=Environment.getExternalStorageDirectory().getAbsolutePath()+filename;
         }
 
         @Override
@@ -77,23 +81,29 @@ public class BitmapUtils {
             super.onPostExecute(aBoolean);
         }
     }
-    public static void saveRgb2Bitmap(Buffer buf, String filename, int width, int height) {
-
+    public static void saveRgb2Bitmap(IntBuffer buf, String filename, int width, int height) {
+        final int[] pixelMirroredArray = new int[width * height];
         Log.d("TryOpenGL", "Creating " + filename);
         BufferedOutputStream bos = null;
         try {
+            int[] pixelArray = buf.array();
+            // rotate 180 deg with x axis because y is reversed
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    pixelMirroredArray[(height - i - 1) * width + j] = pixelArray[i * width + j];
+                }
+            }
             bos = new BufferedOutputStream(new FileOutputStream(filename));
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            bmp.copyPixelsFromBuffer(buf);
-
-            Bitmap outImg = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
-            Matrix rotate = new Matrix();
-            rotate.setRotate(180,(float)width/2,(float)height/2);
-            Canvas canvas = new Canvas(outImg);
-            canvas.drawBitmap(bmp, rotate, new Paint());
-            outImg.compress(Bitmap.CompressFormat.PNG, 90, bos);
+            bmp.copyPixelsFromBuffer(IntBuffer.wrap(pixelMirroredArray));
+//            Bitmap outImg = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+//            Matrix rotate = new Matrix();
+//            rotate.setRotate(180,(float)width/2,(float)height/2);
+//            Canvas canvas = new Canvas(outImg);
+//            canvas.drawBitmap(bmp, rotate, new Paint());
+//            outImg.recycle();
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
             bmp.recycle();
-            outImg.recycle();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

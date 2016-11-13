@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#40000000"
+    android:layout_centerVertical="true">
+
+    <ToggleButton
+        android:id="@+id/play_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/voide_tool_middle"
+        android:background="@drawable/video_toolbar_tb_play"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:textOff=""
+        android:textOn="" />
+
+    <RelativeLayout
+        android:id="@+id/video_tool_rlPlayProg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/voide_tool_middle"
+        android:layout_marginRight="@dimen/voide_tool_middle"
+        android:layout_toRightOf="@id/play_btn">
+
+        <TextView
+            android:id="@+id/current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/voide_tool_middle"
+            android:textColor="#f5f5f5"
+            android:text="00:00/00:00" />
+
+        <SeekBar
+            android:id="@+id/progress_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/current_time"
+            android:paddingLeft="@dimen/little_spacing"
+            android:paddingRight="@dimen/little_spacing"
+            android:max="100"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:thumbOffset="0dip"
+            android:progress="0"
+            android:progressDrawable="@drawable/video_toolbar_sb_style"
+            android:secondaryProgress="0"
+            android:thumb="@drawable/progress_thumb" />
+     </RelativeLayout>
+
+</RelativeLayout>

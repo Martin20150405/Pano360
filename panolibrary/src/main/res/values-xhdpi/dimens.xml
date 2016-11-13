@@ -1,0 +1,8 @@
+<resources>
+
+    
+    <dimen name="little_spacing">3dp</dimen>
+    <dimen name="small_spacing">8dp</dimen>
+    <dimen name="large_spacing">18dp</dimen>
+    
+</resources>
