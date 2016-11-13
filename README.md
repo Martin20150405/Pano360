@@ -5,8 +5,8 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 
 ###Scroll down to read English version Readme
 
-## [系列教程：从零开始写一个Android平台下的全景视频播放器]()
-* 如果不能打开说明还没放链接
+## [系列教程：从零开始写一个Android平台下的全景视频播放器](http://blog.csdn.net/Martin20150405/article/details/53149578)
+* 如果不能打开说明还没更新
 
 ## 平台需求
 * OpenGLES 2.0 
