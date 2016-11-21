@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.Buffer;
@@ -58,8 +59,13 @@ public class BitmapUtils {
             this.height = height;
             this.context = context;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+            File sdRoot = Environment.getExternalStorageDirectory();
+            String dir = "/Pano360Screenshots/";
+            File mkDir = new File(sdRoot, dir);
+            if (!mkDir.exists())
+                mkDir.mkdir();
             String filename="/PanoScreenShot_" +width + "_" + height + "_" + simpleDateFormat.format(new Date())+".png";
-            filePath=Environment.getExternalStorageDirectory().getAbsolutePath()+filename;
+            filePath= mkDir.getAbsolutePath()+filename;
         }
 
         @Override
@@ -81,9 +87,9 @@ public class BitmapUtils {
             super.onPostExecute(aBoolean);
         }
     }
-    public static void saveRgb2Bitmap(IntBuffer buf, String filename, int width, int height) {
+    public static void saveRgb2Bitmap(IntBuffer buf, String filePath, int width, int height) {
         final int[] pixelMirroredArray = new int[width * height];
-        Log.d("TryOpenGL", "Creating " + filename);
+        Log.d("TryOpenGL", "Creating " + filePath);
         BufferedOutputStream bos = null;
         try {
             int[] pixelArray = buf.array();
@@ -93,7 +99,7 @@ public class BitmapUtils {
                     pixelMirroredArray[(height - i - 1) * width + j] = pixelArray[i * width + j];
                 }
             }
-            bos = new BufferedOutputStream(new FileOutputStream(filename));
+            bos = new BufferedOutputStream(new FileOutputStream(filePath));
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             bmp.copyPixelsFromBuffer(IntBuffer.wrap(pixelMirroredArray));
 //            Bitmap outImg = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);

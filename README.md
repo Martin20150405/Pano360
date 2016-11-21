@@ -20,6 +20,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 * 简单的实时滤镜（逐渐完善中）
     * 目前项目中包含一个黑白滤镜，一个反色滤镜  
 * 视频在线截图
+    * readPixels 大约 40ms，保存 JPEG 大约100ms(async)
 * 在线视频播放（你可能需要自行处理多种格式的解码问题，例如rmvb）
 
 ##截图
@@ -114,7 +115,6 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
 * 加速度+电子罗盘支持（适合没有陀螺仪的手机）
 * 快速切换使用的解码器，例如IjkMediaPlayer
 * jcenter/maven
-* 缩短截图保存时间
 * 原视频渲染
 * 小窗口/fragment播放
 * Handler+MessageQueue
@@ -147,6 +147,7 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
 * Simple real-time on-screen filter (improving)
     * now support gray-scale filter and invert-color filter
 * Screenshot support
+    * about 40ms to readPixels about 100ms to save JPEG(async)
 * Online video support (m3u8, etc.), you may have to deal media decode your self (like when playing rmvb).
 
 ##Preview (Screenshots)
@@ -240,7 +241,6 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
 * Acc+Mag support（used for phones without Gyroscope）
 * MediaPlayer switch (like IjkMediaPlayer)
 * jcenter/maven
-* Reduce time to save screenshots
 * Render original video
 * Tiny window / Fragment playing
 * Handler+MessageQueue
