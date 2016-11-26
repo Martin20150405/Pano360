@@ -6,10 +6,12 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import com.example.panolibrary.R;
+import com.martin.ads.vrlib.constant.Constants;
 import com.martin.ads.vrlib.constant.PanoFilter;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.object.Sphere;
 import com.martin.ads.vrlib.utils.BitmapUtils;
+import com.martin.ads.vrlib.utils.SensorUtils;
 import com.martin.ads.vrlib.utils.StatusHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -22,8 +24,7 @@ import static com.martin.ads.vrlib.utils.ShaderUtils.checkGlError;
  */
 public class PanoRender
         implements GLSurfaceView.Renderer {
-    public static String TAG = "PanoRender";
-
+    private static final String TAG = "PanoRender";
     private StatusHelper statusHelper;
     private PanoMediaPlayerWrapper panoMediaPlayerWrapper;
     private SensorEventHandler sensorEventHandler;
@@ -57,6 +58,11 @@ public class PanoRender
 
     private boolean saveImg;
 
+    private int lockAxisMode;
+    private float[] initialRotation=new float[3];
+    private float[] initialInvertRotation=new float[16];
+    private boolean rotationRecorded;
+
     public PanoRender(StatusHelper statusHelper,PanoFilter panoFilter,PanoMediaPlayerWrapper panoMediaPlayerWrapper) {
         this.statusHelper=statusHelper;
         this.panoMediaPlayerWrapper = panoMediaPlayerWrapper;
@@ -66,6 +72,7 @@ public class PanoRender
 
     private void init(PanoFilter panoFilter){
         saveImg=false;
+        lockAxisMode= Constants.LOCK_MODE_GAME_ROTATION_VECTOR;
         mDeltaX=mDeltaY=0;
         mScale=1;
         sphere=new Sphere(18,75,150);
@@ -88,6 +95,8 @@ public class PanoRender
         else  if (panoFilter==PanoFilter.INVERSE_COLOR)
             glProgram=new GLProgram(statusHelper.getContext(), R.raw.vertex_shader,R.raw.fragment_shader_inverse_color);
         initMatrix();
+
+        rotationRecorded=false;
 
     }
 
@@ -161,7 +170,19 @@ public class PanoRender
 
         Matrix.setIdentityM(modelMatrix, 0);
         if (statusHelper.getPanoInteractiveMode()==PanoMode.MOTION){
+            if (!rotationRecorded){
+                Matrix.invertM(initialInvertRotation,0,rotationMatrix,0);
+                SensorUtils.getOrientationFromRotationMatrix(rotationMatrix,initialRotation);
+                for(int i=0;i<initialRotation.length;i++)
+                    initialRotation[i]= (float) Math.toDegrees(initialRotation[i]);
+                rotationRecorded=true;
+            }
             System.arraycopy(rotationMatrix, 0, modelMatrix, 0, 16);
+            if(lockAxisMode==Constants.LOCK_MODE_GAME_ROTATION_VECTOR)
+                Matrix.rotateM(modelMatrix, 0, initialRotation[2], 0.0f, 1.0f, 0.0f);
+            else if (lockAxisMode==Constants.LOCK_MODE_ALL_AXIS){
+                Matrix.multiplyMM(modelMatrix,0,rotationMatrix,0,initialInvertRotation,0);
+            }
         }
         else{
             Matrix.rotateM(modelMatrix, 0, mDeltaY, 1.0f, 0.0f, 0.0f);
@@ -254,5 +275,13 @@ public class PanoRender
     public void updateScale(float scaleFactor){
         mScale=mScale+(1.0f-scaleFactor);
         mScale=Math.max(0.122f,Math.min(1.0f,mScale));
+    }
+
+    public int getLockAxisMode() {
+        return lockAxisMode;
+    }
+
+    public void setLockAxisMode(int lockAxisMode) {
+        this.lockAxisMode = lockAxisMode;
     }
 }

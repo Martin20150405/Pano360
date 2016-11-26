@@ -11,7 +11,7 @@ import android.opengl.Matrix;
  */
 public class SensorUtils {
     private static float[] mTmp = new float[16];
-
+    private static float[] oTmp = new float[16];
     public static void sensorRotationVectorToMatrix(SensorEvent event, float[] output) {
         float[] values = event.values;
      //   SensorManager.getRotationMatrixFromVector(output, values);
@@ -21,10 +21,9 @@ public class SensorUtils {
     }
 
     public static void getOrientation(SensorEvent event,float[] output){
-        float[] values = event.values;
-        float[] tmp=new float[16];
-        SensorManager.getRotationMatrixFromVector(tmp, values);
-        SensorManager.getOrientation(tmp,output);
+        //sensorRotationVectorToMatrix(event,oTmp);
+        SensorManager.getRotationMatrixFromVector(oTmp, event.values);
+        SensorManager.getOrientation(oTmp,output);
     }
 
     public static void getOrientationFromRotationMatrix(float[] rotationMatrix,float[] output){

@@ -3,7 +3,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
   
 Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库，使用OpenGL ES 2.0来进行视频渲染，没有使用第三方库
 
-###Scroll down to read English version Readme
+###Read this in other languages: [English](README.en.md)
 
 ## [系列教程：从零开始写一个Android平台下的全景视频播放器](http://blog.csdn.net/Martin20150405/article/details/53149578)
 * 如果不能打开说明还没更新
@@ -22,7 +22,11 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 * 视频在线截图
     * readPixels 大约 40ms，保存 JPEG 大约100ms(async)
 * 在线视频播放（你可能需要自行处理多种格式的解码问题，例如rmvb）
-
+* 锁定坐标轴（两种模式可选）
+    * 用户从不同角度进入，看到的是同一个场景
+    * **LOCK_MODE_GAME_ROTATION_VECTOR**： 和Cardboard Motion类似
+    * **LOCK_MODE_ALL_AXIS** 直接忽略初始姿态
+	
 ##截图
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/main_screen.jpg)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.jpg)
@@ -49,69 +53,17 @@ startActivity(intent);
     android:layout_height="match_parent" />
 ```
 ```java
-
-public class DemoWithGLSurfaceView extends AppCompatActivity {
-    private PanoViewWrapper panoViewWrapper;
-
-    public static String TAG = "DemoWithGLSurfaceView";
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        this.getSupportActionBar().hide();
-        setContentView(R.layout.player_layout);
-
-        init();
-
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-        getWindow().setAttributes(params);
-    }
-
-    private void init(){
-
-        String videoPath=getIntent().getStringExtra("videoPath");
-        GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        String filter=getIntent().getStringExtra("filter");
-        if (filter.equals("NORMAL"))
-            panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
-        else if (filter.equals("GRAY_SCALE")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.GRAY_SCALE);
-        else if (filter.equals("INVERSE_COLOR")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.INVERSE_COLOR);
-        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //Logger.logTouchEvent(v,event);
-                return panoViewWrapper.handleTouchEvent(event);
-            }
-        });
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        panoViewWrapper.onPause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        panoViewWrapper.onResume();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        panoViewWrapper.releaseResources();
-    }
-
-}
+GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
+panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
+glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		return panoViewWrapper.handleTouchEvent(event);
+	}
+});
 ```
 
 ##未来特性（不要期望过高- -|||）
-* 锁定坐标轴
-    * 用户从不同角度进入，看到的是同一个场景
 * 加速度+电子罗盘支持（适合没有陀螺仪的手机）
 * 快速切换使用的解码器，例如IjkMediaPlayer
 * jcenter/maven
@@ -126,134 +78,12 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
 * Anti Distortion
 * RTSP RTMP (with VLC/Vitamio)
 
+## [ChangeLog](https://github.com/Martin20150405/Pano360/wiki/ChangeLog)
+
 ##反馈交流
 >可能回复不及时，但是我承诺一定会回复!
 
 * 开启一个issue
 * 或者发送邮件至1036040418@qq.com
-* **如果觉得这个项目对你有帮助，欢迎star**
+* 如果觉得这个项目对你有帮助，欢迎star
 
-
-#Sorry for my poor english
-## Platform Requirements
-* OpenGLES 2.0 
-* At least Android 4.0.3 (API-15) 
-
-##Features
-* Single/Dual Screen support
-    * by configuring rows and cols you can get as many screens as you want
-* Support two modes: Gyroscope(Motion) or Pinch,Scroll(Touch)
-* Player control, tool bar auto-hide (T_T)
-* Simple real-time on-screen filter (improving)
-    * now support gray-scale filter and invert-color filter
-* Screenshot support
-    * about 40ms to readPixels about 100ms to save JPEG(async)
-* Online video support (m3u8, etc.), you may have to deal media decode your self (like when playing rmvb).
-
-##Preview (Screenshots)
-![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/main_screen.jpg)
-![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.jpg)
-
-##Target user
-* If you are interested in implementing a panorama video player on Android, or you are urged yo use a Panorama video player with playing control, or you want to add more functions to Panorama video player, you may find this project helpful.
-
-##Integration (How to use)
-* There are two ways to integrate this library, you can compile demo app for more details.
-
-* Start an `Activity` provided by library 
-```java
-Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-intent.putExtra("videoPath",filePath);
-intent.putExtra("filter","NORMAL");
-startActivity(intent);
-```
-
-* Or provide a `GLSurfaceView`,you can use it anywhere，but you have to deal player control and mode switch yourself
-```java
-<android.opengl.GLSurfaceView
-    android:id="@+id/surface_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
-```
-```java
-
-public class DemoWithGLSurfaceView extends AppCompatActivity {
-    private PanoViewWrapper panoViewWrapper;
-
-    public static String TAG = "DemoWithGLSurfaceView";
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        this.getSupportActionBar().hide();
-        setContentView(R.layout.player_layout);
-
-        init();
-
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-        getWindow().setAttributes(params);
-    }
-
-    private void init(){
-
-        String videoPath=getIntent().getStringExtra("videoPath");
-        GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        String filter=getIntent().getStringExtra("filter");
-        if (filter.equals("NORMAL"))
-            panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
-        else if (filter.equals("GRAY_SCALE")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.GRAY_SCALE);
-        else if (filter.equals("INVERSE_COLOR")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.INVERSE_COLOR);
-        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //Logger.logTouchEvent(v,event);
-                return panoViewWrapper.handleTouchEvent(event);
-            }
-        });
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        panoViewWrapper.onPause();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        panoViewWrapper.onResume();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        panoViewWrapper.releaseResources();
-    }
-
-}
-```
-
-##Future works (Don't expect too much- -|||)
-* Lock axis( User can enter view in any rotation, and will see the same view firstly)
-* Acc+Mag support（used for phones without Gyroscope）
-* MediaPlayer switch (like IjkMediaPlayer)
-* jcenter/maven
-* Render original video
-* Tiny window / Fragment playing
-* Handler+MessageQueue
-* Panorama photo
-* More Panorama format support
-* Better filter support
-* Hotspot
-* Anti Distortion
-* RTSP RTMP (with VLC/Vitamio)
-
-##Feedback
->I promise to reply every single message (not in time maybe). Sorry again for my poor english.
-
-* Open an issue
-* Or send an e-mail to 1036040418@qq.com
-* **If you found this project helpful, star is highly welcomed.**
