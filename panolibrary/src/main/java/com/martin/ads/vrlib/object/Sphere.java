@@ -140,8 +140,6 @@ public class Sphere {
         return mTexCoordinateBuffer;
     }
 
-
-
     public void draw() {
         if (indexBuffer != null){
             indexBuffer.position(0);

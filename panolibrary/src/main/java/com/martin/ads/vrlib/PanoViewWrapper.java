@@ -6,7 +6,6 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.view.MotionEvent;
 
-import com.martin.ads.vrlib.constant.PanoFilter;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
 import com.martin.ads.vrlib.utils.StatusHelper;
@@ -21,17 +20,17 @@ public class PanoViewWrapper {
     private GLSurfaceView glSurfaceView;
     private TouchHelper touchHelper;
 
-    public PanoViewWrapper(Context context, String videoPath, GLSurfaceView glSurfaceView, PanoFilter panoFilter) {
+    public PanoViewWrapper(Context context, String videoPath, GLSurfaceView glSurfaceView) {
         this.glSurfaceView=glSurfaceView;
-        init(context,videoPath,panoFilter);
+        init(context,videoPath);
     }
 
-    private void init(Context context,String videoPath,PanoFilter panoFilter){
+    private void init(Context context,String videoPath){
         Uri uri=Uri.parse(videoPath);
-        init(context,uri,panoFilter);
+        init(context,uri);
     }
 
-    private void init(Context context, Uri uri, PanoFilter panoFilter){
+    private void init(Context context, Uri uri){
         glSurfaceView.setEGLContextClientVersion(2);
 
         statusHelper=new StatusHelper(context);
@@ -48,7 +47,7 @@ public class PanoViewWrapper {
             }
         });
 
-        mRenderer = new PanoRender(statusHelper,panoFilter,mPnoVideoPlayer);
+        mRenderer = new PanoRender(statusHelper,mPnoVideoPlayer);
 
         glSurfaceView.setRenderer(mRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -87,7 +86,7 @@ public class PanoViewWrapper {
     public void releaseResources(){
         mPnoVideoPlayer.releaseResource();
         mPnoVideoPlayer=null;
-        mRenderer.getSensorEventHandler().releaseResources();
+        mRenderer.getSpherePlugin().getSensorEventHandler().releaseResources();
     }
 
     public PanoMediaPlayerWrapper getMediaPlayer(){

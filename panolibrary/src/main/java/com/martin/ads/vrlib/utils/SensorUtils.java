@@ -12,9 +12,10 @@ import android.opengl.Matrix;
 public class SensorUtils {
     private static float[] mTmp = new float[16];
     private static float[] oTmp = new float[16];
+
+    //the coordinate is remapped to landscape
     public static void sensorRotationVectorToMatrix(SensorEvent event, float[] output) {
         float[] values = event.values;
-     //   SensorManager.getRotationMatrixFromVector(output, values);
         SensorManager.getRotationMatrixFromVector(mTmp, values);
         SensorManager.remapCoordinateSystem(mTmp, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, output);
         Matrix.rotateM(output, 0, 90.0F, 1.0F, 0.0F, 0.0F);

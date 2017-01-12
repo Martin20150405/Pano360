@@ -47,8 +47,8 @@ public class TouchHelper {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 if (statusHelper.getPanoInteractiveMode()==PanoMode.TOUCH){
-                    mRenderer.setDeltaX(mRenderer.getDeltaX() + distanceX / sDensity * sDamping);
-                    mRenderer.setDeltaY(mRenderer.getDeltaY() + distanceY / sDensity * sDamping);
+                    mRenderer.getSpherePlugin().setDeltaX(mRenderer.getSpherePlugin().getDeltaX() + distanceX / sDensity * sDamping);
+                    mRenderer.getSpherePlugin().setDeltaY(mRenderer.getSpherePlugin().getDeltaY() + distanceY / sDensity * sDamping);
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
@@ -58,7 +58,7 @@ public class TouchHelper {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 float scaleFactor=detector.getScaleFactor();
-                mRenderer.updateScale(scaleFactor);
+                mRenderer.getSpherePlugin().updateScale(scaleFactor);
                 return true;
             }
 

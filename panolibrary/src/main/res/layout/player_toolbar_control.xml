@@ -13,18 +13,7 @@
         android:src="@drawable/back_btn"
         android:layout_marginLeft="@dimen/voide_tool_large"
         android:layout_centerVertical="true"/>
-    <TextView
-        android:id="@+id/video_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#f5f5f5"
-        android:textSize="30sp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:maxEms="10"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:text="Title" />
+
     <ToggleButton
         android:id="@+id/dualScreen_btn"
         android:layout_width="wrap_content"
@@ -57,6 +46,19 @@
         android:layout_toLeftOf="@id/gyro_btn"
         android:src="@drawable/video_toolbar_btn_screenshot"
         android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/video_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#f5f5f5"
+        android:textSize="30sp"
+        android:maxEms="10"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="Title"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

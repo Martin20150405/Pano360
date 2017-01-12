@@ -25,14 +25,12 @@ public class MainActivity extends AppCompatActivity {
     private Button playURL;
     private Button playDemo;
     private EditText url;
-    private Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        spinner= (Spinner) findViewById(R.id.filter_spinner);
         playURL=(Button)findViewById(R.id.play_url);
         url= (EditText) findViewById(R.id.edit_text_url);
         url.setText("http://cache.utovr.com/201508270528174780.m3u8");
@@ -42,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 String filePath= url.getText().toString();
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
                 intent.putExtra("videoPath",filePath);
-                Log.d("lalala",spinner.getSelectedItem().toString());
-                intent.putExtra("filter",spinner.getSelectedItem().toString());
                 startActivity(intent);
             }
         });
@@ -55,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
                 intent.putExtra("videoPath",filePath);
-                intent.putExtra("filter",spinner.getSelectedItem().toString());
                 startActivity(intent);
             }
         });
@@ -107,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
             //Intent intent=new Intent(MainActivity.this,DemoWithGLSurfaceView.class);
             intent.putExtra("videoPath",filePath);
-            intent.putExtra("filter",spinner.getSelectedItem().toString());
             startActivity(intent);
         }
     }

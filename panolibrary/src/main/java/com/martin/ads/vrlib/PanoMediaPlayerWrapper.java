@@ -4,6 +4,7 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.opengl.Matrix;
 import android.util.Log;
 import android.view.Surface;
 
@@ -169,7 +170,7 @@ public class PanoMediaPlayerWrapper implements
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-
+        //TODO:used to play plane videos
     }
 
     public void seekTo(int pos){

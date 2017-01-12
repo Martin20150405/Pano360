@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.martin.ads.vrlib.PanoViewWrapper;
-import com.martin.ads.vrlib.constant.PanoFilter;
-import com.martin.ads.vrlib.utils.Logger;
 
 /**
  * Created by Ads on 2016/6/25.
@@ -38,10 +36,7 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
 
         String videoPath=getIntent().getStringExtra("videoPath");
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        String filter=getIntent().getStringExtra("filter");
-        if (filter.equals("GRAY_SCALE")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.GRAY_SCALE);
-        else if (filter.equals("INVERSE_COLOR")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.INVERSE_COLOR);
-        else panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
+        panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView);
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

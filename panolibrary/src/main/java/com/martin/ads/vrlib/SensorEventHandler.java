@@ -25,7 +25,7 @@ public class SensorEventHandler implements SensorEventListener {
     //private float[] orientationData=new float[3];
 
     private StatusHelper statusHelper;
-    private PanoRender.SensorHandlerCallback sensorHandlerCallback;
+    private SensorHandlerCallback sensorHandlerCallback;
 
     private boolean sensorRegistered;
     private SensorManager sensorManager;
@@ -65,7 +65,7 @@ public class SensorEventHandler implements SensorEventListener {
 
     }
 
-    public void setSensorHandlerCallback(PanoRender.SensorHandlerCallback sensorHandlerCallback){
+    public void setSensorHandlerCallback(SensorHandlerCallback sensorHandlerCallback){
         this.sensorHandlerCallback=sensorHandlerCallback;
     }
 
@@ -73,4 +73,7 @@ public class SensorEventHandler implements SensorEventListener {
         this.statusHelper=statusHelper;
     }
 
+    public interface SensorHandlerCallback{
+        void updateSensorMatrix(float[] sensorMatrix);
+    }
 }

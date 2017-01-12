@@ -39,7 +39,8 @@ public class BitmapUtils {
 
         Log.d("TryOpenGL", "glReadPixels time: " + (end - start)/1000000+" ms");
 
-        //about 700-4000ms
+        //about 700-4000ms(png) 200-1000ms(jpeg)
+        //use jpeg instead of png to save time
         //it will consume large memory and may take a long time, depends on the phone
         new SaveBitmapTask(pixelBuffer,width,height,context).execute();
     }
@@ -64,7 +65,7 @@ public class BitmapUtils {
             File mkDir = new File(sdRoot, dir);
             if (!mkDir.exists())
                 mkDir.mkdir();
-            String filename="/PanoScreenShot_" +width + "_" + height + "_" + simpleDateFormat.format(new Date())+".png";
+            String filename="/PanoScreenShot_" +width + "_" + height + "_" + simpleDateFormat.format(new Date())+".jpg";
             filePath= mkDir.getAbsolutePath()+filename;
         }
 
@@ -108,7 +109,7 @@ public class BitmapUtils {
 //            Canvas canvas = new Canvas(outImg);
 //            canvas.drawBitmap(bmp, rotate, new Paint());
 //            outImg.recycle();
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos);
             bmp.recycle();
         } catch (IOException e) {
             e.printStackTrace();

@@ -13,10 +13,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.panolibrary.R;
-import com.martin.ads.vrlib.constant.Constants;
-import com.martin.ads.vrlib.constant.PanoFilter;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
+import com.martin.ads.vrlib.filters.advanced.GGDissolveBlendFilter;
+import com.martin.ads.vrlib.filters.advanced.GGGrayScaleFilter;
+import com.martin.ads.vrlib.filters.advanced.GGRiseFilter;
 import com.martin.ads.vrlib.utils.UIUtils;
 
 /**
@@ -53,12 +54,7 @@ public class PanoPlayerActivity extends Activity {
         TextView title= (TextView) findViewById(R.id.video_title);
         title.setText(Uri.parse(videoPath).getLastPathSegment());
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        String filter=getIntent().getStringExtra("filter");
-
-        if (filter.equals("GRAY_SCALE")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.GRAY_SCALE);
-        else if (filter.equals("INVERSE_COLOR")) panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.INVERSE_COLOR);
-        else panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
-
+        panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView);
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -136,7 +132,6 @@ public class PanoPlayerActivity extends Activity {
                 finish();
             }
         });
-        //panoViewWrapper.getRenderer().setLockAxisMode(Constants.LOCK_MODE_GAME_ROTATION_VECTOR);
     }
 
     @Override

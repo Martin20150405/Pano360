@@ -2,8 +2,6 @@
 <resources>
     <string-array name="filter_type">
         <item>NORMAL</item>
-        <item>GRAY_SCALE</item>
-        <item>INVERSE_COLOR</item>
     </string-array>
 
 </resources>

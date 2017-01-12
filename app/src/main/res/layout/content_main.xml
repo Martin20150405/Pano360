@@ -77,15 +77,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You can choose real-time filter here"
+        android:text="Some features don't have UI now, utilize them in the source code!"
         android:id="@+id/filter_text"
         android:textSize="20dp"
         android:layout_below="@id/select_text"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/filter_spinner"
-        android:entries="@array/filter_type"
-        android:background="@color/colorPrimaryLight"
-        android:layout_below="@id/filter_text" />
 </RelativeLayout>

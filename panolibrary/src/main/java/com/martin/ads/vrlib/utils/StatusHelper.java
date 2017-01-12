@@ -2,7 +2,6 @@ package com.martin.ads.vrlib.utils;
 
 import android.content.Context;
 
-import com.martin.ads.vrlib.GLProgram;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
 
