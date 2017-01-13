@@ -2,26 +2,21 @@
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
 
 ## Platform Requirements
-* OpenGLES 2.0 
+* OpenGL ES 2.0 
 * At least Android 4.0.3 (API-15) 
 
 ##Features
 * Single/Dual Screen support
     * by configuring rows and cols you can get as many screens as you want
 * Support two modes: Gyroscope(Motion) or Pinch,Scroll(Touch)
-* Player control, tool bar auto-hide (T_T)
-* Simple real-time on-screen filter (improving)
-    * now support gray-scale filter and invert-color filter
+* Player control
+* GPUImage-like real-time on-screen filter group
 * Screenshot support
-    * about 40ms to readPixels,about 100ms to save JPEG(async)
-* Online video support (m3u8, etc.), you may have to deal media decode your self (like when playing rmvb).
-* Lock axis
-    * User can enter view in any rotation, and will see the same view firstly
-    * **LOCK_MODE_GAME_ROTATION_VECTOR**： similar to Cardboard Motion
-    * **LOCK_MODE_ALL_AXIS**:simply ignore initial rotation
-	
+* Online video support (m3u8, etc.), you may have to deal with media decoding yourself.
+* Lock any axis, user can enter view in any rotation, and will see the same view firstly
+    * **LOCK_MODE_AXIS_Y**:similar to Cardboard Motion
+* Ignore rotation of any axis
 ##Preview (Screenshots)
-![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/main_screen.jpg)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.jpg)
 
 ##Target user
@@ -60,12 +55,10 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 * Acc+Mag support（used for phones without Gyroscope）
 * MediaPlayer switch (like IjkMediaPlayer)
 * jcenter/maven
-* Render original video
 * Tiny window / Fragment playing
 * Handler+MessageQueue
 * Panorama photo
 * More Panorama format support
-* Better filter support
 * Hotspot
 * Anti Distortion
 * RTSP RTMP (with VLC/Vitamio)
@@ -76,5 +69,4 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 >I promise to reply every single message (not in time maybe). Sorry for my poor english.
 
 * Open an issue
-* Or send an e-mail to 1036040418@qq.com
 * If you found this project helpful, star is highly welcomed.

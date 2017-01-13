@@ -63,7 +63,17 @@ public class GGSphere2DPlugin extends GGAbsFilter {
 
         orientationHelper=new OrientationHelper();
         //TODO:move it to outer layer
-        //orientationHelper.setLockAxisMode(OrientationHelper.LOCK_MODE_ALL_AXIS);
+
+        //Lock or Ignore parameters can be linked by binary-or operation,
+        //see the samples below
+
+        //for example,lock Y to achieve the similar result as Cardboard Motion
+        //and GAME_ROTATION_VECTOR
+        //orientationHelper.setLockAxisMode(OrientationHelper.LOCK_MODE_AXIS_Y);
+
+        //for example ,lock z and y to detect whether the user
+        // is looking at the sky or the ground
+        //orientationHelper.setIgnoreRotationMode(OrientationHelper.IGNORE_ROTATION_AXIS_Z | OrientationHelper.IGNORE_ROTATION_AXIS_Y);
     }
 
     @Override
@@ -166,4 +176,7 @@ public class GGSphere2DPlugin extends GGAbsFilter {
         mScale=Math.max(0.122f,Math.min(1.0f,mScale));
     }
 
+    public OrientationHelper getOrientationHelper() {
+        return orientationHelper;
+    }
 }
