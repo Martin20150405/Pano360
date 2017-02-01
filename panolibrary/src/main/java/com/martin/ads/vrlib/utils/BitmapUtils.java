@@ -103,12 +103,6 @@ public class BitmapUtils {
             bos = new BufferedOutputStream(new FileOutputStream(filePath));
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             bmp.copyPixelsFromBuffer(IntBuffer.wrap(pixelMirroredArray));
-//            Bitmap outImg = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
-//            Matrix rotate = new Matrix();
-//            rotate.setRotate(180,(float)width/2,(float)height/2);
-//            Canvas canvas = new Canvas(outImg);
-//            canvas.drawBitmap(bmp, rotate, new Paint());
-//            outImg.recycle();
             bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos);
             bmp.recycle();
         } catch (IOException e) {

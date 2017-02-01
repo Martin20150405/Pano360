@@ -3,6 +3,7 @@ package com.martin.ads.vrlib;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
+import com.martin.ads.vrlib.filters.advanced.GGGrayScaleFilter;
 import com.martin.ads.vrlib.filters.advanced.GGRiseFilter;
 import com.martin.ads.vrlib.filters.advanced.GGSphere2DPlugin;
 import com.martin.ads.vrlib.filters.base.GGFilterGroup;
@@ -45,6 +46,8 @@ public class PanoRender
         //like filterGroup.addFilter(new GGRiseFilter(statusHelper.getContext()))
 
         filterGroup.addFilter(spherePlugin);
+
+        //filterGroup.addFilter(new GGGrayScaleFilter(statusHelper.getContext()));
 
         //you can also add filters here
         //pay attention to the order of execution
