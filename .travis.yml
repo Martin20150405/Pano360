@@ -3,6 +3,7 @@ before_script:
  
 language: android
 jdk: oraclejdk8
+
 android:
   components:
     # Uncomment the lines below if you want to
@@ -21,8 +22,8 @@ android:
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     #- sys-img-armeabi-v7a-android-22
-    
-   licenses:
+
+  licenses:
     - '.+'
     
 before_cache:
