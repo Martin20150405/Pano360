@@ -6,7 +6,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 ###Read this in other languages: [English](README.en.md)
 
 ## [系列教程：从零开始写一个Android平台下的全景视频播放器](http://blog.csdn.net/Martin20150405/article/details/53149578)
-* 如果不能打开说明还没更新
+
 
 ## 平台需求
 * OpenGL ES 2.0 
@@ -28,7 +28,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 	
 ##截图
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.jpg)
-
+![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/preview.gif)
 ##适用对象
 * 如果你对于如何实现一个Android平台下的全景视频播放器感兴趣，或者急于使用一个带播放控制功能的全景视频播放器，或者有意在全景视频播放器中加入各种奇怪的功能，这个项目可能会对你有帮助。
 
@@ -74,7 +74,11 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 * Anti Distortion
 * RTSP RTMP (with VLC/Vitamio)
 
-## [ChangeLog](https://github.com/Martin20150405/Pano360/wiki/ChangeLog)
+## [历史版本](https://github.com/Martin20150405/Pano360/releases)
+
+## [更新日志](https://github.com/Martin20150405/Pano360/wiki/ChangeLog)
+
+
 
 ##反馈交流
 >可能回复不及时，但是我承诺一定会回复!
