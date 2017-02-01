@@ -8,7 +8,5 @@ import org.junit.Test;
 public class BuilderTest {
     @Test
     public void getIntent() {
-        new MaterialFilePicker()
-                .getFilter();
     }
 }
