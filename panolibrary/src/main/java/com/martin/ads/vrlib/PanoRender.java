@@ -8,6 +8,7 @@ import com.martin.ads.vrlib.filters.advanced.GGRiseFilter;
 import com.martin.ads.vrlib.filters.advanced.GGSphere2DPlugin;
 import com.martin.ads.vrlib.filters.base.GGFilterGroup;
 import com.martin.ads.vrlib.filters.base.GGOESFilter;
+import com.martin.ads.vrlib.filters.base.OrthoFilter;
 import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.martin.ads.vrlib.utils.OrientationHelper;
 import com.martin.ads.vrlib.utils.StatusHelper;
@@ -32,20 +33,40 @@ public class PanoRender
 
     private boolean saveImg;
 
+    //TODO: remove it
+    //Adjust the value to play plane video.
+    public static final boolean PLANE_VIDEO=false;
+    private OrthoFilter orthoFilter;
+
     public PanoRender(StatusHelper statusHelper,PanoMediaPlayerWrapper panoMediaPlayerWrapper) {
         this.statusHelper=statusHelper;
         this.panoMediaPlayerWrapper = panoMediaPlayerWrapper;
         saveImg=false;
-        spherePlugin=new GGSphere2DPlugin(statusHelper);
-        filterGroup=new GGFilterGroup();
-        ggoesFilter=new GGOESFilter(statusHelper.getContext(),GGOESFilter.ADJUSTING_MODE_STRETCH);
 
+        filterGroup=new GGFilterGroup();
+
+        ggoesFilter=new GGOESFilter(statusHelper.getContext());
         filterGroup.addFilter(ggoesFilter);
+
         //you can add filters here
 
         //like filterGroup.addFilter(new GGRiseFilter(statusHelper.getContext()))
 
-        filterGroup.addFilter(spherePlugin);
+        spherePlugin=new GGSphere2DPlugin(statusHelper);
+        //TODO: this should be adjustable
+        orthoFilter=new OrthoFilter(statusHelper.getContext(),
+                OrthoFilter.ADJUSTING_MODE_FIT_TO_SCREEN);
+        if(!PLANE_VIDEO){
+            filterGroup.addFilter(spherePlugin);
+        }else{
+            panoMediaPlayerWrapper.setVideoSizeCallback(new PanoMediaPlayerWrapper.VideoSizeCallback() {
+                @Override
+                public void notifyVideoSizeChanged(int width, int height) {
+                    orthoFilter.updateProjection(width,height);
+                }
+            });
+            filterGroup.addFilter(orthoFilter);
+        }
 
         //filterGroup.addFilter(new GGGrayScaleFilter(statusHelper.getContext()));
 

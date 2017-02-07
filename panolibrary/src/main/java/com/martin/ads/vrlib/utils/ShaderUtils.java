@@ -71,8 +71,24 @@ public class ShaderUtils {
         return shader;
     }
 
+
     public static String readRawTextFile(Context context, int resId) {
         InputStream inputStream = context.getResources().openRawResource(resId);
+        return getStringFromStream(inputStream);
+    }
+
+    public static String readAssetsTextFile(Context context, String filePath) {
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getResources().getAssets().open(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return getStringFromStream(inputStream);
+    }
+
+    private static String getStringFromStream(InputStream inputStream){
+        if(inputStream==null) return null;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             StringBuilder sb = new StringBuilder();
@@ -87,4 +103,5 @@ public class ShaderUtils {
         }
         return null;
     }
+
 }

@@ -4,9 +4,10 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.martin.ads.vrlib.utils.ShaderUtils;
+
 import static com.martin.ads.vrlib.utils.ShaderUtils.checkGlError;
 import static com.martin.ads.vrlib.utils.ShaderUtils.createProgram;
-import static com.martin.ads.vrlib.utils.ShaderUtils.readRawTextFile;
 
 /**
  * Created by Ads on 2016/11/19.
@@ -22,10 +23,17 @@ public abstract class GLAbsProgram {
     private int maTextureHandle;
 
     public GLAbsProgram(Context context
+            , final String vertexShaderPath
+            , final String fragmentShaderPath){
+        mVertexShader = ShaderUtils.readAssetsTextFile(context,vertexShaderPath);
+        mFragmentShader= ShaderUtils.readAssetsTextFile(context,fragmentShaderPath);
+    }
+
+    public GLAbsProgram(Context context
             , final int vertexShaderResourceId
             , final int fragmentShaderResourceId){
-        mVertexShader = readRawTextFile(context, vertexShaderResourceId);
-        mFragmentShader= readRawTextFile(context, fragmentShaderResourceId);
+        mVertexShader = ShaderUtils.readRawTextFile(context, vertexShaderResourceId);
+        mFragmentShader= ShaderUtils.readRawTextFile(context, fragmentShaderResourceId);
     }
 
     public void create(){

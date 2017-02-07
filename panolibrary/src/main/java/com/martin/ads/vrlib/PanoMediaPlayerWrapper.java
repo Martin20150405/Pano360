@@ -38,6 +38,8 @@ public class PanoMediaPlayerWrapper implements
 
     private PlayerCallback playerCallback;
 
+    private VideoSizeCallback videoSizeCallback;
+
     public PanoMediaPlayerWrapper() {
         mMediaPlayer=new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
@@ -170,7 +172,8 @@ public class PanoMediaPlayerWrapper implements
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        //TODO:used to play plane videos
+        if(videoSizeCallback!=null)
+            videoSizeCallback.notifyVideoSizeChanged(width,height);
     }
 
     public void seekTo(int pos){
@@ -214,5 +217,13 @@ public class PanoMediaPlayerWrapper implements
 
     public void setPlayerCallback(PlayerCallback playerCallback) {
         this.playerCallback = playerCallback;
+    }
+
+    interface VideoSizeCallback{
+        void notifyVideoSizeChanged(int width,int height);
+    }
+
+    public void setVideoSizeCallback(VideoSizeCallback videoSizeCallback) {
+        this.videoSizeCallback = videoSizeCallback;
     }
 }

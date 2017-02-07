@@ -20,27 +20,19 @@ import com.martin.ads.vrlib.utils.Logger;
  */
 
 public class GGOESFilter extends GGAbsFilter{
-
-    public static final int ADJUSTING_MODE_STRETCH=1;
-/*    public static final int ADJUSTING_MODE_CROP=2;
-    public static final int ADJUSTING_MODE_FIT_TO_SCREEN=3;*/
-
-
     private GLOESTexture gloesTexture;
     private GLOESProgram gloesProgram;
     private Plain plain;
 
     private float[] mSTMatrix = new float[16];      //videoTextureMatrix
 
-    private int adjustingMode;
     private float[] projectionMatrix = new float[16];
 
-    public GGOESFilter(Context context,int adjustingMode) {
+    public GGOESFilter(Context context) {
         plain=new Plain();
         gloesProgram=new GLOESProgram(context);
         gloesTexture=new GLOESTexture();
         Matrix.setIdentityM(mSTMatrix, 0);
-        this.adjustingMode=adjustingMode;
     }
 
     @Override
@@ -85,11 +77,4 @@ public class GGOESFilter extends GGAbsFilter{
         return plain;
     }
 
-    private void updateProjection(int videoWidth, int videoHeight){
-        float screenRatio=(float)width/height;
-        float videoRatio=(float)videoWidth/videoHeight;
-        if (videoRatio>screenRatio){
-            Matrix.orthoM(projectionMatrix,0,-1f,1f,-videoRatio/screenRatio,videoRatio/screenRatio,-1f,1f);
-        }else Matrix.orthoM(projectionMatrix,0,-screenRatio/videoRatio,screenRatio/videoRatio,-1f,1f,-1f,1f);
-    }
 }

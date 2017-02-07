@@ -31,7 +31,7 @@ public class BitmapUtils {
     public static void sendImage(int width, int height, Context context) {
         final IntBuffer pixelBuffer = IntBuffer.allocate(width * height);
 
-        //about 20-50ms
+        //depends on the resolution of screen, about 20-50ms (1280x720)
         long start = System.nanoTime();
         GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
                 pixelBuffer);
