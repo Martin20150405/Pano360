@@ -3,14 +3,15 @@ package com.martin.ads.vrlib;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
-import com.martin.ads.vrlib.filters.advanced.GGGrayScaleFilter;
-import com.martin.ads.vrlib.filters.advanced.GGRiseFilter;
-import com.martin.ads.vrlib.filters.advanced.GGSphere2DPlugin;
-import com.martin.ads.vrlib.filters.base.GGFilterGroup;
-import com.martin.ads.vrlib.filters.base.GGOESFilter;
+import com.martin.ads.vrlib.filters.advanced.DissolveBlendFilter;
+import com.martin.ads.vrlib.filters.advanced.RiseFilter;
+import com.martin.ads.vrlib.filters.advanced.Sphere2DPlugin;
+import com.martin.ads.vrlib.filters.advanced.VignetteFilter;
+import com.martin.ads.vrlib.filters.base.FilterGroup;
+import com.martin.ads.vrlib.filters.base.OESFilter;
 import com.martin.ads.vrlib.filters.base.OrthoFilter;
+import com.martin.ads.vrlib.filters.imgproc.GrayScaleShaderFilter;
 import com.martin.ads.vrlib.utils.BitmapUtils;
-import com.martin.ads.vrlib.utils.OrientationHelper;
 import com.martin.ads.vrlib.utils.StatusHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -25,9 +26,9 @@ public class PanoRender
 
     private StatusHelper statusHelper;
     private PanoMediaPlayerWrapper panoMediaPlayerWrapper;
-    private GGSphere2DPlugin spherePlugin;
-    private GGFilterGroup filterGroup;
-    private GGOESFilter ggoesFilter;
+    private Sphere2DPlugin spherePlugin;
+    private FilterGroup filterGroup;
+    private OESFilter oesFilter;
 
     private int width,height;
 
@@ -43,21 +44,24 @@ public class PanoRender
         this.panoMediaPlayerWrapper = panoMediaPlayerWrapper;
         saveImg=false;
 
-        filterGroup=new GGFilterGroup();
+        filterGroup=new FilterGroup();
 
-        ggoesFilter=new GGOESFilter(statusHelper.getContext());
-        filterGroup.addFilter(ggoesFilter);
+        oesFilter=new OESFilter(statusHelper.getContext());
+        filterGroup.addFilter(oesFilter);
 
         //you can add filters here
 
-        //like filterGroup.addFilter(new GGRiseFilter(statusHelper.getContext()))
+//        filterGroup.addFilter(new GrayScaleShaderFilter(statusHelper.getContext()));
+//        filterGroup.addFilter(new DissolveBlendFilter(statusHelper.getContext()));
+//        filterGroup.addFilter(new RiseFilter(statusHelper.getContext()));
 
-        spherePlugin=new GGSphere2DPlugin(statusHelper);
+        spherePlugin=new Sphere2DPlugin(statusHelper);
         //TODO: this should be adjustable
         orthoFilter=new OrthoFilter(statusHelper.getContext(),
                 OrthoFilter.ADJUSTING_MODE_FIT_TO_SCREEN);
         if(!PLANE_VIDEO){
             filterGroup.addFilter(spherePlugin);
+            //filterGroup.addFilter(new VignetteFilter(statusHelper.getContext()));
         }else{
             panoMediaPlayerWrapper.setVideoSizeCallback(new PanoMediaPlayerWrapper.VideoSizeCallback() {
                 @Override
@@ -67,8 +71,6 @@ public class PanoRender
             });
             filterGroup.addFilter(orthoFilter);
         }
-
-        //filterGroup.addFilter(new GGGrayScaleFilter(statusHelper.getContext()));
 
         //you can also add filters here
         //pay attention to the order of execution
@@ -82,7 +84,7 @@ public class PanoRender
     @Override
     public void onSurfaceCreated(GL10 glUnused,EGLConfig config) {
         filterGroup.init();
-        panoMediaPlayerWrapper.setSurface(ggoesFilter.getGloesTexture().getTextureId());
+        panoMediaPlayerWrapper.setSurface(oesFilter.getGlOESTexture().getTextureId());
     }
 
 
@@ -90,8 +92,8 @@ public class PanoRender
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-        panoMediaPlayerWrapper.doTextureUpdate(ggoesFilter.getmSTMatrix());
-        filterGroup.onDrawFrame(ggoesFilter.getGloesTexture().getTextureId());
+        panoMediaPlayerWrapper.doTextureUpdate(oesFilter.getSTMatrix());
+        filterGroup.onDrawFrame(oesFilter.getGlOESTexture().getTextureId());
         if (saveImg){
             BitmapUtils.sendImage(width,height,statusHelper.getContext());
             saveImg=false;
@@ -112,11 +114,11 @@ public class PanoRender
         saveImg=true;
     }
 
-    public GGSphere2DPlugin getSpherePlugin() {
+    public Sphere2DPlugin getSpherePlugin() {
         return spherePlugin;
     }
 
-    public GGFilterGroup getFilterGroup() {
+    public FilterGroup getFilterGroup() {
         return filterGroup;
     }
 }
