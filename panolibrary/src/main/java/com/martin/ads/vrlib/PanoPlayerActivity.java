@@ -15,9 +15,6 @@ import android.widget.TextView;
 import com.example.panolibrary.R;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
-import com.martin.ads.vrlib.filters.advanced.GGDissolveBlendFilter;
-import com.martin.ads.vrlib.filters.advanced.GGGrayScaleFilter;
-import com.martin.ads.vrlib.filters.advanced.GGRiseFilter;
 import com.martin.ads.vrlib.utils.UIUtils;
 
 /**

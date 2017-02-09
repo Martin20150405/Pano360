@@ -6,8 +6,8 @@ import android.opengl.Matrix;
 
 import com.martin.ads.vrlib.object.Plain;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
-import com.martin.ads.vrlib.textures.TextureUtils;
 import com.martin.ads.vrlib.utils.MatrixUtils;
+import com.martin.ads.vrlib.utils.TextureUtils;
 
 
 /**
@@ -16,7 +16,7 @@ import com.martin.ads.vrlib.utils.MatrixUtils;
  * and simply fit the image to the screen
  */
 
-public class OrthoFilter extends GGAbsFilter{
+public class OrthoFilter extends AbsFilter {
 
     public static final int ADJUSTING_MODE_STRETCH=1;
     public static final int ADJUSTING_MODE_CROP=2;
@@ -33,7 +33,7 @@ public class OrthoFilter extends GGAbsFilter{
 
     public OrthoFilter(Context context,int adjustingMode) {
         glPassThroughProgram=new GLPassThroughProgram(context);
-        plain=new Plain();
+        plain=new Plain(true);
         Matrix.setIdentityM(projectionMatrix,0);
         this.adjustingMode=adjustingMode;
     }
@@ -45,9 +45,10 @@ public class OrthoFilter extends GGAbsFilter{
 
     @Override
     public void onPreDrawElements() {
+        super.onPreDrawElements();
         glPassThroughProgram.use();
-        plain.uploadTexCoordinateBuffer(glPassThroughProgram.getMaTextureHandle());
-        plain.uploadVerticesBuffer(glPassThroughProgram.getMaPositionHandle());
+        plain.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
+        plain.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
         GLES20.glUniformMatrix4fv(glPassThroughProgram.getMVPMatrixHandle(), 1, false, projectionMatrix, 0);
     }
 
@@ -60,7 +61,7 @@ public class OrthoFilter extends GGAbsFilter{
     public void onDrawFrame(int textureId) {
         onPreDrawElements();
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glPassThroughProgram.getTextureSamplerHandle(),0);
-        GLES20.glViewport(0,0,width,height);
+        GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
         plain.draw();
     }
 
@@ -73,7 +74,7 @@ public class OrthoFilter extends GGAbsFilter{
                 break;
             case ADJUSTING_MODE_FIT_TO_SCREEN:
                 MatrixUtils.updateProjection(videoWidth,videoHeight,
-                        width,height,projectionMatrix);
+                        surfaceWidth,surfaceHeight,projectionMatrix);
                 break;
             case ADJUSTING_MODE_CROP:
                 //TODO

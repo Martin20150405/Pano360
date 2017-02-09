@@ -2,25 +2,21 @@ package com.martin.ads.vrlib.programs;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.util.Log;
 
 import com.martin.ads.vrlib.utils.ShaderUtils;
 
-import static com.martin.ads.vrlib.utils.ShaderUtils.checkGlError;
-import static com.martin.ads.vrlib.utils.ShaderUtils.createProgram;
 
 /**
  * Created by Ads on 2016/11/19.
  */
 
-//It is optional to split reference to a program
 public abstract class GLAbsProgram {
     private int mProgramId;
     private String mVertexShader;
     private String mFragmentShader;
 
     private int maPositionHandle;
-    private int maTextureHandle;
+    private int maTextureCoordinateHandle;
 
     public GLAbsProgram(Context context
             , final String vertexShaderPath
@@ -37,26 +33,26 @@ public abstract class GLAbsProgram {
     }
 
     public void create(){
-        mProgramId = createProgram(mVertexShader, mFragmentShader);
+        mProgramId = ShaderUtils.createProgram(mVertexShader, mFragmentShader);
         if (mProgramId == 0) {
             return;
         }
 
         maPositionHandle = GLES20.glGetAttribLocation(getProgramId(), "aPosition");
-        checkGlError("glGetAttribLocation aPosition");
+        ShaderUtils.checkGlError("glGetAttribLocation aPosition");
         if (maPositionHandle == -1) {
             throw new RuntimeException("Could not get attrib location for aPosition");
         }
-        maTextureHandle = GLES20.glGetAttribLocation(getProgramId(), "aTextureCoord");
-        checkGlError("glGetAttribLocation aTextureCoord");
-        if (maTextureHandle == -1) {
+        maTextureCoordinateHandle = GLES20.glGetAttribLocation(getProgramId(), "aTextureCoord");
+        ShaderUtils.checkGlError("glGetAttribLocation aTextureCoord");
+        if (maTextureCoordinateHandle == -1) {
             throw new RuntimeException("Could not get attrib location for aTextureCoord");
         }
     }
 
     public void use(){
         GLES20.glUseProgram(getProgramId());
-        checkGlError("glUseProgram");
+        ShaderUtils.checkGlError("glUseProgram");
     }
 
     public int getProgramId() {
@@ -68,11 +64,11 @@ public abstract class GLAbsProgram {
     }
 
 
-    public int getMaPositionHandle() {
+    public int getPositionHandle() {
         return maPositionHandle;
     }
 
-    public int getMaTextureHandle() {
-        return maTextureHandle;
+    public int getTextureCoordinateHandle() {
+        return maTextureCoordinateHandle;
     }
 }

@@ -14,8 +14,10 @@ public class GLTwoInputProgram extends GLAbsProgram {
     private int uTextureSamplerHandle;
     private int maTexture2Handle;
 
-    public GLTwoInputProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) {
-        super(context, vertexShaderResourceId, fragmentShaderResourceId);
+    public GLTwoInputProgram(Context context,
+                             final String vertexShaderPath,
+                             final String fragmentShaderPath) {
+        super(context, vertexShaderPath, fragmentShaderPath);
     }
 
     @Override

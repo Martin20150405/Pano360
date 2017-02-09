@@ -3,9 +3,8 @@ package com.martin.ads.vrlib.programs;
 import android.content.Context;
 import android.opengl.GLES20;
 
-import com.example.panolibrary.R;
+import com.martin.ads.vrlib.utils.ShaderUtils;
 
-import static com.martin.ads.vrlib.utils.ShaderUtils.checkGlError;
 
 /**
  * Created by Ads on 2016/11/19.
@@ -16,18 +15,20 @@ public class GLSimpleProgram extends GLAbsProgram {
 
     private int uTextureSamplerHandle;
 
-    public GLSimpleProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) {
-        super(context, vertexShaderResourceId, fragmentShaderResourceId);
+    public GLSimpleProgram(Context context,
+                           final String vertexShaderPath,
+                           final String fragmentShaderPath) {
+        super(context, vertexShaderPath, fragmentShaderPath);
     }
 
     @Override
     public void create() {
         super.create();
-        uTextureSamplerHandle=GLES20.glGetUniformLocation(getProgramId(),"sTexture");
-        checkGlError("glGetUniformLocation uniform samplerExternalOES sTexture");
+        uTextureSamplerHandle= GLES20.glGetUniformLocation(getProgramId(),"sTexture");
+        ShaderUtils.checkGlError("glGetUniformLocation uniform samplerExternalOES sTexture");
     }
 
-    public int getuTextureSamplerHandle() {
+    public int getTextureSamplerHandle() {
         return uTextureSamplerHandle;
     }
 }
