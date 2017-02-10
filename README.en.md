@@ -3,6 +3,8 @@
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
 
+**Download Demo App [HERE](https://github.com/Martin20150405/Pano360/blob/master/app/app-release.apk)~**
+
 ## Platform Requirements
 * OpenGL ES 2.0 
 * At least Android 4.0.3 (API-15) 
@@ -13,15 +15,16 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 * Support two modes: Gyroscope(Motion) or Pinch,Scroll(Touch)
 * Player control
 * GPUImage-like real-time on-screen filter group
+* Panorama photo
 * Screenshot support
 * Online video support (m3u8, etc.), you may have to deal with media decoding yourself.
 * Lock any axis, user can enter view in any rotation, and will see the same view firstly
     * **LOCK_MODE_AXIS_Y**:similar to Cardboard Motion
 * Ignore rotation of any axis
 ##Preview (Screenshots)
-![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.jpg)
+![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/preview.gif)
-
+![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/main_screen.png)
 ##Target user
 * If you are interested in implementing a panorama video player on Android, or you are urged yo use a Panorama video player with playing control, or you want to add more functions to Panorama video player, you may find this project helpful.
 
@@ -32,7 +35,6 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 ```java
 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
 intent.putExtra("videoPath",filePath);
-intent.putExtra("filter","NORMAL");
 startActivity(intent);
 ```
 
@@ -45,7 +47,7 @@ startActivity(intent);
 ```
 ```java
 GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView, PanoFilter.NORMAL);
+panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView);
 glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -60,7 +62,6 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 * jcenter/maven
 * Tiny window / Fragment playing
 * Handler+MessageQueue
-* Panorama photo
 * More Panorama format support
 * Hotspot
 * Anti Distortion
@@ -74,4 +75,5 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 >I promise to reply every single message (not in time maybe). Sorry for my poor english.
 
 * Open an issue
-* If you found this project helpful, star is highly welcomed.
+* Send an E-mail to martin20150405@163.com (Not frequently visited)
+* If you found this project helpful, star is highly welcomed. Also, let's improve this project together.

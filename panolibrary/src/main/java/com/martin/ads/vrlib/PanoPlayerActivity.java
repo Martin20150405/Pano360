@@ -21,10 +21,13 @@ import com.martin.ads.vrlib.utils.UIUtils;
  * Created by Ads on 2016/11/10.
  * UI is modified from UtoVR demo
  */
+//FIXME:looks so lame.
 public class PanoPlayerActivity extends Activity {
     private PanoViewWrapper panoViewWrapper;
     private PanoUIController panoUIController;
     private ImageView bufferAnim;
+
+    private boolean imageMode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,20 +41,21 @@ public class PanoPlayerActivity extends Activity {
     }
 
     private void init(){
-
         bufferAnim= (ImageView) findViewById(R.id.activity_imgBuffer);
-        UIUtils.setBufferVisibility(bufferAnim,true);
-
+        String videoPath=getIntent().getStringExtra("videoPath");
+        imageMode=getIntent().getBooleanExtra("imageMode",false);
+        boolean planeMode=getIntent().getBooleanExtra("planeMode",false);
+        if(!imageMode)
+            UIUtils.setBufferVisibility(bufferAnim,true);
+        else UIUtils.setBufferVisibility(bufferAnim,false);
         panoUIController=new PanoUIController(
                 (RelativeLayout)findViewById(R.id.player_toolbar_control),
                 (RelativeLayout)findViewById(R.id.player_toolbar_progress),
-                this);
-        String videoPath=getIntent().getStringExtra("videoPath");
-
+                this,imageMode);
         TextView title= (TextView) findViewById(R.id.video_title);
         title.setText(Uri.parse(videoPath).getLastPathSegment());
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView);
+        panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView,imageMode,planeMode);
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -111,24 +115,26 @@ public class PanoPlayerActivity extends Activity {
         });
         panoViewWrapper.getTouchHelper().setPanoUIController(panoUIController);
 
-        panoViewWrapper.getMediaPlayer().setPlayerCallback(new PanoMediaPlayerWrapper.PlayerCallback() {
-            @Override
-            public void updateProgress() {
-                panoUIController.updateProgress();
-            }
+        if(!imageMode){
+            panoViewWrapper.getMediaPlayer().setPlayerCallback(new PanoMediaPlayerWrapper.PlayerCallback() {
+                @Override
+                public void updateProgress() {
+                    panoUIController.updateProgress();
+                }
 
-            @Override
-            public void updateInfo() {
-                UIUtils.setBufferVisibility(bufferAnim,false);
-                panoUIController.startHideControllerTimer();
-                panoUIController.setInfo();
-            }
+                @Override
+                public void updateInfo() {
+                    UIUtils.setBufferVisibility(bufferAnim,false);
+                    panoUIController.startHideControllerTimer();
+                    panoUIController.setInfo();
+                }
 
-            @Override
-            public void requestFinish() {
-                finish();
-            }
-        });
+                @Override
+                public void requestFinish() {
+                    finish();
+                }
+            });
+        }else panoUIController.startHideControllerTimer();
     }
 
     @Override

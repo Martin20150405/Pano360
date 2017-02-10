@@ -91,7 +91,6 @@ public class PanoMediaPlayerWrapper implements
 
     public void prepare(){
         if (statusHelper.getPanoStatus()==PanoStatus.IDLE || statusHelper.getPanoStatus()==PanoStatus.STOPPED){
-
             mMediaPlayer.prepareAsync();
         }
     }

@@ -24,17 +24,11 @@ public class PassThroughFilter extends AbsFilter {
         this.context=context;
         glPassThroughProgram=new GLPassThroughProgram(context);
         plain=new Plain(true);
-
     }
 
     @Override
     public void init() {
         glPassThroughProgram.create();
-    }
-
-    @Override
-    public void onPreDrawElements() {
-        super.onPreDrawElements();
     }
 
     @Override

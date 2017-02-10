@@ -20,8 +20,13 @@ public class PanoViewWrapper {
     private GLSurfaceView glSurfaceView;
     private TouchHelper touchHelper;
 
-    public PanoViewWrapper(Context context, String videoPath, GLSurfaceView glSurfaceView) {
+    private boolean imageMode;
+    private boolean planeMode;
+
+    public PanoViewWrapper(Context context, String videoPath, GLSurfaceView glSurfaceView,boolean imageMode,boolean planeMode) {
         this.glSurfaceView=glSurfaceView;
+        this.imageMode=imageMode;
+        this.planeMode=planeMode;
         init(context,videoPath);
     }
 
@@ -35,19 +40,23 @@ public class PanoViewWrapper {
 
         statusHelper=new StatusHelper(context);
 
-        mPnoVideoPlayer = new PanoMediaPlayerWrapper();
-        mPnoVideoPlayer.setStatusHelper(statusHelper);
-        if (uri.toString().startsWith("http"))
-            mPnoVideoPlayer.openRemoteFile(uri.toString());
-        else mPnoVideoPlayer.setMediaPlayerFromUri(uri);
-        mPnoVideoPlayer.setRenderCallBack(new PanoViewWrapper.RenderCallBack() {
-            @Override
-            public void renderImmediately() {
-                glSurfaceView.requestRender();
-            }
-        });
+        if(!imageMode){
+            mPnoVideoPlayer = new PanoMediaPlayerWrapper();
+            mPnoVideoPlayer.setStatusHelper(statusHelper);
+            if (uri.toString().startsWith("http"))
+                mPnoVideoPlayer.openRemoteFile(uri.toString());
+            else mPnoVideoPlayer.setMediaPlayerFromUri(uri);
+            mPnoVideoPlayer.setRenderCallBack(new PanoViewWrapper.RenderCallBack() {
+                @Override
+                public void renderImmediately() {
+                    glSurfaceView.requestRender();
+                }
+            });
+            statusHelper.setPanoStatus(PanoStatus.IDLE);
+            mPnoVideoPlayer.prepare();
+        }
 
-        mRenderer = new PanoRender(statusHelper,mPnoVideoPlayer);
+        mRenderer = new PanoRender(statusHelper,mPnoVideoPlayer,imageMode,planeMode);
 
         glSurfaceView.setRenderer(mRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -63,8 +72,7 @@ public class PanoViewWrapper {
         statusHelper.setPanoInteractiveMode(PanoMode.MOTION);
 
         touchHelper=new TouchHelper(statusHelper,mRenderer);
-        statusHelper.setPanoStatus(PanoStatus.IDLE);
-        mPnoVideoPlayer.prepare();
+
     }
 
     public void onPause(){
@@ -84,9 +92,13 @@ public class PanoViewWrapper {
     }
 
     public void releaseResources(){
-        mPnoVideoPlayer.releaseResource();
-        mPnoVideoPlayer=null;
-        mRenderer.getSpherePlugin().getSensorEventHandler().releaseResources();
+        if(mPnoVideoPlayer!=null){
+            mPnoVideoPlayer.releaseResource();
+            mPnoVideoPlayer=null;
+        }
+        if(mRenderer.getSpherePlugin()!=null){
+            mRenderer.getSpherePlugin().getSensorEventHandler().releaseResources();
+        }
     }
 
     public PanoMediaPlayerWrapper getMediaPlayer(){

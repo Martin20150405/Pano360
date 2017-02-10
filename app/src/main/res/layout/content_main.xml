@@ -38,31 +38,29 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-
-
-
-
-
     <LinearLayout
         android:orientation="horizontal"
         android:id="@+id/demo_filed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/url_filed">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Or play demo video"
-            android:layout_weight="4"
-            android:textSize="20dp"
-            android:id="@+id/local_demo_text"/>
         <Button
-            android:text="DEMO"
+            android:text="Demo Video"
             android:id="@+id/play_local_demo"
             android:layout_weight="4"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
+        <Button
+            android:text="Demo Image"
+            android:id="@+id/play_local_demo_image"
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <CheckBox
+            android:text="Plane Video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/plane_mode" />
     </LinearLayout>
 
     <TextView
@@ -81,4 +79,6 @@
         android:id="@+id/filter_text"
         android:textSize="20dp"
         android:layout_below="@id/select_text"/>
+
+
 </RelativeLayout>

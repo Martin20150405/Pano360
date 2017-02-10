@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.martin.ads.vrlib.constant.AdjustingMode;
 import com.martin.ads.vrlib.object.Plain;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.utils.MatrixUtils;
@@ -17,11 +18,6 @@ import com.martin.ads.vrlib.utils.TextureUtils;
  */
 
 public class OrthoFilter extends AbsFilter {
-
-    //Don't change the values
-    public static final int ADJUSTING_MODE_STRETCH=1;
-    public static final int ADJUSTING_MODE_CROP=2;
-    public static final int ADJUSTING_MODE_FIT_TO_SCREEN=3;
 
     private int adjustingMode;
 
@@ -69,16 +65,13 @@ public class OrthoFilter extends AbsFilter {
     public void updateProjection(int videoWidth,int videoHeight){
         this.videoWidth=videoWidth;
         this.videoHeight=videoHeight;
-        switch (adjustingMode){
-            case ADJUSTING_MODE_STRETCH:
-                Matrix.setIdentityM(projectionMatrix,0);
-                break;
-            case ADJUSTING_MODE_FIT_TO_SCREEN:
-            case ADJUSTING_MODE_CROP:
-                MatrixUtils.updateProjection(videoWidth,videoHeight,
-                        surfaceWidth,surfaceHeight,projectionMatrix,adjustingMode);
-                break;
-        }
+        MatrixUtils.updateProjection(
+                videoWidth,
+                videoHeight,
+                surfaceWidth,
+                surfaceHeight,
+                adjustingMode,
+                projectionMatrix);
     }
 
     @Override

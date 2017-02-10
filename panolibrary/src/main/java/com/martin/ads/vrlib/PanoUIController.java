@@ -46,11 +46,15 @@ public class PanoUIController {
     private boolean autoHideController;
 
     private Context context;
-    public PanoUIController(RelativeLayout controlToolbar,RelativeLayout progressToolbar,Context context) {
+
+    private boolean imageMode;
+
+    public PanoUIController(RelativeLayout controlToolbar,RelativeLayout progressToolbar,Context context,boolean imageMode) {
         this.controlToolbar=controlToolbar;
         this.progressToolbar=progressToolbar;
         this.context=context;
         visible=true;
+        this.imageMode=imageMode;
         initView();
     }
 
@@ -124,6 +128,8 @@ public class PanoUIController {
                 uiCallback.changePlayingStatus();
             }
         });
+
+        if(imageMode) progressToolbar.setVisibility(View.GONE);
     }
     public void hide(){
         if (!visible) return;
@@ -135,7 +141,7 @@ public class PanoUIController {
     public void show(){
         if (visible) return;
         visible=true;
-        progressToolbar.setVisibility(View.VISIBLE);
+        if(!imageMode) progressToolbar.setVisibility(View.VISIBLE);
         controlToolbar.setVisibility(View.VISIBLE);
     }
 

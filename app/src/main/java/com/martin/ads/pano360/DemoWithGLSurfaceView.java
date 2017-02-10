@@ -36,7 +36,7 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
 
         String videoPath=getIntent().getStringExtra("videoPath");
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView);
+        panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView,false,false);
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

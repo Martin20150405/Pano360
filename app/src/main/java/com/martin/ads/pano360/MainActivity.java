@@ -25,12 +25,16 @@ public class MainActivity extends AppCompatActivity {
     private Button playURL;
     private Button playDemo;
     private EditText url;
+    private CheckBox planeMode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        planeMode= (CheckBox) findViewById(R.id.plane_mode);
+
         playURL=(Button)findViewById(R.id.play_url);
         url= (EditText) findViewById(R.id.edit_text_url);
         url.setText("http://cache.utovr.com/201508270528174780.m3u8");
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
                 String filePath= url.getText().toString();
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
                 intent.putExtra("videoPath",filePath);
+                intent.putExtra("imageMode",false);
+                intent.putExtra("planeMode",planeMode.isChecked());
                 startActivity(intent);
             }
         });
@@ -51,6 +57,21 @@ public class MainActivity extends AppCompatActivity {
                 String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
                 intent.putExtra("videoPath",filePath);
+                intent.putExtra("imageMode",false);
+                intent.putExtra("planeMode",planeMode.isChecked());
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.play_local_demo_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //...
+                String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
+                Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
+                intent.putExtra("videoPath",filePath);
+                intent.putExtra("imageMode",true);
+                intent.putExtra("planeMode",planeMode.isChecked());
                 startActivity(intent);
             }
         });
@@ -102,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
             //Intent intent=new Intent(MainActivity.this,DemoWithGLSurfaceView.class);
             intent.putExtra("videoPath",filePath);
+            intent.putExtra("imageMode",false);
+            intent.putExtra("planeMode",planeMode.isChecked());
             startActivity(intent);
         }
     }
