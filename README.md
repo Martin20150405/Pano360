@@ -33,7 +33,9 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 	
 ##截图
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
+
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/preview.gif)
+
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/main_screen.png)
 
 ##适用对象

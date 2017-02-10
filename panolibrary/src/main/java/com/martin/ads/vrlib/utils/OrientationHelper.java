@@ -50,6 +50,7 @@ public class OrientationHelper {
 
     float[] tmp=new float[16];
 
+    //TODO:this should be adjustable
     public OrientationHelper() {
         lockAxisMode=LOCK_MODE_NONE;
         ignoreRotationMode=IGNORE_ROTATION_NONE;

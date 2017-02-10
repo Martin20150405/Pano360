@@ -23,8 +23,11 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 * Ignore rotation of any axis
 ##Preview (Screenshots)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
+
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/preview.gif)
+
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/main_screen.png)
+
 ##Target user
 * If you are interested in implementing a panorama video player on Android, or you are urged yo use a Panorama video player with playing control, or you want to add more functions to Panorama video player, you may find this project helpful.
 
