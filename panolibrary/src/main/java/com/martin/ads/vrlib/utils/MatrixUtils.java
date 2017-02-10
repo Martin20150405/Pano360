@@ -7,10 +7,12 @@ import android.opengl.Matrix;
  */
 
 public class MatrixUtils {
-    public static void updateProjection(int imageWidth, int imageHeight,int surfaceWidth,int surfaceHeight,float[] projectionMatrix) {
+    //crop is just making the screen fit the image.
+    public static void updateProjection(int imageWidth, int imageHeight,int surfaceWidth,int surfaceHeight,float[] projectionMatrix,int adjustingMode) {
         float screenRatio=(float)surfaceWidth/surfaceHeight;
         float videoRatio=(float) imageWidth / imageHeight;
-        if (videoRatio>screenRatio){
+        int flag=videoRatio>screenRatio? 0:1;
+        if (flag+adjustingMode==3){
             Matrix.orthoM(projectionMatrix,0,-1f,1f,-videoRatio/screenRatio,videoRatio/screenRatio,-1f,1f);
         }else Matrix.orthoM(projectionMatrix,0,-screenRatio/videoRatio,screenRatio/videoRatio,-1f,1f,-1f,1f);
     }

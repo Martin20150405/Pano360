@@ -18,6 +18,7 @@ import com.martin.ads.vrlib.utils.TextureUtils;
 
 public class OrthoFilter extends AbsFilter {
 
+    //Don't change the values
     public static final int ADJUSTING_MODE_STRETCH=1;
     public static final int ADJUSTING_MODE_CROP=2;
     public static final int ADJUSTING_MODE_FIT_TO_SCREEN=3;
@@ -73,11 +74,9 @@ public class OrthoFilter extends AbsFilter {
                 Matrix.setIdentityM(projectionMatrix,0);
                 break;
             case ADJUSTING_MODE_FIT_TO_SCREEN:
-                MatrixUtils.updateProjection(videoWidth,videoHeight,
-                        surfaceWidth,surfaceHeight,projectionMatrix);
-                break;
             case ADJUSTING_MODE_CROP:
-                //TODO
+                MatrixUtils.updateProjection(videoWidth,videoHeight,
+                        surfaceWidth,surfaceHeight,projectionMatrix,adjustingMode);
                 break;
         }
     }
