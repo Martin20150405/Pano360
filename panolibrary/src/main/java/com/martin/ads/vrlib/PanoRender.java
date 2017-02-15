@@ -77,11 +77,18 @@ public class PanoRender
 
         //you can also add filters here
         //pay attention to the order of execution
+        //here is some demo:
 
 //        filterGroup.addFilter(new GrayScaleShaderFilter(statusHelper.getContext()));
 //        filterGroup.addFilter(new DissolveBlendFilter(statusHelper.getContext()));
 //        filterGroup.addFilter(new RiseFilter(statusHelper.getContext()));
         //filterGroup.addFilter(new VignetteFilter(statusHelper.getContext()));
+//        filterGroup.addFilter(
+//                new DrawImageFilter(
+//                        statusHelper.getContext(),
+//                        "filter/imgs/blackboard.png",
+//                        AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN
+//                ));
 
         //TODO:remove to outer layer
         //if you want to play a plane video,remove
@@ -101,6 +108,11 @@ public class PanoRender
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         GLES20.glClear( GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
+        GLES20.glFrontFace(GLES20.GL_CW);
+        GLES20.glCullFace(GLES20.GL_BACK);
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+
         if(!imageMode){
             panoMediaPlayerWrapper.doTextureUpdate(((OESFilter)firstPassFilter).getSTMatrix());
             filterGroup.onDrawFrame(((OESFilter)firstPassFilter).getGlOESTexture().getTextureId());
@@ -112,6 +124,8 @@ public class PanoRender
             BitmapUtils.sendImage(width,height,statusHelper.getContext());
             saveImg=false;
         }
+
+        GLES20.glDisable(GLES20.GL_CULL_FACE);
         //GLES20.glFinish();
     }
 

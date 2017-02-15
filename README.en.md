@@ -21,6 +21,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 * Lock any axis, user can enter view in any rotation, and will see the same view firstly
     * **LOCK_MODE_AXIS_Y**:similar to Cardboard Motion
 * Ignore rotation of any axis
+
 ##Preview (Screenshots)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
 

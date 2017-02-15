@@ -19,15 +19,15 @@ import java.nio.FloatBuffer;
 public class Plain {
     private FloatBuffer mVerticesBuffer;
     private FloatBuffer mTexCoordinateBuffer;
-    private static final float TRIANGLES_DATA[] = {
+    private static final float TRIANGLES_DATA_CW[] = {
             -1.0f, -1.0f, 0f,
-            1.0f, -1.0f, 0f,
             -1.0f, 1.0f, 0f,
+            1.0f, -1.0f, 0f,
             1.0f, 1.0f, 0f
     };
 
     public Plain(boolean isInGroup) {
-        mVerticesBuffer = BufferUtils.getFloatBuffer(TRIANGLES_DATA,0);
+        mVerticesBuffer = BufferUtils.getFloatBuffer(TRIANGLES_DATA_CW,0);
         if (isInGroup)
             mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.getRotation(Rotation.NORMAL, false, true), 0);
         else mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.TEXTURE_NO_ROTATION,0);
