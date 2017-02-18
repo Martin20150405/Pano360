@@ -25,27 +25,27 @@ public class PlainTextureRotationUtils {
             0.0f, 1.0f,
             0.0f, 0.0f,
             1.0f, 1.0f,
-            1.0f, 0.0f,
+            1.0f, 0.0f
     };
 
-    //FIXME
     public static final float TEXTURE_ROTATED_90[] = {
-            1.0f, 1.0f,
+            0.0f, 0.0f,
             1.0f, 0.0f,
             0.0f, 1.0f,
-            0.0f, 0.0f,
+            1.0f, 1.0f
     };
+
     public static final float TEXTURE_ROTATED_180[] = {
             1.0f, 0.0f,
-            0.0f, 0.0f,
             1.0f, 1.0f,
-            0.0f, 1.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f
     };
     public static final float TEXTURE_ROTATED_270[] = {
-            0.0f, 0.0f,
             0.0f, 1.0f,
             1.0f, 0.0f,
             1.0f, 1.0f,
+            0.0f, 0.0f
     };
 
     private PlainTextureRotationUtils() {
