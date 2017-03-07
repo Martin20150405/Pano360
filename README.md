@@ -1,15 +1,11 @@
 # Pano360
-[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360)
-
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) 
-
-![progress](http://progressed.io/bar/55?title=Progress)
+[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/55?title=Progress)
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
   
 Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库，使用OpenGL ES 2.0来进行视频渲染，没有使用第三方库
 
-**Demo App [在这里下](https://github.com/Martin20150405/Pano360/blob/master/app/app-release.apk)~**
+**Demo App [在这里下](https://raw.githubusercontent.com/Martin20150405/Pano360/master/app/app-release.apk)~**
 
 ###Read this in other languages: [English](README.en.md)
 

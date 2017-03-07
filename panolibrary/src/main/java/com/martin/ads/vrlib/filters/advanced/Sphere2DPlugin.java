@@ -89,6 +89,7 @@ public class Sphere2DPlugin extends AbsFilter {
 
     @Override
     public void onDrawFrame(int textureId) {
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         glSphereProgram.use();
         sphere.uploadTexCoordinateBuffer(glSphereProgram.getTextureCoordinateHandle());
         sphere.uploadVerticesBuffer(glSphereProgram.getPositionHandle());
@@ -125,7 +126,7 @@ public class Sphere2DPlugin extends AbsFilter {
             GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
             sphere.draw();
         }
-
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
     }
 
     @Override

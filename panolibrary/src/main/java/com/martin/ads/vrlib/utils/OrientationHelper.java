@@ -115,7 +115,6 @@ public class OrientationHelper {
     private void convertToDegrees(float[] s){
         for(int i=0;i<s.length;i++)
             s[i]= (float) Math.toDegrees(s[i]);
-
     }
     public void setRotationRecorded(boolean rotationRecorded) {
         this.rotationRecorded = rotationRecorded;
