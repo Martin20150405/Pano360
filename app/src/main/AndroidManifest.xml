@@ -20,6 +20,8 @@
         <activity
             android:name=".DemoWithGLSurfaceView"
             android:screenOrientation="landscape"/>
+        <activity android:name=".PlanePlayerActivity"
+                  android:configChanges="orientation|screenSize|keyboardHidden"/>
     </application>
 
 </manifest>

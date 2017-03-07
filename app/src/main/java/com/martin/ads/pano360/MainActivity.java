@@ -2,18 +2,15 @@ package com.martin.ads.pano360;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.martin.ads.vrlib.PanoPlayerActivity;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
@@ -26,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private Button playDemo;
     private EditText url;
     private CheckBox planeMode;
+    private CheckBox windowMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         planeMode= (CheckBox) findViewById(R.id.plane_mode);
+        windowMode = (CheckBox) findViewById(R.id.window_mode);
 
         playURL=(Button)findViewById(R.id.play_url);
         url= (EditText) findViewById(R.id.edit_text_url);
@@ -42,10 +42,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String filePath= url.getText().toString();
-                Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-                intent.putExtra("videoPath",filePath);
-                intent.putExtra("imageMode",false);
-                intent.putExtra("planeMode",planeMode.isChecked());
+                Intent intent = new Intent();
+                if(windowMode.isChecked()){
+                    intent.setClass(MainActivity.this, PlanePlayerActivity.class);
+                }else{
+                    intent.setClass(MainActivity.this, PanoPlayerActivity.class);
+                }
+                intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+                intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
+                intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
+                intent.putExtra(PanoPlayerActivity.WINDOW_MODE, windowMode.isChecked());
                 startActivity(intent);
             }
         });
@@ -56,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-                intent.putExtra("videoPath",filePath);
-                intent.putExtra("imageMode",false);
-                intent.putExtra("planeMode",planeMode.isChecked());
+                intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+                intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
+                intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
                 startActivity(intent);
             }
         });
@@ -69,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                 //...
                 String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-                intent.putExtra("videoPath",filePath);
-                intent.putExtra("imageMode",true);
-                intent.putExtra("planeMode",planeMode.isChecked());
+                intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+                intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
+                intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
                 startActivity(intent);
             }
         });
@@ -122,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
             //Intent intent=new Intent(MainActivity.this,DemoWithGLSurfaceView.class);
-            intent.putExtra("videoPath",filePath);
-            intent.putExtra("imageMode",false);
-            intent.putExtra("planeMode",planeMode.isChecked());
+            intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+            intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
+            intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
             startActivity(intent);
         }
     }
