@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
                 intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
-                intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
+                intent.putExtra(PanoPlayerActivity.IMAGE_MODE, true);
                 intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
                 startActivity(intent);
             }

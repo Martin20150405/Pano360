@@ -1,10 +1,12 @@
 package com.martin.ads.vrlib;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.Surface;
 
 import com.martin.ads.vrlib.constant.Constants;
 import com.martin.ads.vrlib.utils.SensorUtils;
@@ -30,6 +32,8 @@ public class SensorEventHandler implements SensorEventListener {
     private boolean sensorRegistered;
     private SensorManager sensorManager;
 
+    private int mDeviceRotation;
+
     public void init(){
         sensorRegistered=false;
         sensorManager = (SensorManager) statusHelper.getContext()
@@ -53,7 +57,9 @@ public class SensorEventHandler implements SensorEventListener {
             int type = event.sensor.getType();
             switch (type){
                 case Constants.SENSOR_ROT:
-                    SensorUtils.sensorRotationVectorToMatrix(event,rotationMatrix);
+                    //FIXME
+                    mDeviceRotation= ((Activity)statusHelper.getContext()).getWindowManager().getDefaultDisplay().getRotation();
+                    SensorUtils.sensorRotationVectorToMatrix(event,mDeviceRotation,rotationMatrix);
                     sensorHandlerCallback.updateSensorMatrix(rotationMatrix);
                 break;
             }
