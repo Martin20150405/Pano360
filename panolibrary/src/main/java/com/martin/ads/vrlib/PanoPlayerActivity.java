@@ -23,110 +23,124 @@ import com.martin.ads.vrlib.utils.UIUtils;
  */
 //FIXME:looks so lame.
 public class PanoPlayerActivity extends Activity {
-    private PanoViewWrapper panoViewWrapper;
-    private PanoUIController panoUIController;
-    private ImageView bufferAnim;
 
-    private boolean imageMode;
+    /** 视屏地址 */
+    public static final String VIDEO_PATH = "videoPath";
+    /** 是否是浏览全景图片模式 */
+    public static final String IMAGE_MODE = "imageMode";
+    /** 是否是水平平铺播放模式 */
+    public static final String PLANE_MODE = "planeMode";
+    /** 是否是窗口播放模式 */
+    public static final String WINDOW_MODE = "windowMode";
+
+    private PanoUIController mPanoUIController;
+    private PanoViewWrapper mPanoViewWrapper;
+    private ImageView mImgBufferAnim;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.player_activity_layout);
-
-        init();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        setContentView(R.layout.player_activity_layout);
+
+        init();
     }
 
     private void init(){
-        bufferAnim= (ImageView) findViewById(R.id.activity_imgBuffer);
-        String videoPath=getIntent().getStringExtra("videoPath");
-        imageMode=getIntent().getBooleanExtra("imageMode",false);
-        boolean planeMode=getIntent().getBooleanExtra("planeMode",false);
-        if(!imageMode)
-            UIUtils.setBufferVisibility(bufferAnim,true);
-        else UIUtils.setBufferVisibility(bufferAnim,false);
-        panoUIController=new PanoUIController(
+        String videoPath = getIntent().getStringExtra(VIDEO_PATH);
+        boolean imageMode = getIntent().getBooleanExtra(IMAGE_MODE, false);
+        boolean planeMode = getIntent().getBooleanExtra(PLANE_MODE, false);
+        boolean windowMode = getIntent().getBooleanExtra(WINDOW_MODE, false);
+
+        findViewById(R.id.img_full_screen).setVisibility(windowMode ? View.VISIBLE : View.GONE);
+
+        mImgBufferAnim = (ImageView) findViewById(R.id.activity_imgBuffer);
+        UIUtils.setBufferVisibility(mImgBufferAnim, !imageMode);
+        mPanoUIController = new PanoUIController(
                 (RelativeLayout)findViewById(R.id.player_toolbar_control),
                 (RelativeLayout)findViewById(R.id.player_toolbar_progress),
-                this,imageMode);
-        TextView title= (TextView) findViewById(R.id.video_title);
+                this, imageMode);
+
+        TextView title = (TextView) findViewById(R.id.video_title);
         title.setText(Uri.parse(videoPath).getLastPathSegment());
-        GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-        panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView,imageMode,planeMode);
+
+        GLSurfaceView glSurfaceView = (GLSurfaceView) findViewById(R.id.surface_view);
+        mPanoViewWrapper = new PanoViewWrapper(this, videoPath, glSurfaceView, imageMode, planeMode);
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //Logger.logTouchEvent(v,event);
-                panoUIController.startHideControllerTimer();
-                return panoViewWrapper.handleTouchEvent(event);
+                mPanoUIController.startHideControllerTimer();
+                return mPanoViewWrapper.handleTouchEvent(event);
             }
         });
-        panoUIController.setAutoHideController(true);
-        panoUIController.setUiCallback(new PanoUIController.UICallback() {
+        mPanoUIController.setAutoHideController(true);
+        mPanoUIController.setUiCallback(new PanoUIController.UICallback() {
             @Override
             public void requestScreenshot() {
-                panoViewWrapper.getTouchHelper().shotScreen();
+                mPanoViewWrapper.getTouchHelper().shotScreen();
             }
 
             @Override
             public void requestFinish() {
                 finish();
             }
+
             @Override
             public void changeDisPlayMode() {
-                if (panoViewWrapper.getStatusHelper().getPanoDisPlayMode()==PanoMode.DUAL_SCREEN)
-                    panoViewWrapper.getStatusHelper().setPanoDisPlayMode(PanoMode.SINGLE_SCREEN);
-                else panoViewWrapper.getStatusHelper().setPanoDisPlayMode(PanoMode.DUAL_SCREEN);
+                if (mPanoViewWrapper.getStatusHelper().getPanoDisPlayMode()==PanoMode.DUAL_SCREEN)
+                    mPanoViewWrapper.getStatusHelper().setPanoDisPlayMode(PanoMode.SINGLE_SCREEN);
+                else mPanoViewWrapper.getStatusHelper().setPanoDisPlayMode(PanoMode.DUAL_SCREEN);
             }
 
             @Override
             public void changeInteractiveMode() {
-                if (panoViewWrapper.getStatusHelper().getPanoInteractiveMode()==PanoMode.MOTION)
-                    panoViewWrapper.getStatusHelper().setPanoInteractiveMode(PanoMode.TOUCH);
-                else panoViewWrapper.getStatusHelper().setPanoInteractiveMode(PanoMode.MOTION);
+                if (mPanoViewWrapper.getStatusHelper().getPanoInteractiveMode()==PanoMode.MOTION)
+                    mPanoViewWrapper.getStatusHelper().setPanoInteractiveMode(PanoMode.TOUCH);
+                else mPanoViewWrapper.getStatusHelper().setPanoInteractiveMode(PanoMode.MOTION);
             }
 
             @Override
             public void changePlayingStatus() {
-                if (panoViewWrapper.getStatusHelper().getPanoStatus()== PanoStatus.PLAYING){
-                    panoViewWrapper.getMediaPlayer().pauseByUser();
-                }else if (panoViewWrapper.getStatusHelper().getPanoStatus()== PanoStatus.PAUSED_BY_USER){
-                    panoViewWrapper.getMediaPlayer().start();
+                if (mPanoViewWrapper.getStatusHelper().getPanoStatus()== PanoStatus.PLAYING){
+                    mPanoViewWrapper.getMediaPlayer().pauseByUser();
+                }else if (mPanoViewWrapper.getStatusHelper().getPanoStatus()== PanoStatus.PAUSED_BY_USER){
+                    mPanoViewWrapper.getMediaPlayer().start();
                 }
             }
 
             @Override
             public void playerSeekTo(int pos) {
-                panoViewWrapper.getMediaPlayer().seekTo(pos);
+                mPanoViewWrapper.getMediaPlayer().seekTo(pos);
             }
 
             @Override
             public int getPlayerDuration() {
-                return panoViewWrapper.getMediaPlayer().getDuration();
+                return mPanoViewWrapper.getMediaPlayer().getDuration();
             }
 
             @Override
             public int getPlayerCurrentPosition() {
-                return panoViewWrapper.getMediaPlayer().getCurrentPosition();
+                return mPanoViewWrapper.getMediaPlayer().getCurrentPosition();
             }
         });
-        panoViewWrapper.getTouchHelper().setPanoUIController(panoUIController);
+        mPanoViewWrapper.getTouchHelper().setPanoUIController(mPanoUIController);
 
         if(!imageMode){
-            panoViewWrapper.getMediaPlayer().setPlayerCallback(new PanoMediaPlayerWrapper.PlayerCallback() {
+            mPanoViewWrapper.getMediaPlayer().setPlayerCallback(new PanoMediaPlayerWrapper.PlayerCallback() {
                 @Override
                 public void updateProgress() {
-                    panoUIController.updateProgress();
+                    mPanoUIController.updateProgress();
                 }
 
                 @Override
                 public void updateInfo() {
-                    UIUtils.setBufferVisibility(bufferAnim,false);
-                    panoUIController.startHideControllerTimer();
-                    panoUIController.setInfo();
+                    UIUtils.setBufferVisibility(mImgBufferAnim,false);
+                    mPanoUIController.startHideControllerTimer();
+                    mPanoUIController.setInfo();
                 }
 
                 @Override
@@ -134,27 +148,24 @@ public class PanoPlayerActivity extends Activity {
                     finish();
                 }
             });
-        }else panoUIController.startHideControllerTimer();
+        }else mPanoUIController.startHideControllerTimer();
     }
 
     @Override
     protected void onPause(){
         super.onPause();
-        panoViewWrapper.onPause();
+        mPanoViewWrapper.onPause();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-
-        panoViewWrapper.onResume();
+        mPanoViewWrapper.onResume();
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        panoViewWrapper.releaseResources();
+        mPanoViewWrapper.releaseResources();
     }
-
-
 }

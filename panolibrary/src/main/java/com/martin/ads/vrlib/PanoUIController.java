@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,7 +30,8 @@ public class PanoUIController {
 
     private RelativeLayout progressToolbar;
     private SeekBar processSeekBar;                    // 播放进度条
-    private TextView timeText;                   // 时间长度
+    private TextView currTimeText;                  // 当前播放时间
+    private TextView totalTimeText;             // 时间总长度
     private ToggleButton playBtn;        // 启动、暂停按钮
 
     private boolean visible;
@@ -66,7 +66,8 @@ public class PanoUIController {
         screenshotBtn= (ImageView) controlToolbar.findViewById(R.id.screenshot_btn);
         //progressToolbar
         processSeekBar= (SeekBar) progressToolbar.findViewById(R.id.progress_seek_bar);
-        timeText= (TextView) progressToolbar.findViewById(R.id.current_time);
+        currTimeText = (TextView) progressToolbar.findViewById(R.id.txt_time_curr);
+        totalTimeText = (TextView) progressToolbar.findViewById(R.id.txt_time_total);
         playBtn= (ToggleButton) progressToolbar.findViewById(R.id.play_btn);
 
         seekBarTouched=false;
@@ -149,7 +150,7 @@ public class PanoUIController {
         return visible;
     }
 
-    interface UICallback{
+    public interface UICallback{
         void requestScreenshot();
         void requestFinish();
         void changeDisPlayMode();
@@ -166,7 +167,8 @@ public class PanoUIController {
         processSeekBar.setMax(duration);
 
         lengthStr = UIUtils.getShowTime(duration);
-        timeText.setText("00:00:00/" + lengthStr);
+        currTimeText.setText("00:00:00");
+        totalTimeText.setText(lengthStr);
     }
 
     public void setUiCallback(UICallback uiCallback) {
@@ -188,7 +190,7 @@ public class PanoUIController {
                     {
                         processSeekBar.setProgress(position);
                         String cur = UIUtils.getShowTime(position);
-                        timeText.setText(cur + "/" + lengthStr);
+                        currTimeText.setText(cur);
                     }
                     break;
             }

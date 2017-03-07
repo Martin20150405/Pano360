@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#fdfdfd">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/activity_rlParent"
+        android:id="@+id/rlt_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="230dp">
 
         <android.opengl.GLSurfaceView
             android:id="@+id/surface_view"
@@ -21,6 +21,7 @@
             android:layout_alignParentTop="true">
 
             <include layout="@layout/player_toolbar_control"/>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -40,5 +41,4 @@
             android:src="@drawable/loading_1"
             android:visibility="visible"/>
     </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

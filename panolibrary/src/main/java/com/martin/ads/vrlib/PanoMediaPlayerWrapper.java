@@ -208,7 +208,7 @@ public class PanoMediaPlayerWrapper implements
         return false;
     }
 
-    interface PlayerCallback{
+    public interface PlayerCallback{
         void updateProgress();
         void updateInfo();
         void requestFinish();
