@@ -23,16 +23,17 @@ public class PanoViewWrapper {
     private boolean imageMode;
     private boolean planeMode;
 
-    public PanoViewWrapper(Context context, String videoPath, GLSurfaceView glSurfaceView,boolean imageMode,boolean planeMode) {
-        this.glSurfaceView=glSurfaceView;
-        this.imageMode=imageMode;
-        this.planeMode=planeMode;
-        init(context,videoPath);
+    private Context context;
+    private String videoPath;
+
+    private PanoViewWrapper(Context context) {
+        this.context=context;
     }
 
-    private void init(Context context,String videoPath){
+    public PanoViewWrapper init(){
         Uri uri=Uri.parse(videoPath);
         init(context,uri);
+        return this;
     }
 
     private void init(Context context, Uri uri){
@@ -56,7 +57,12 @@ public class PanoViewWrapper {
             mPnoVideoPlayer.prepare();
         }
 
-        mRenderer = new PanoRender(statusHelper,mPnoVideoPlayer,imageMode,planeMode);
+        mRenderer = PanoRender.newInstance()
+                .setStatusHelper(statusHelper)
+                .setPanoMediaPlayerWrapper(mPnoVideoPlayer)
+                .setImageMode(imageMode)
+                .setPlaneMode(planeMode)
+                .init();
 
         glSurfaceView.setRenderer(mRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -123,5 +129,29 @@ public class PanoViewWrapper {
 
     public TouchHelper getTouchHelper() {
         return touchHelper;
+    }
+
+    public PanoViewWrapper setImageMode(boolean imageMode) {
+        this.imageMode = imageMode;
+        return this;
+    }
+
+    public PanoViewWrapper setPlaneMode(boolean planeMode) {
+        this.planeMode = planeMode;
+        return this;
+    }
+
+    public PanoViewWrapper setGlSurfaceView(GLSurfaceView glSurfaceView) {
+        this.glSurfaceView = glSurfaceView;
+        return this;
+    }
+
+    public PanoViewWrapper setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
+        return this;
+    }
+
+    public static PanoViewWrapper with(Context context){
+        return new PanoViewWrapper(context);
     }
 }

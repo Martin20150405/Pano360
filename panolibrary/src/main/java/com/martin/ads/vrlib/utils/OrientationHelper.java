@@ -14,7 +14,7 @@ public class OrientationHelper {
     private static final String TAG = "OrientationHelper";
     public static final int LOCK_MODE_NONE=0;
     //In the rotationMatrix , the coordinate is defined as follows:
-    // Z:azimuth   pointing at sky  rotation around the -Z axis
+    // Z:azimuth/yaw   pointing at sky  rotation around the -Z axis
     // X:pitch     pointing at east  rotation around the -X axis
     // Y:roll      pointing at north  rotation around the Y axis
 

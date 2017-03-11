@@ -56,7 +56,7 @@ abstract class MixBlendFilter extends AbsFilter {
 
         mMixLocation = GLES20.glGetUniformLocation(twoInputProgram.getProgramId(), "mixturePercent");
 
-        bitmapTexture.load(context,"filter/imgs/texture_360.png");
+        bitmapTexture.load(context,"filter/imgs/texture_360_n.jpg");
     }
 
     @Override

@@ -24,9 +24,12 @@ public class Sphere2DPlugin extends AbsFilter {
 
     private float[] rotationMatrix = new float[16];
 
-    private float[] modelMatrix = new float[16];    //球体 拖动、传感器数据改变时改变
-    private float[] viewMatrix = new float[16];     //观看角度
-    private float[] projectionMatrix = new float[16];//投影变换，用于缩放
+    //Sphere/touch/sensor
+    private float[] modelMatrix = new float[16];
+    //gluLookAt
+    private float[] viewMatrix = new float[16];
+    //perspective/scaling
+    private float[] projectionMatrix = new float[16];
 
     private float[] modelViewMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
@@ -80,6 +83,7 @@ public class Sphere2DPlugin extends AbsFilter {
 
     @Override
     public void onPreDrawElements() {
+        super.onPreDrawElements();
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.opengl.GLSurfaceView;
 
 import com.martin.ads.vrlib.constant.AdjustingMode;
 import com.martin.ads.vrlib.filters.advanced.Sphere2DPlugin;
-import com.martin.ads.vrlib.filters.advanced.VignetteFilter;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 import com.martin.ads.vrlib.filters.base.DrawImageFilter;
 import com.martin.ads.vrlib.filters.base.FilterGroup;
@@ -32,16 +31,17 @@ public class PanoRender
     private int width,height;
 
     private boolean imageMode;
+    private boolean planeMode;
     private boolean saveImg;
 
     private OrthoFilter orthoFilter;
 
-    //TODO:use builder to tidy up all the mess
-    public PanoRender(StatusHelper statusHelper,PanoMediaPlayerWrapper panoMediaPlayerWrapper,boolean imageMode,boolean planeMode) {
-        this.statusHelper=statusHelper;
-        this.panoMediaPlayerWrapper = panoMediaPlayerWrapper;
+    private PanoRender() {
+
+    }
+
+    public PanoRender init(){
         saveImg=false;
-        this.imageMode=imageMode;
         filterGroup=new FilterGroup();
 
         if(!imageMode) {
@@ -50,52 +50,29 @@ public class PanoRender
             firstPassFilter=new DrawImageFilter(
                     statusHelper.getContext(),
                     //TODO: where is my UI?????
-                    "filter/imgs/texture_360.png",
+                    "filter/imgs/texture_360_n.jpg",
                     AdjustingMode.ADJUSTING_MODE_STRETCH);
         }
         filterGroup.addFilter(firstPassFilter);
-
-        //you can add filters here
-
         spherePlugin=new Sphere2DPlugin(statusHelper);
         if(!planeMode){
             filterGroup.addFilter(spherePlugin);
         }else{
-             //TODO: this should be adjustable
-             orthoFilter=new OrthoFilter(statusHelper.getContext(),
-                     AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN);
-             if(panoMediaPlayerWrapper!=null){
-                 panoMediaPlayerWrapper.setVideoSizeCallback(new PanoMediaPlayerWrapper.VideoSizeCallback() {
-                     @Override
-                     public void notifyVideoSizeChanged(int width, int height) {
-                         orthoFilter.updateProjection(width,height);
-                     }
-                 });
-                 filterGroup.addFilter(orthoFilter);
-             }
+            //TODO: this should be adjustable
+            orthoFilter=new OrthoFilter(statusHelper.getContext(),
+                    AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN);
+            if(panoMediaPlayerWrapper!=null){
+                panoMediaPlayerWrapper.setVideoSizeCallback(new PanoMediaPlayerWrapper.VideoSizeCallback() {
+                    @Override
+                    public void notifyVideoSizeChanged(int width, int height) {
+                        orthoFilter.updateProjection(width,height);
+                    }
+                });
+                filterGroup.addFilter(orthoFilter);
+            }
         }
-
-        //you can also add filters here
-        //pay attention to the order of execution
-        //here is some demo:
-
-//        filterGroup.addFilter(new GrayScaleShaderFilter(statusHelper.getContext()));
-//        filterGroup.addFilter(new DissolveBlendFilter(statusHelper.getContext()));
-//        filterGroup.addFilter(new RiseFilter(statusHelper.getContext()));
-        //filterGroup.addFilter(new VignetteFilter(statusHelper.getContext()));
-//        filterGroup.addFilter(
-//                new DrawImageFilter(
-//                        statusHelper.getContext(),
-//                        "filter/imgs/blackboard.png",
-//                        AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN
-//                ));
-
-        //TODO:remove to outer layer
-        //if you want to play a plane video,remove
-        //filterGroup.addFilter(spherePlugin);
-        //and reset adjustingMode of GGOESFilter
+        return this;
     }
-
     @Override
     public void onSurfaceCreated(GL10 glUnused,EGLConfig config) {
         filterGroup.init();
@@ -148,5 +125,29 @@ public class PanoRender
 
     public FilterGroup getFilterGroup() {
         return filterGroup;
+    }
+
+    public PanoRender setStatusHelper(StatusHelper statusHelper) {
+        this.statusHelper = statusHelper;
+        return this;
+    }
+
+    public PanoRender setPanoMediaPlayerWrapper(PanoMediaPlayerWrapper panoMediaPlayerWrapper) {
+        this.panoMediaPlayerWrapper = panoMediaPlayerWrapper;
+        return this;
+    }
+
+    public PanoRender setImageMode(boolean imageMode) {
+        this.imageMode = imageMode;
+        return this;
+    }
+
+    public PanoRender setPlaneMode(boolean planeMode) {
+        this.planeMode = planeMode;
+        return this;
+    }
+
+    public static PanoRender newInstance(){
+        return new PanoRender();
     }
 }

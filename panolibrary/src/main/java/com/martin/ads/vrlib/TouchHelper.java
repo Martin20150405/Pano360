@@ -82,7 +82,7 @@ public class TouchHelper {
         if (!scaleGestureDetector.isInProgress()){
             ret=gestureDetector.onTouchEvent(event);
         }
-        return  ret;
+        return ret;
     }
 
     public void setPanoUIController(PanoUIController panoUIController) {

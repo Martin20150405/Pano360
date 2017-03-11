@@ -17,6 +17,7 @@ import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.util.regex.Pattern;
 
+@Deprecated
 public class MainActivity extends AppCompatActivity {
 
     private Button playURL;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_old);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                String filePath= Environment.getExternalStorageDirectory().getPath()+"/360Video/video.mp4";
-//                Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
+//                Intent intent=new Intent(HomeActivity.this,PanoPlayerActivity.class);
 //                intent.putExtra("videoPath",filePath);
 //                startActivity(intent);
 
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-            //Intent intent=new Intent(MainActivity.this,DemoWithGLSurfaceView.class);
+            //Intent intent=new Intent(HomeActivity.this,DemoWithGLSurfaceView.class);
             intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
             intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
             intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());

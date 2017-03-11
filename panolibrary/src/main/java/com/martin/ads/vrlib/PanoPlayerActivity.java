@@ -69,7 +69,12 @@ public class PanoPlayerActivity extends Activity {
         title.setText(Uri.parse(videoPath).getLastPathSegment());
 
         GLSurfaceView glSurfaceView = (GLSurfaceView) findViewById(R.id.surface_view);
-        mPanoViewWrapper = new PanoViewWrapper(this, videoPath, glSurfaceView, imageMode, planeMode);
+        mPanoViewWrapper = PanoViewWrapper.with(this)
+                .setVideoPath(videoPath)
+                .setGlSurfaceView(glSurfaceView)
+                .setImageMode(imageMode)
+                .setPlaneMode(planeMode)
+                .init();
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
