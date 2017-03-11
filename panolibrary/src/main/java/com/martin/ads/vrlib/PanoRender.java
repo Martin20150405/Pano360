@@ -4,12 +4,12 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import com.martin.ads.vrlib.constant.AdjustingMode;
-import com.martin.ads.vrlib.filters.advanced.Sphere2DPlugin;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 import com.martin.ads.vrlib.filters.base.DrawImageFilter;
 import com.martin.ads.vrlib.filters.base.FilterGroup;
 import com.martin.ads.vrlib.filters.base.OESFilter;
 import com.martin.ads.vrlib.filters.base.OrthoFilter;
+import com.martin.ads.vrlib.filters.vr.Sphere2DPlugin;
 import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.martin.ads.vrlib.utils.StatusHelper;
 

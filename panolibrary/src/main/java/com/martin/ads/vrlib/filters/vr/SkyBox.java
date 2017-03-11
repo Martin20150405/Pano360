@@ -1,4 +1,4 @@
-package com.martin.ads.vrlib.vr;
+package com.martin.ads.vrlib.filters.vr;
 
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 

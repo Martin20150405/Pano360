@@ -76,4 +76,14 @@ public class Plain {
     public void draw() {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
     }
+
+    public Plain scale(float scalingFactor){
+        float[] temp=new float[TRIANGLES_DATA_CW.length];
+        System.arraycopy(TRIANGLES_DATA_CW,0,temp,0,TRIANGLES_DATA_CW.length);
+        for(int i=0;i<temp.length;i++){
+            temp[i]*=scalingFactor;
+        }
+        mVerticesBuffer = BufferUtils.getFloatBuffer(temp,0);
+        return this;
+    }
 }

@@ -1,4 +1,4 @@
-package com.martin.ads.vrlib.filters.advanced;
+package com.martin.ads.vrlib.filters.vr;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -6,11 +6,15 @@ import android.opengl.Matrix;
 import com.martin.ads.vrlib.SensorEventHandler;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
+import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.object.Sphere;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.utils.OrientationHelper;
 import com.martin.ads.vrlib.utils.StatusHelper;
 import com.martin.ads.vrlib.utils.TextureUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ads on 2016/11/19.
@@ -43,9 +47,14 @@ public class Sphere2DPlugin extends AbsFilter {
 
     private OrientationHelper orientationHelper;
 
+    private HotSpot hotSpot;
+
+    private List<HotSpot> hotSpotList;
+
     public Sphere2DPlugin(StatusHelper statusHelper) {
         this.statusHelper=statusHelper;
-        mDeltaX=mDeltaY=0;
+        mDeltaX=-90;
+        mDeltaY=0;
         mScale=1;
         sphere=new Sphere(18,75,150);
         sensorEventHandler=new SensorEventHandler();
@@ -74,11 +83,20 @@ public class Sphere2DPlugin extends AbsFilter {
         //for example ,lock z and y to detect whether the user
         // is looking at the sky or the ground
         //orientationHelper.setIgnoreRotationMode(OrientationHelper.IGNORE_ROTATION_AXIS_Z | OrientationHelper.IGNORE_ROTATION_AXIS_Y);
+
+        hotSpotList=new ArrayList<>();
+        PositionOrientation po1=PositionOrientation.newInstance()
+                .setY(-15).setAngleX(-90).setAngleY(-90);
+        hotSpot=HotSpot.with(statusHelper.getContext())
+                .setPositionOrientation(po1)
+                .setImagePath("imgs/hotspot_logo.png");
+        hotSpotList.add(hotSpot);
     }
 
     @Override
     public void init() {
         glSphereProgram.create();
+        hotSpot.init();
     }
 
     @Override
@@ -89,6 +107,7 @@ public class Sphere2DPlugin extends AbsFilter {
     @Override
     public void destroy() {
         glSphereProgram.onDestroy();
+        hotSpot.destroy();
     }
 
     @Override
@@ -121,14 +140,19 @@ public class Sphere2DPlugin extends AbsFilter {
         TextureUtils.bindTexture2D(textureId,GLES20.GL_TEXTURE0,glSphereProgram.getTextureSamplerHandle(),0);
 
         onPreDrawElements();
+
         if (statusHelper.getPanoDisPlayMode()== PanoMode.DUAL_SCREEN){
             GLES20.glViewport(0,0,surfaceWidth/2,surfaceHeight);
             sphere.draw();
             GLES20.glViewport(surfaceWidth/2,0,surfaceWidth-surfaceWidth/2,surfaceHeight);
             sphere.draw();
+            drawHotSpot();
+            GLES20.glViewport(0,0,surfaceWidth/2,surfaceHeight);
+            drawHotSpot();
         }else{
             GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
             sphere.draw();
+            drawHotSpot();
         }
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
     }
@@ -137,6 +161,7 @@ public class Sphere2DPlugin extends AbsFilter {
     public void onFilterChanged(int width, int height) {
         super.onFilterChanged(width,height);
         ratio=(float)width/ height;
+        hotSpot.onFilterChanged(width,height);
     }
 
 
@@ -148,7 +173,7 @@ public class Sphere2DPlugin extends AbsFilter {
         Matrix.setIdentityM(projectionMatrix,0);
         Matrix.setIdentityM(viewMatrix, 0);
         Matrix.setLookAtM(viewMatrix, 0,
-                0.0f, 0.0f, 0f,
+                0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f,-1.0f,
                 0.0f, 1.0f, 0.0f);
     }
@@ -181,4 +206,15 @@ public class Sphere2DPlugin extends AbsFilter {
     public OrientationHelper getOrientationHelper() {
         return orientationHelper;
     }
+
+    //FIXME:code about hotspot is temporary
+    private void drawHotSpot(){
+        for(HotSpot hotSpot1:hotSpotList){
+            hotSpot1.setModelMatrix(modelMatrix);
+            hotSpot1.setViewMatrix(viewMatrix);
+            hotSpot1.setProjectionMatrix(projectionMatrix);
+            hotSpot1.onDrawFrame(0);
+        }
+    }
+
 }
