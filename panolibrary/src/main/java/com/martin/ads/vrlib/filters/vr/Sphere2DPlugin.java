@@ -46,9 +46,6 @@ public class Sphere2DPlugin extends AbsFilter {
     private float mScale;
 
     private OrientationHelper orientationHelper;
-
-    private HotSpot hotSpot;
-
     private List<HotSpot> hotSpotList;
 
     public Sphere2DPlugin(StatusHelper statusHelper) {
@@ -85,18 +82,21 @@ public class Sphere2DPlugin extends AbsFilter {
         //orientationHelper.setIgnoreRotationMode(OrientationHelper.IGNORE_ROTATION_AXIS_Z | OrientationHelper.IGNORE_ROTATION_AXIS_Y);
 
         hotSpotList=new ArrayList<>();
-        PositionOrientation po1=PositionOrientation.newInstance()
-                .setY(-15).setAngleX(-90).setAngleY(-90);
-        hotSpot=HotSpot.with(statusHelper.getContext())
-                .setPositionOrientation(po1)
-                .setImagePath("imgs/hotspot_logo.png");
-        hotSpotList.add(hotSpot);
+
+        hotSpotList.add(HotSpot.with(statusHelper.getContext())
+                .setPositionOrientation(
+                        PositionOrientation.newInstance()
+                                .setY(-15).setAngleX(-90).setAngleY(-90)
+                )
+                .setImagePath("imgs/hotspot_logo.png")
+        );
     }
 
     @Override
     public void init() {
         glSphereProgram.create();
-        hotSpot.init();
+        for(HotSpot hotSpot:hotSpotList)
+            hotSpot.init();
     }
 
     @Override
@@ -107,7 +107,8 @@ public class Sphere2DPlugin extends AbsFilter {
     @Override
     public void destroy() {
         glSphereProgram.onDestroy();
-        hotSpot.destroy();
+        for(HotSpot hotSpot:hotSpotList)
+            hotSpot.destroy();
     }
 
     @Override
@@ -161,7 +162,8 @@ public class Sphere2DPlugin extends AbsFilter {
     public void onFilterChanged(int width, int height) {
         super.onFilterChanged(width,height);
         ratio=(float)width/ height;
-        hotSpot.onFilterChanged(width,height);
+        for(HotSpot hotSpot:hotSpotList)
+            hotSpot.onFilterChanged(width,height);
     }
 
 
@@ -209,12 +211,18 @@ public class Sphere2DPlugin extends AbsFilter {
 
     //FIXME:code about hotspot is temporary
     private void drawHotSpot(){
-        for(HotSpot hotSpot1:hotSpotList){
-            hotSpot1.setModelMatrix(modelMatrix);
-            hotSpot1.setViewMatrix(viewMatrix);
-            hotSpot1.setProjectionMatrix(projectionMatrix);
-            hotSpot1.onDrawFrame(0);
+        for(HotSpot hotSpot:hotSpotList){
+            hotSpot.setModelMatrix(modelMatrix);
+            hotSpot.setViewMatrix(viewMatrix);
+            hotSpot.setProjectionMatrix(projectionMatrix);
+            hotSpot.onDrawFrame(0);
         }
+    }
+
+    public boolean clearHotSpot(){
+        if(hotSpotList==null) return false;
+        hotSpotList.clear();
+        return true;
     }
 
 }

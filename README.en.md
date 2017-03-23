@@ -1,5 +1,5 @@
 # Pano360
-[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/55?title=Progress)
+[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/58?title=Progress)
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
 
@@ -9,7 +9,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 * OpenGL ES 2.0 
 * At least Android 4.0.3 (API-15) 
 
-##Features
+## Features
 * Single/Dual Screen support
     * by configuring rows and cols you can get as many screens as you want
 * Support two modes: Gyroscope(Motion) or Pinch,Scroll(Touch)
@@ -22,7 +22,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
     * **LOCK_MODE_AXIS_Y**:similar to Cardboard Motion
 * Ignore rotation of any axis
 
-##Preview (Screenshots)
+## Preview (Screenshots)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
 
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/preview.gif)
@@ -32,7 +32,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/hotspot.jpg)
 
 
-##Target user
+## Target user
 * If you are interested in implementing a panorama video player on Android, or you are urged yo use a Panorama video player with playing control, or you want to add more functions to Panorama video player, you may find this project helpful.
 
 ##Integration (How to use)
@@ -63,7 +63,7 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 });
 ```
 
-##Future works (Don't expect too much- -|||)
+## Future works (Don't expect too much- -|||)
 * Acc+Mag support（used for phones without Gyroscope）
 * MediaPlayer switch (like IjkMediaPlayer)
 * jcenter/maven
@@ -78,7 +78,7 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 
 ## [ChangeLog](https://github.com/Martin20150405/Pano360/wiki/ChangeLog)
 
-##Feedback
+## Feedback
 
 * Open an issue
 * Send an E-mail to martin20150405@163.com

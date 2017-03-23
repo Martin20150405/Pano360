@@ -3,6 +3,7 @@ package com.martin.ads.vrlib.filters.vr;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 import com.martin.ads.vrlib.math.PositionOrientation;

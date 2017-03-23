@@ -11,8 +11,8 @@ import java.util.List;
 
 public class FilterGroup extends AbsFilter {
     private static final String TAG = "FilterGroup";
-    private static int[] frameBuffers = null;
-    private static int[] frameBufferTextures = null;
+    private int[] frameBuffers = null;
+    private int[] frameBufferTextures = null;
     private List<AbsFilter> filters;
     private boolean isRunning;
 

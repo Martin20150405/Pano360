@@ -1,5 +1,5 @@
 # Pano360
-[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/55?title=Progress)
+[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/58?title=Progress)
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
   
@@ -7,7 +7,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 
 **Demo App [在这里下](https://raw.githubusercontent.com/Martin20150405/Pano360/master/app/app-release.apk)~**
 
-###Read this in other languages: [English](README.en.md)
+### Read this in other languages: [English](README.en.md)
 
 ## [系列教程：从零开始写一个Android平台下的全景视频播放器](http://blog.csdn.net/Martin20150405/article/details/53149578)
 
@@ -16,7 +16,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 * OpenGL ES 2.0 
 * Android 4.0.3 (API-15) 以上
 
-##特性
+## 特性
 * 单、双屏切换
     * 支持单屏、双屏切换，通过配置rows和cols可以实现任意行任意列的分屏数目
 * 陀螺仪、触控(拖动、缩放)两种交互模式切换
@@ -31,7 +31,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
     * **LOCK_MODE_AXIS_Y**： 和Cardboard Motion类似
 * 支持忽略任意坐标轴的旋转角度
 	
-##截图
+## 截图
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
 
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/preview.gif)
@@ -41,10 +41,10 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/hotspot.jpg)
 
 
-##适用对象
-* 如果你对于如何实现一个Android平台下的全景视频播放器感兴趣，或者急于使用一个带播放控制功能的全景视频播放器，或者有意在全景视频播放器中加入各种奇怪的功能，这个项目可能会对你有帮助。
+## 适用对象
+*  如果你对于如何实现一个Android平台下的全景视频播放器感兴趣，或者急于使用一个带播放控制功能的全景视频播放器，或者有意在全景视频播放器中加入各种奇怪的功能，这个项目可能会对你有帮助。
 
-##如何使用
+## 如何使用
 * 有两种方法可以使用该库，详情请参考Demo App  
 
 * 使用带播放控制的`Activity`  （由类库提供）
@@ -72,7 +72,7 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 });
 ```
 
-##未来特性（不要期望过高- -|||）
+## 未来特性（不要期望过高- -|||）
 * 加速度+电子罗盘支持（适合没有陀螺仪的手机）
 * 快速切换使用的解码器，例如IjkMediaPlayer
 * jcenter/maven
@@ -91,7 +91,7 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 
 
 
-##反馈交流
+## 反馈交流
 
 * 开启一个issue
 * 去[我的博客](http://blog.csdn.net/martin20150405)留言

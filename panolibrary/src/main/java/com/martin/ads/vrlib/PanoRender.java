@@ -9,6 +9,7 @@ import com.martin.ads.vrlib.filters.base.DrawImageFilter;
 import com.martin.ads.vrlib.filters.base.FilterGroup;
 import com.martin.ads.vrlib.filters.base.OESFilter;
 import com.martin.ads.vrlib.filters.base.OrthoFilter;
+import com.martin.ads.vrlib.filters.imgproc.GrayScaleShaderFilter;
 import com.martin.ads.vrlib.filters.vr.Sphere2DPlugin;
 import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.martin.ads.vrlib.utils.StatusHelper;
@@ -59,7 +60,7 @@ public class PanoRender
             filterGroup.addFilter(spherePlugin);
         }else{
             //TODO: this should be adjustable
-            orthoFilter=new OrthoFilter(statusHelper.getContext(),
+            orthoFilter=new OrthoFilter(statusHelper,
                     AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN);
             if(panoMediaPlayerWrapper!=null){
                 panoMediaPlayerWrapper.setVideoSizeCallback(new PanoMediaPlayerWrapper.VideoSizeCallback() {
