@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.panolibrary.R;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
+import com.martin.ads.vrlib.filters.advanced.FilterType;
 import com.martin.ads.vrlib.utils.UIUtils;
 
 /**
@@ -24,13 +25,9 @@ import com.martin.ads.vrlib.utils.UIUtils;
 //FIXME:looks so lame.
 public class PanoPlayerActivity extends Activity {
 
-    /** 视屏地址 */
     public static final String VIDEO_PATH = "videoPath";
-    /** 是否是浏览全景图片模式 */
     public static final String IMAGE_MODE = "imageMode";
-    /** 是否是水平平铺播放模式 */
     public static final String PLANE_MODE = "planeMode";
-    /** 是否是窗口播放模式 */
     public static final String WINDOW_MODE = "windowMode";
 
     private PanoUIController mPanoUIController;
@@ -130,6 +127,11 @@ public class PanoPlayerActivity extends Activity {
             @Override
             public int getPlayerCurrentPosition() {
                 return mPanoViewWrapper.getMediaPlayer().getCurrentPosition();
+            }
+
+            @Override
+            public void addFilter(FilterType filterType) {
+                mPanoViewWrapper.getRenderer().switchFilter();
             }
         });
         mPanoViewWrapper.getTouchHelper().setPanoUIController(mPanoUIController);

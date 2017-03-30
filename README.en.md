@@ -1,5 +1,5 @@
 # Pano360
-[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/58?title=Progress)
+[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/60?title=Progress)
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
 
@@ -35,7 +35,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 ## Target user
 * If you are interested in implementing a panorama video player on Android, or you are urged yo use a Panorama video player with playing control, or you want to add more functions to Panorama video player, you may find this project helpful.
 
-##Integration (How to use)
+## Integration (How to use)
 * There are two ways to integrate this library, you can compile demo app for more details.
 
 * Start an `Activity` provided by library 

@@ -27,6 +27,7 @@ import com.martin.ads.vrlib.PanoUIController;
 import com.martin.ads.vrlib.PanoViewWrapper;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
+import com.martin.ads.vrlib.filters.advanced.FilterType;
 import com.martin.ads.vrlib.utils.UIUtils;
 
 /**
@@ -155,6 +156,11 @@ public class PlanePlayerActivity extends AppCompatActivity implements View.OnCli
             @Override
             public int getPlayerCurrentPosition() {
                 return mPanoViewWrapper.getMediaPlayer().getCurrentPosition();
+            }
+
+            @Override
+            public void addFilter(FilterType filterType) {
+                mPanoViewWrapper.getRenderer().switchFilter();
             }
         });
         mPanoViewWrapper.getTouchHelper().setPanoUIController(mPanoUIController);

@@ -9,7 +9,7 @@ import com.martin.ads.vrlib.filters.base.DrawImageFilter;
 import com.martin.ads.vrlib.filters.base.FilterGroup;
 import com.martin.ads.vrlib.filters.base.OESFilter;
 import com.martin.ads.vrlib.filters.base.OrthoFilter;
-import com.martin.ads.vrlib.filters.imgproc.GrayScaleShaderFilter;
+import com.martin.ads.vrlib.filters.base.PassThroughFilter;
 import com.martin.ads.vrlib.filters.vr.Sphere2DPlugin;
 import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.martin.ads.vrlib.utils.StatusHelper;
@@ -24,6 +24,10 @@ public class PanoRender
         implements GLSurfaceView.Renderer {
     public static String TAG = "PanoRender";
 
+    public static final int FILTER_MODE_NONE=0x0001;
+    public static final int FILTER_MODE_BEFORE_PROJECTION=0x0002;
+    public static final int FILTER_MODE_AFTER_PROJECTION=0x0003;
+
     private StatusHelper statusHelper;
     private PanoMediaPlayerWrapper panoMediaPlayerWrapper;
     private Sphere2DPlugin spherePlugin;
@@ -34,8 +38,9 @@ public class PanoRender
     private boolean imageMode;
     private boolean planeMode;
     private boolean saveImg;
-
+    private int filterMode;
     private OrthoFilter orthoFilter;
+    private FilterGroup customizedFilters;
 
     private PanoRender() {
 
@@ -44,6 +49,7 @@ public class PanoRender
     public PanoRender init(){
         saveImg=false;
         filterGroup=new FilterGroup();
+        customizedFilters=new FilterGroup();
 
         if(!imageMode) {
             firstPassFilter = new OESFilter(statusHelper.getContext());
@@ -55,6 +61,9 @@ public class PanoRender
                     AdjustingMode.ADJUSTING_MODE_STRETCH);
         }
         filterGroup.addFilter(firstPassFilter);
+        if(filterMode==FILTER_MODE_BEFORE_PROJECTION){
+            //the code is becoming more and more messy ┗( T﹏T )┛
+        }
         spherePlugin=new Sphere2DPlugin(statusHelper);
         if(!planeMode){
             filterGroup.addFilter(spherePlugin);
@@ -71,6 +80,12 @@ public class PanoRender
                 });
                 filterGroup.addFilter(orthoFilter);
             }
+        }
+        if(filterMode==FILTER_MODE_AFTER_PROJECTION){
+            filterGroup.addFilter(customizedFilters);
+        }
+        if(filterMode!=FILTER_MODE_NONE){
+            customizedFilters.addFilter(new PassThroughFilter(statusHelper.getContext()));
         }
         return this;
     }
@@ -148,7 +163,24 @@ public class PanoRender
         return this;
     }
 
+    public PanoRender setFilterMode(int filterMode) {
+        this.filterMode = filterMode;
+        return this;
+    }
+
     public static PanoRender newInstance(){
         return new PanoRender();
+    }
+
+    public void switchFilter(){
+        if(customizedFilters!=null){
+            customizedFilters.randomSwitchFilter(statusHelper.getContext());
+        }
+    }
+
+    public void addFilter(){
+        if(filterGroup!=null){
+            //
+        }
     }
 }

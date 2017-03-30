@@ -62,6 +62,7 @@ public class PanoViewWrapper {
                 .setPanoMediaPlayerWrapper(mPnoVideoPlayer)
                 .setImageMode(imageMode)
                 .setPlaneMode(planeMode)
+                .setFilterMode(PanoRender.FILTER_MODE_AFTER_PROJECTION)
                 .init();
 
         glSurfaceView.setRenderer(mRenderer);

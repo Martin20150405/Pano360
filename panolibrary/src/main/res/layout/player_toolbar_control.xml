@@ -14,6 +14,15 @@
         android:layout_marginLeft="@dimen/voide_tool_large"
         android:src="@drawable/back_btn"/>
 
+    <ImageView
+        android:id="@+id/add_filter_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toRightOf="@id/back_btn"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/voide_tool_large"
+        android:src="@drawable/add_filter"/>
+
     <ToggleButton
         android:id="@+id/dualScreen_btn"
         android:layout_width="30dp"

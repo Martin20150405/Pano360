@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.panolibrary.R;
+import com.martin.ads.vrlib.filters.advanced.FilterType;
 import com.martin.ads.vrlib.utils.UIUtils;
 
 import java.util.Timer;
@@ -130,6 +131,14 @@ public class PanoUIController {
             }
         });
 
+        controlToolbar.findViewById(R.id.add_filter_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startHideControllerTimer();
+                uiCallback.addFilter(null);
+            }
+        });
+
         if(imageMode) progressToolbar.setVisibility(View.GONE);
     }
     public void hide(){
@@ -159,6 +168,7 @@ public class PanoUIController {
         void playerSeekTo(int pos);
         int getPlayerDuration();
         int getPlayerCurrentPosition();
+        void addFilter(FilterType filterType);
     }
 
     public void setInfo(){

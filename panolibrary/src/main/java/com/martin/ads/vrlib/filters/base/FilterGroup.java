@@ -1,6 +1,9 @@
 package com.martin.ads.vrlib.filters.base;
 
+import android.content.Context;
 import android.opengl.GLES20;
+
+import com.martin.ads.vrlib.filters.advanced.FilterFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +132,23 @@ public class FilterGroup extends AbsFilter {
             addPreDrawTask(new Runnable() {
             @Override
             public void run() {
+                filter.init();
+                filters.add(filter);
+                onFilterChanged(surfaceWidth,surfaceHeight);
+            }
+        });
+    }
+
+    public void randomSwitchFilter(Context context){
+        final AbsFilter filter= FilterFactory.randomlyCreateFilter(context);
+
+        addPreDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                for(AbsFilter absFilter:filters){
+                    absFilter.destroy();
+                }
+                filters.clear();
                 filter.init();
                 filters.add(filter);
                 onFilterChanged(surfaceWidth,surfaceHeight);
