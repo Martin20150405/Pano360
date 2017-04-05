@@ -8,6 +8,7 @@ import com.example.panolibrary.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by xilin on 2015/12/14.
@@ -15,17 +16,13 @@ import java.util.Calendar;
 public class UIUtils
 {
     public static String getShowTime(long milliseconds) {
-        // 获取日历函数
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(milliseconds);
-        SimpleDateFormat dateFormat = null;
-        // 判断是否大于60分钟，如果大于就显示小时。设置日期格式
-        if (milliseconds / 60000 > 60) {
-            dateFormat = new SimpleDateFormat("hh:mm:ss");
-        } else {
-            dateFormat = new SimpleDateFormat("00:mm:ss");
-        }
-        return dateFormat.format(calendar.getTime());
+
+        return String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(milliseconds),
+                TimeUnit.MILLISECONDS.toMinutes(milliseconds) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milliseconds)),
+                TimeUnit.MILLISECONDS.toSeconds(milliseconds) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
     }
 
     public static void startImageAnim(ImageView Img, int anim)
