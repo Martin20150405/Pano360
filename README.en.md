@@ -25,11 +25,8 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 ## Preview (Screenshots)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
 
-![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/preview.gif)
-
-![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/main_screen.png)
-
-![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/hotspot.jpg)
+[**Youtube**](https://youtu.be/kTJfI_dRLUk)
+[**youku**](http://v.youku.com/v_show/id_XMjY4ODI4OTM3Mg==?spm=a2h3j.8428770.3416059.1)
 
 
 ## Target user
