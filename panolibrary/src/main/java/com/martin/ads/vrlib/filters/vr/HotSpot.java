@@ -1,15 +1,17 @@
 package com.martin.ads.vrlib.filters.vr;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
+import com.martin.ads.vrlib.constant.AdjustingMode;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.object.Plain;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.textures.BitmapTexture;
+import com.martin.ads.vrlib.utils.MatrixUtils;
 import com.martin.ads.vrlib.utils.TextureUtils;
 
 /**
@@ -23,14 +25,17 @@ public class HotSpot extends AbsFilter{
 
     private float[] hotSpotModelMatrix = new float[16];
     private float[] tmpMatrix = new float[16];
+    private float[] resultMatrix = new float[16];
     private float[] modelMatrix = new float[16];
     private float[] viewMatrix = new float[16];
     private float[] projectionMatrix = new float[16];
+    private float[] hotspotOrthoProjectionMatrix = new float[16];
     private float[] modelViewMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
 
     private BitmapTexture bitmapTexture;
     private String imagePath;
+    private Bitmap bitmap;
     private PositionOrientation positionOrientation;
 
     private HotSpot(Context context) {
@@ -38,11 +43,22 @@ public class HotSpot extends AbsFilter{
         bitmapTexture=new BitmapTexture();
         imagePlain=new Plain(false).scale(4.5f);
         glPassThroughProgram=new GLPassThroughProgram(context);
+        Matrix.setIdentityM(hotspotOrthoProjectionMatrix,0);
     }
 
     public void init(){
         glPassThroughProgram.create();
-        bitmapTexture.load(context,imagePath);
+        if(imagePath!=null)
+            bitmapTexture.loadWithFile(context,imagePath);
+        else bitmapTexture.loadBitmap(bitmap);
+        int minSize=Math.min(bitmapTexture.getImageWidth(),bitmapTexture.getImageHeight());
+        MatrixUtils.updateProjection(
+                bitmapTexture.getImageWidth(),
+                bitmapTexture.getImageHeight(),
+                minSize,
+                minSize,
+                AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN,
+                hotspotOrthoProjectionMatrix);
     }
 
     @Override
@@ -60,7 +76,8 @@ public class HotSpot extends AbsFilter{
         imagePlain.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
 
         positionOrientation.updateModelMatrix(hotSpotModelMatrix);
-        Matrix.multiplyMM(tmpMatrix, 0,modelMatrix , 0,hotSpotModelMatrix , 0);
+        Matrix.multiplyMM(resultMatrix,0,hotSpotModelMatrix,0,hotspotOrthoProjectionMatrix,0);
+        Matrix.multiplyMM(tmpMatrix, 0,modelMatrix , 0,resultMatrix , 0);
         Matrix.multiplyMM(modelViewMatrix, 0, viewMatrix, 0, tmpMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, projectionMatrix, 0, modelViewMatrix, 0);
 
@@ -69,8 +86,18 @@ public class HotSpot extends AbsFilter{
         GLES20.glDisable(GLES20.GL_BLEND);
     }
 
+    /**
+     * if you have set imagePath, the bitmap will not be used.
+     * @param imagePath
+     * @return
+     */
     public HotSpot setImagePath(String imagePath) {
         this.imagePath = imagePath;
+        return this;
+    }
+
+    public HotSpot setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
         return this;
     }
 

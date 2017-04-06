@@ -33,7 +33,7 @@ public class DrawImageFilter extends PassThroughFilter {
     @Override
     public void init() {
         super.init();
-        bitmapTexture.load(context,imagePath);
+        bitmapTexture.loadWithFile(context,imagePath);
     }
 
     @Override

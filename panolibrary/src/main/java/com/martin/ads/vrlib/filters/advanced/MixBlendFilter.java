@@ -3,7 +3,6 @@ package com.martin.ads.vrlib.filters.advanced;
 import android.content.Context;
 import android.opengl.GLES20;
 
-import com.example.panolibrary.R;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 import com.martin.ads.vrlib.object.Plain;
 import com.martin.ads.vrlib.programs.GLTwoInputProgram;
@@ -56,7 +55,7 @@ abstract class MixBlendFilter extends AbsFilter {
 
         mMixLocation = GLES20.glGetUniformLocation(twoInputProgram.getProgramId(), "mixturePercent");
 
-        bitmapTexture.load(context,"filter/imgs/texture_360_n.jpg");
+        bitmapTexture.loadWithFile(context,"filter/imgs/texture_360_n.jpg");
     }
 
     @Override

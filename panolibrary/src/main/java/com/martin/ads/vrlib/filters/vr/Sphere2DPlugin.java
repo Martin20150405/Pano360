@@ -1,5 +1,7 @@
 package com.martin.ads.vrlib.filters.vr;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -11,6 +13,7 @@ import com.martin.ads.vrlib.object.Sphere;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.utils.OrientationHelper;
 import com.martin.ads.vrlib.utils.StatusHelper;
+import com.martin.ads.vrlib.utils.TextImageGenerator;
 import com.martin.ads.vrlib.utils.TextureUtils;
 
 import java.util.ArrayList;
@@ -89,6 +92,24 @@ public class Sphere2DPlugin extends AbsFilter {
                                 .setY(-15).setAngleX(-90).setAngleY(-90)
                 )
                 .setImagePath("imgs/hotspot_logo.png")
+        );
+
+        hotSpotList.add(HotSpot.with(statusHelper.getContext())
+                .setPositionOrientation(
+                        PositionOrientation.newInstance()
+                                .setY(15).setAngleX(90).setAngleY(-90)
+                )
+                .setBitmap( TextImageGenerator.newInstance()
+                            .setPadding(25)
+                            .setTextColor(Color.parseColor("#FFCE54"))
+                            .setBackgroundColor(Color.parseColor("#22000000"))
+                            .setTypeface(Typeface.createFromAsset(
+                                    statusHelper.getContext().getAssets(),
+                                    "fonts/font_26.ttf")
+                            )
+                            .setTextSize(55)
+                            .addTextToImage("I'm a text hotspot~")
+                )
         );
     }
 
