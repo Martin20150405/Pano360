@@ -56,13 +56,9 @@ public class OESFilter extends AbsFilter{
     @Override
     public void onDrawFrame(int textureId) {
         onPreDrawElements();
-        TextureUtils.bindTextureOES(textureId, GLES20.GL_TEXTURE0,glOESProgram.getUTextureSamplerHandle(),0);
+        TextureUtils.bindTextureOES(glOESTexture.getTextureId(), GLES20.GL_TEXTURE0,glOESProgram.getUTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
         plain.draw();
-    }
-
-    public GLOESProgram getGlOESProgram() {
-        return glOESProgram;
     }
 
     public GLOESTexture getGlOESTexture() {

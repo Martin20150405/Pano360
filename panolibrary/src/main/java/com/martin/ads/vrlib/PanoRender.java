@@ -108,11 +108,9 @@ public class PanoRender
 
         if(!imageMode){
             panoMediaPlayerWrapper.doTextureUpdate(((OESFilter)firstPassFilter).getSTMatrix());
-            filterGroup.onDrawFrame(((OESFilter)firstPassFilter).getGlOESTexture().getTextureId());
-        }else{
-            //don't change the value, may cause crash
-            filterGroup.onDrawFrame(0);
         }
+        filterGroup.onDrawFrame(0);
+
         if (saveImg){
             BitmapUtils.sendImage(width,height,statusHelper.getContext());
             saveImg=false;

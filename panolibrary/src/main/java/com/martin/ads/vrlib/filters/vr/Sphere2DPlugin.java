@@ -121,11 +121,6 @@ public class Sphere2DPlugin extends AbsFilter {
     }
 
     @Override
-    public void onPreDrawElements() {
-        super.onPreDrawElements();
-    }
-
-    @Override
     public void destroy() {
         glSphereProgram.onDestroy();
         for(HotSpot hotSpot:hotSpotList)

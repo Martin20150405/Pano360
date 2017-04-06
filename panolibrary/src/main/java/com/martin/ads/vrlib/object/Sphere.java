@@ -28,7 +28,7 @@ public class Sphere {
      * modified from hzqiujiadi on 16/1/8.
      * original source code:
      * https://github.com/shulja/viredero/blob/a7d28b21d762e8479dc10cde1aa88054497ff649/viredroid/src/main/java/org/viredero/viredroid/Sphere.java
-     * @param radius 半径，半径应该在远平面和近平面之间
+     * @param radius -between near plane and far plane.
      * @param rings
      * @param sectors
      */
@@ -46,7 +46,7 @@ public class Sphere {
         float[] texcoords = new float[numPoint * 2];
         short[] indices = new short[numPoint * 6];
 
-        //纹理映射2d-3d
+        //map texture 2d-3d
         int t = 0, v = 0;
         for(r = 0; r < rings + 1; r++) {
             for(s = 0; s < sectors + 1; s++) {
@@ -63,7 +63,7 @@ public class Sphere {
             }
         }
 
-        //球体绘制坐标索引，用于  glDrawElements
+        //glDrawElements
         int counter = 0;
         int sectorsPlusOne = sectors + 1;
         for(r = 0; r < rings; r++){
