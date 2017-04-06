@@ -19,7 +19,7 @@ import java.nio.FloatBuffer;
 public class Plain {
     private FloatBuffer mVerticesBuffer;
     private FloatBuffer mTexCoordinateBuffer;
-    private static final float TRIANGLES_DATA_CW[] = {
+    private final float TRIANGLES_DATA_CW[] = {
             -1.0f, -1.0f, 0f,
             -1.0f, 1.0f, 0f,
             1.0f, -1.0f, 0f,

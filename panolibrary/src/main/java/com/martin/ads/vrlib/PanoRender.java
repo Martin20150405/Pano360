@@ -63,6 +63,7 @@ public class PanoRender
         filterGroup.addFilter(firstPassFilter);
         if(filterMode==FILTER_MODE_BEFORE_PROJECTION){
             //the code is becoming more and more messy ┗( T﹏T )┛
+            filterGroup.addFilter(customizedFilters);
         }
         spherePlugin=new Sphere2DPlugin(statusHelper);
         if(!planeMode){
