@@ -1,1 +1,1 @@
-include ':app', ':panolibrary', ':filepicker'
+include ':filepicker', ':pano360demo', ':vrlib'
