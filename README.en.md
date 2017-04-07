@@ -3,7 +3,7 @@
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
 
-**Download Demo App [HERE](https://raw.githubusercontent.com/Martin20150405/Pano360/master/app/app-release.apk)~**
+**Download Demo App [HERE](https://raw.githubusercontent.com/Martin20150405/Pano360/master/pano360demo/pano360demo-release.apk)~**
 
 ## Platform Requirements
 * OpenGL ES 2.0 
@@ -11,7 +11,6 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 
 ## Features
 * Single/Dual Screen support
-    * by configuring rows and cols you can get as many screens as you want
 * Support two modes: Gyroscope(Motion) or Pinch,Scroll(Touch)
 * Player control
 * GPUImage-like real-time on-screen filter group
@@ -21,6 +20,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 * Lock any axis, user can enter view in any rotation, and will see the same view firstly
     * **LOCK_MODE_AXIS_Y**:similar to Cardboard Motion
 * Ignore rotation of any axis
+* Hotspot
 
 ## Preview (Screenshots)
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
@@ -67,7 +67,6 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 * Tiny window / Fragment playing
 * Handler+MessageQueue
 * More Panorama format support
-* Hotspot
 * Anti Distortion
 * RTSP RTMP (with VLC/Vitamio)
 

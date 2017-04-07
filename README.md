@@ -5,7 +5,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
   
 Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库，使用OpenGL ES 2.0来进行视频渲染，没有使用第三方库
 
-**Demo App [在这里下](https://raw.githubusercontent.com/Martin20150405/Pano360/master/app/app-release.apk)~**
+**Demo App [在这里下](https://raw.githubusercontent.com/Martin20150405/Pano360/master/pano360demo/pano360demo-release.apk)~**
 
 ### Read this in other languages: [English](README.en.md)
 
@@ -18,11 +18,9 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 
 ## 特性
 * 单、双屏切换
-    * 支持单屏、双屏切换，通过配置rows和cols可以实现任意行任意列的分屏数目
 * 陀螺仪、触控(拖动、缩放)两种交互模式切换
 * 播放进度控制，控制栏自动隐藏
 * 类似GPUImage的滤镜组，支持多个滤镜叠加，滤镜顺序可在渲染到球体之前或之后
-    * 更多滤镜请参见[这里](http://blog.csdn.net/column/details/14377.html)
 * 支持原视频渲染（铺满屏幕/剪切/自适应）
 * 支持播放全景图片
 * 视频实时截图
@@ -30,6 +28,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 * 支持锁定任意坐标轴,用户从不同角度进入，看到的是同一个场景
     * **LOCK_MODE_AXIS_Y**： 和Cardboard Motion类似
 * 支持忽略任意坐标轴的旋转角度
+* 支持简单热点
 	
 ## 截图
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
