@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private CheckBox planeMode;
     private CheckBox windowMode;
-    private String filePath="= =";
+    private String filePath="~(～￣▽￣)～";
     private boolean flag;
 
     @Override
@@ -62,6 +62,7 @@ public class HomeActivity extends AppCompatActivity {
                         startActivityForResult(intent, 1);
                         return;
                     case 2:
+                        filePath="images/texture_360_n.jpg";
                         imageMode=true;
                         break;
                     case 3:
@@ -78,10 +79,11 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         return;
                 }
-                intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+                intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
                 intent.putExtra(PanoPlayerActivity.IMAGE_MODE, imageMode);
                 intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
                 intent.putExtra(PanoPlayerActivity.WINDOW_MODE, windowMode.isChecked());
+                intent.putExtra("removeHotspot", false);
                 startActivity(intent);
             }
         });
@@ -102,9 +104,10 @@ public class HomeActivity extends AppCompatActivity {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             Intent intent=new Intent(HomeActivity.this,PanoPlayerActivity.class);
             //Intent intent=new Intent(HomeActivity.this,DemoWithGLSurfaceView.class);
-            intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+            intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
             intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
             intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
+            intent.putExtra("removeHotspot", true);
             startActivity(intent);
         }
     }

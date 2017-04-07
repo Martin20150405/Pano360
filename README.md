@@ -45,7 +45,7 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 * 使用带播放控制的`Activity`  （由类库提供）
 ```java
 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-intent.putExtra("videoPath",filePath);
+intent.putExtra("filePath",filePath);
 startActivity(intent);
 ```
 
@@ -58,7 +58,12 @@ startActivity(intent);
 ```
 ```java
 GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView);
+panoViewWrapper =PanoViewWrapper.with(this)
+		.setVideoPath(filePath)
+		.setGlSurfaceView(glSurfaceView)
+		.setImageMode(false)
+		.setPlaneMode(false)
+		.init();
 glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {

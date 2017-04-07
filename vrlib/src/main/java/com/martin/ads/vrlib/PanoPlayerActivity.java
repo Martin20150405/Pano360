@@ -24,7 +24,7 @@ import com.martin.ads.vrlib.utils.UIUtils;
 //FIXME:looks so lame.
 public class PanoPlayerActivity extends Activity {
 
-    public static final String VIDEO_PATH = "videoPath";
+    public static final String FILE_PATH = "filePath";
     public static final String IMAGE_MODE = "imageMode";
     public static final String PLANE_MODE = "planeMode";
     public static final String WINDOW_MODE = "windowMode";
@@ -47,7 +47,7 @@ public class PanoPlayerActivity extends Activity {
     }
 
     private void init(){
-        String videoPath = getIntent().getStringExtra(VIDEO_PATH);
+        String filePath = getIntent().getStringExtra(FILE_PATH);
         boolean imageMode = getIntent().getBooleanExtra(IMAGE_MODE, false);
         boolean planeMode = getIntent().getBooleanExtra(PLANE_MODE, false);
         boolean windowMode = getIntent().getBooleanExtra(WINDOW_MODE, false);
@@ -62,15 +62,17 @@ public class PanoPlayerActivity extends Activity {
                 this, imageMode);
 
         TextView title = (TextView) findViewById(R.id.video_title);
-        title.setText(Uri.parse(videoPath).getLastPathSegment());
+        title.setText(Uri.parse(filePath).getLastPathSegment());
 
         GLSurfaceView glSurfaceView = (GLSurfaceView) findViewById(R.id.surface_view);
+        boolean removeHotspot=getIntent().getBooleanExtra("removeHotspot",false);
         mPanoViewWrapper = PanoViewWrapper.with(this)
-                .setVideoPath(videoPath)
+                .setFilePath(filePath)
                 .setGlSurfaceView(glSurfaceView)
                 .setImageMode(imageMode)
                 .setPlaneMode(planeMode)
                 .init();
+        if(removeHotspot) mPanoViewWrapper.removeDefaultHotSpot();
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

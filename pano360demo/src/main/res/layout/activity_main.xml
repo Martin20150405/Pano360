@@ -47,7 +47,7 @@
         android:background="#66A9F4"
         android:orientation="horizontal">
         <CheckBox
-            android:text="Plane Video"
+            android:text="Plane Mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/plane_mode" />

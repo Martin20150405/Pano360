@@ -38,7 +38,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 * Start an `Activity` provided by library 
 ```java
 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-intent.putExtra("videoPath",filePath);
+intent.putExtra("filePath",filePath);
 startActivity(intent);
 ```
 
@@ -51,7 +51,12 @@ startActivity(intent);
 ```
 ```java
 GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
-panoViewWrapper =new PanoViewWrapper(this,videoPath, glSurfaceView);
+panoViewWrapper =PanoViewWrapper.with(this)
+		.setVideoPath(filePath)
+		.setGlSurfaceView(glSurfaceView)
+		.setImageMode(false)
+		.setPlaneMode(false)
+		.init();
 glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {

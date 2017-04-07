@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.martin.ads.vrlib.PanoPlayerActivity;
 import com.martin.ads.vrlib.PanoViewWrapper;
 
 /**
@@ -34,14 +35,15 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
 
     private void init(){
 
-        String videoPath=getIntent().getStringExtra("videoPath");
+        String filePath=getIntent().getStringExtra(PanoPlayerActivity.FILE_PATH);
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
         panoViewWrapper =PanoViewWrapper.with(this)
-                .setVideoPath(videoPath)
+                .setFilePath(filePath)
                 .setGlSurfaceView(glSurfaceView)
                 .setImageMode(false)
                 .setPlaneMode(false)
-                .init();
+                .init()
+                .removeDefaultHotSpot();
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -60,7 +62,6 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-
         panoViewWrapper.onResume();
     }
 

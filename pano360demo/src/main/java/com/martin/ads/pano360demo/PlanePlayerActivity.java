@@ -70,7 +70,7 @@ public class PlanePlayerActivity extends AppCompatActivity implements View.OnCli
     };
 
     private void init(){
-        String videoPath = getIntent().getStringExtra(PanoPlayerActivity.VIDEO_PATH);
+        String filePath = getIntent().getStringExtra(PanoPlayerActivity.FILE_PATH);
         boolean imageMode = getIntent().getBooleanExtra(PanoPlayerActivity.IMAGE_MODE, false);
         boolean planeMode = getIntent().getBooleanExtra(PanoPlayerActivity.PLANE_MODE, false);
         boolean windowMode = getIntent().getBooleanExtra(PanoPlayerActivity.WINDOW_MODE, false);
@@ -88,11 +88,11 @@ public class PlanePlayerActivity extends AppCompatActivity implements View.OnCli
                 this, imageMode);
 
         TextView title = (TextView) findViewById(R.id.video_title);
-        title.setText(Uri.parse(videoPath).getLastPathSegment());
+        title.setText(Uri.parse(filePath).getLastPathSegment());
 
         GLSurfaceView glSurfaceView = (GLSurfaceView) findViewById(R.id.surface_view);
         mPanoViewWrapper = PanoViewWrapper.with(this)
-                .setVideoPath(videoPath)
+                .setFilePath(filePath)
                 .setGlSurfaceView(glSurfaceView)
                 .setImageMode(imageMode)
                 .setPlaneMode(planeMode)

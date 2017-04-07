@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     intent.setClass(MainActivity.this, PanoPlayerActivity.class);
                 }
-                intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+                intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
                 intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
                 intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
                 intent.putExtra(PanoPlayerActivity.WINDOW_MODE, windowMode.isChecked());
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-                intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+                intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
                 intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
                 intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
                 startActivity(intent);
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 //...
                 String filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                 Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
-                intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+                intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
                 intent.putExtra(PanoPlayerActivity.IMAGE_MODE, true);
                 intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
                 startActivity(intent);
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             Intent intent=new Intent(MainActivity.this,PanoPlayerActivity.class);
             //Intent intent=new Intent(HomeActivity.this,DemoWithGLSurfaceView.class);
-            intent.putExtra(PanoPlayerActivity.VIDEO_PATH, filePath);
+            intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
             intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
             intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
             startActivity(intent);

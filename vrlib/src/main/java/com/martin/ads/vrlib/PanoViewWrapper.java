@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.martin.ads.vrlib.constant.PanoMode;
@@ -24,14 +25,14 @@ public class PanoViewWrapper {
     private boolean planeMode;
 
     private Context context;
-    private String videoPath;
+    private String filePath;
 
     private PanoViewWrapper(Context context) {
         this.context=context;
     }
 
     public PanoViewWrapper init(){
-        Uri uri=Uri.parse(videoPath);
+        Uri uri=Uri.parse(filePath);
         init(context,uri);
         return this;
     }
@@ -62,6 +63,7 @@ public class PanoViewWrapper {
                 .setPanoMediaPlayerWrapper(mPnoVideoPlayer)
                 .setImageMode(imageMode)
                 .setPlaneMode(planeMode)
+                .setFilePath(uri.toString())
                 .setFilterMode(PanoRender.FILTER_MODE_AFTER_PROJECTION)
                 .init();
 
@@ -147,8 +149,15 @@ public class PanoViewWrapper {
         return this;
     }
 
-    public PanoViewWrapper setVideoPath(String videoPath) {
-        this.videoPath = videoPath;
+    public PanoViewWrapper setFilePath(String filePath) {
+        this.filePath = filePath;
+        return this;
+    }
+
+    //TODO:add real interface to control hot spot
+    // & head pose control
+    public PanoViewWrapper removeDefaultHotSpot(){
+        getRenderer().getSpherePlugin().clearHotSpot();
         return this;
     }
 

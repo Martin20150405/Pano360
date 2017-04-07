@@ -42,6 +42,8 @@ public class PanoRender
     private OrthoFilter orthoFilter;
     private FilterGroup customizedFilters;
 
+    private String filePath;
+
     private PanoRender() {
 
     }
@@ -56,8 +58,7 @@ public class PanoRender
         }else{
             firstPassFilter=new DrawImageFilter(
                     statusHelper.getContext(),
-                    //TODO: where is my UI?????
-                    "images/texture_360_n.jpg",
+                    filePath,
                     AdjustingMode.ADJUSTING_MODE_STRETCH);
         }
         filterGroup.addFilter(firstPassFilter);
@@ -164,6 +165,11 @@ public class PanoRender
 
     public PanoRender setFilterMode(int filterMode) {
         this.filterMode = filterMode;
+        return this;
+    }
+
+    public PanoRender setFilePath(String filePath) {
+        this.filePath = filePath;
         return this;
     }
 
