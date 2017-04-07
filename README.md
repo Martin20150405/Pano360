@@ -1,5 +1,5 @@
 # Pano360
-[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/61?title=Progress)
+[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE)[![](https://jitpack.io/v/Martin20150405/Pano360.svg)](https://jitpack.io/#Martin20150405/Pano360) ![progress](http://progressed.io/bar/61?title=Progress)
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
   
@@ -40,6 +40,16 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 *  如果你对于如何实现一个Android平台下的全景视频播放器感兴趣，或者急于使用一个带播放控制功能的全景视频播放器，或者有意在全景视频播放器中加入各种奇怪的功能，这个项目可能会对你有帮助。
 
 ## 如何使用
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+	dependencies {
+	        compile 'com.github.Martin20150405.Pano360:vrlib:v1.1.1'
+	}
+	
 * 有两种方法可以使用该库，详情请参考Demo App  
 
 * 使用带播放控制的`Activity`  （由类库提供）
@@ -70,6 +80,23 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 		return panoViewWrapper.handleTouchEvent(event);
 	}
 });
+@Override
+protected void onPause(){
+	super.onPause();
+	panoViewWrapper.onPause();
+}
+
+@Override
+protected void onResume(){
+	super.onResume();
+	panoViewWrapper.onResume();
+}
+
+@Override
+protected void onDestroy(){
+	super.onDestroy();
+	panoViewWrapper.releaseResources();
+}
 ```
 
 ## 未来特性（不要期望过高- -|||）

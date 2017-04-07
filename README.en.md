@@ -1,5 +1,5 @@
 # Pano360
-[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE) ![progress](http://progressed.io/bar/61?title=Progress)
+[![Build Status](https://travis-ci.org/Martin20150405/Pano360.svg?branch=master)](https://travis-ci.org/Martin20150405/Pano360) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LECENSE)[![](https://jitpack.io/v/Martin20150405/Pano360.svg)](https://jitpack.io/#Martin20150405/Pano360) ![progress](http://progressed.io/bar/61?title=Progress)
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
 
@@ -33,6 +33,15 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
 * If you are interested in implementing a panorama video player on Android, or you are urged yo use a Panorama video player with playing control, or you want to add more functions to Panorama video player, you may find this project helpful.
 
 ## Integration (How to use)
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+	dependencies {
+	        compile 'com.github.Martin20150405.Pano360:vrlib:v1.1.1'
+	}
 * There are two ways to integrate this library, you can compile demo app for more details.
 
 * Start an `Activity` provided by library 
@@ -63,12 +72,28 @@ glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
 		return panoViewWrapper.handleTouchEvent(event);
 	}
 });
+@Override
+protected void onPause(){
+	super.onPause();
+	panoViewWrapper.onPause();
+}
+
+@Override
+protected void onResume(){
+	super.onResume();
+	panoViewWrapper.onResume();
+}
+
+@Override
+protected void onDestroy(){
+	super.onDestroy();
+	panoViewWrapper.releaseResources();
+}
 ```
 
 ## Future works (Don't expect too much- -|||)
 * Acc+Mag support（used for phones without Gyroscope）
 * MediaPlayer switch (like IjkMediaPlayer)
-* jcenter/maven
 * Tiny window / Fragment playing
 * Handler+MessageQueue
 * More Panorama format support
