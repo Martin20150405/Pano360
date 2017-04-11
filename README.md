@@ -28,7 +28,8 @@ Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库
 * 支持锁定任意坐标轴,用户从不同角度进入，看到的是同一个场景
     * **LOCK_MODE_AXIS_Y**： 和Cardboard Motion类似
 * 支持忽略任意坐标轴的旋转角度
-* 支持简单热点
+* 2D视频VR影院模式 
+* 支持简单热点(图片/视频)
 	
 ## 截图
 ![ScreenShot](https://github.com/Martin20150405/Pano360/blob/master/screenshots/player_screen.png)
