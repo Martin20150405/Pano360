@@ -10,13 +10,12 @@ import android.view.Surface;
 
 
 import com.martin.ads.vrlib.constant.PanoStatus;
+import com.martin.ads.vrlib.filters.vr.AbsHotspot;
 import com.martin.ads.vrlib.utils.StatusHelper;
 
 import java.io.IOException;
 
 /**
- * Project: Pano360
- * Package: com.martin.ads.pano360
  * Created by Ads on 2016/5/2.
  */
 public class PanoMediaPlayerWrapper implements
@@ -30,6 +29,7 @@ public class PanoMediaPlayerWrapper implements
     public static String TAG = "PanoMediaPlayerWrapper";
 
     private StatusHelper statusHelper;
+
     private PanoViewWrapper.RenderCallBack renderCallBack;
 
     private SurfaceTexture mSurfaceTexture;

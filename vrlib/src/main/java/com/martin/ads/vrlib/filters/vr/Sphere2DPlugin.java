@@ -1,22 +1,17 @@
 package com.martin.ads.vrlib.filters.vr;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.martin.ads.vrlib.SensorEventHandler;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
-import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.object.Sphere;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.utils.OrientationHelper;
 import com.martin.ads.vrlib.utils.StatusHelper;
-import com.martin.ads.vrlib.utils.TextImageGenerator;
 import com.martin.ads.vrlib.utils.TextureUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +20,7 @@ import java.util.List;
 
 public class Sphere2DPlugin extends AbsFilter {
     private Sphere sphere;
-    GLPassThroughProgram glSphereProgram;
+    private GLPassThroughProgram glSphereProgram;
     private SensorEventHandler sensorEventHandler;
     private StatusHelper statusHelper;
 
@@ -49,7 +44,7 @@ public class Sphere2DPlugin extends AbsFilter {
     private float mScale;
 
     private OrientationHelper orientationHelper;
-    private List<HotSpot> hotSpotList;
+    private List<AbsHotspot> hotspotList;
 
     public Sphere2DPlugin(StatusHelper statusHelper) {
         this.statusHelper=statusHelper;
@@ -83,47 +78,19 @@ public class Sphere2DPlugin extends AbsFilter {
         //for example ,lock z and y to detect whether the user
         // is looking at the sky or the ground
         //orientationHelper.setIgnoreRotationMode(OrientationHelper.IGNORE_ROTATION_AXIS_Z | OrientationHelper.IGNORE_ROTATION_AXIS_Y);
-
-        hotSpotList=new ArrayList<>();
-
-        hotSpotList.add(HotSpot.with(statusHelper.getContext())
-                .setPositionOrientation(
-                        PositionOrientation.newInstance()
-                                .setY(-15).setAngleX(-90).setAngleY(-90)
-                )
-                .setImagePath("imgs/hotspot_logo.png")
-        );
-
-        hotSpotList.add(HotSpot.with(statusHelper.getContext())
-                .setPositionOrientation(
-                        PositionOrientation.newInstance()
-                                .setY(15).setAngleX(90).setAngleY(-90)
-                )
-                .setBitmap( TextImageGenerator.newInstance()
-                            .setPadding(25)
-                            .setTextColor(Color.parseColor("#FFCE54"))
-                            .setBackgroundColor(Color.parseColor("#22000000"))
-                            .setTypeface(Typeface.createFromAsset(
-                                    statusHelper.getContext().getAssets(),
-                                    "fonts/font_26.ttf")
-                            )
-                            .setTextSize(55)
-                            .addTextToImage("I'm a text hotspot~")
-                )
-        );
     }
 
     @Override
     public void init() {
         glSphereProgram.create();
-        for(HotSpot hotSpot:hotSpotList)
+        for(AbsHotspot hotSpot: hotspotList)
             hotSpot.init();
     }
 
     @Override
     public void destroy() {
         glSphereProgram.onDestroy();
-        for(HotSpot hotSpot:hotSpotList)
+        for(AbsHotspot hotSpot: hotspotList)
             hotSpot.destroy();
     }
 
@@ -178,7 +145,7 @@ public class Sphere2DPlugin extends AbsFilter {
     public void onFilterChanged(int width, int height) {
         super.onFilterChanged(width,height);
         ratio=(float)width/ height;
-        for(HotSpot hotSpot:hotSpotList)
+        for(AbsHotspot hotSpot: hotspotList)
             hotSpot.onFilterChanged(width,height);
     }
 
@@ -227,7 +194,7 @@ public class Sphere2DPlugin extends AbsFilter {
 
     //FIXME:code about hotspot is temporary
     private void drawHotSpot(){
-        for(HotSpot hotSpot:hotSpotList){
+        for(AbsHotspot hotSpot: hotspotList){
             hotSpot.setModelMatrix(modelMatrix);
             hotSpot.setViewMatrix(viewMatrix);
             hotSpot.setProjectionMatrix(projectionMatrix);
@@ -235,10 +202,7 @@ public class Sphere2DPlugin extends AbsFilter {
         }
     }
 
-    public boolean clearHotSpot(){
-        if(hotSpotList==null) return false;
-        hotSpotList.clear();
-        return true;
+    public void setHotspotList(List<AbsHotspot> hotspotList) {
+        this.hotspotList = hotspotList;
     }
-
 }

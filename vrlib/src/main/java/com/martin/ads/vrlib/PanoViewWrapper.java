@@ -1,15 +1,26 @@
 package com.martin.ads.vrlib;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
+import com.martin.ads.vrlib.filters.vr.AbsHotspot;
+import com.martin.ads.vrlib.filters.vr.ImageHotspot;
+import com.martin.ads.vrlib.filters.vr.VideoHotspot;
+import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.utils.StatusHelper;
+import com.martin.ads.vrlib.utils.TextImageGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PanoViewWrapper {
@@ -22,10 +33,12 @@ public class PanoViewWrapper {
     private TouchHelper touchHelper;
 
     private boolean imageMode;
+    private String videoHotspotPath;
     private boolean planeMode;
 
     private Context context;
     private String filePath;
+    private List<AbsHotspot> hotspotList;
 
     private PanoViewWrapper(Context context) {
         this.context=context;
@@ -67,6 +80,47 @@ public class PanoViewWrapper {
                 .setFilterMode(PanoRender.FILTER_MODE_AFTER_PROJECTION)
                 .init();
 
+        hotspotList =new ArrayList<>();
+
+        if(videoHotspotPath!=null && !videoHotspotPath.isEmpty()){
+            hotspotList.add(VideoHotspot.with(statusHelper.getContext())
+                    .setPositionOrientation(
+                            PositionOrientation.newInstance()
+                                    .setX(-7.8f).setY(1.2f).setAngleY(-90)
+                    )
+                    .setUri(Uri.parse(videoHotspotPath))
+                    .setAssumedScreenSize(2.0f,1.0f)
+            );
+        }else{
+            hotspotList.add(ImageHotspot.with(statusHelper.getContext())
+                    .setPositionOrientation(
+                            PositionOrientation.newInstance()
+                                    .setY(15).setAngleX(90).setAngleY(-90)
+                    )
+                    .setBitmap( TextImageGenerator.newInstance()
+                            .setPadding(25)
+                            .setTextColor(Color.parseColor("#FFCE54"))
+                            .setBackgroundColor(Color.parseColor("#22000000"))
+                            .setTypeface(Typeface.createFromAsset(
+                                    statusHelper.getContext().getAssets(),
+                                    "fonts/font_26.ttf")
+                            )
+                            .setTextSize(55)
+                            .addTextToImage("I'm a text hotspot~")
+                    )
+            );
+        }
+
+        hotspotList.add(ImageHotspot.with(statusHelper.getContext())
+                .setPositionOrientation(
+                        PositionOrientation.newInstance()
+                                .setY(-15).setAngleX(-90).setAngleY(-90)
+                )
+                .setImagePath("imgs/hotspot_logo.png")
+        );
+
+        mRenderer.getSpherePlugin().setHotspotList(hotspotList);
+
         glSurfaceView.setRenderer(mRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
@@ -89,6 +143,9 @@ public class PanoViewWrapper {
         if(mPnoVideoPlayer!=null && statusHelper.getPanoStatus()== PanoStatus.PLAYING){
             mPnoVideoPlayer.pause();
         }
+        for(AbsHotspot hotspot:hotspotList){
+            hotspot.notifyOnPause();
+        }
     }
 
     public void onResume() {
@@ -98,9 +155,15 @@ public class PanoViewWrapper {
                 mPnoVideoPlayer.start();
             }
         }
+        for(AbsHotspot hotspot:hotspotList){
+            hotspot.notifyOnResume();
+        }
     }
 
     public void releaseResources(){
+        for(AbsHotspot hotspot:hotspotList){
+            hotspot.notifyOnDestroy();
+        }
         if(mPnoVideoPlayer!=null){
             mPnoVideoPlayer.releaseResource();
             mPnoVideoPlayer=null;
@@ -154,10 +217,21 @@ public class PanoViewWrapper {
         return this;
     }
 
+    public PanoViewWrapper setVideoHotspotPath(String videoHotspotPath) {
+        this.videoHotspotPath = videoHotspotPath;
+        return this;
+    }
+
+    public boolean clearHotSpot(){
+        if(hotspotList ==null) return false;
+        hotspotList.clear();
+        return true;
+    }
+
     //TODO:add real interface to control hot spot
     // & head pose control
     public PanoViewWrapper removeDefaultHotSpot(){
-        getRenderer().getSpherePlugin().clearHotSpot();
+        clearHotSpot();
         return this;
     }
 

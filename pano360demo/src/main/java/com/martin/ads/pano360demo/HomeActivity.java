@@ -41,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         mCardAdapter.addCardItem(new CardItem(R.string.title_3, R.string.content_text_3));
         mCardAdapter.addCardItem(new CardItem(R.string.title_4, R.string.content_text_4));
         mCardAdapter.addCardItem(new CardItem(R.string.title_5, R.string.content_text_5));
+        mCardAdapter.addCardItem(new CardItem(R.string.title_6, R.string.content_text_6));
 
         planeMode= (CheckBox) findViewById(R.id.plane_mode);
         windowMode = (CheckBox) findViewById(R.id.window_mode);
@@ -62,16 +63,21 @@ public class HomeActivity extends AppCompatActivity {
                         startActivityForResult(intent, 1);
                         return;
                     case 2:
-                        filePath="images/texture_360_n.jpg";
+                        filePath="images/vr_cinema.jpg";
+                        intent.putExtra(PanoPlayerActivity.VIDEO_HOTSPOT_PATH, "android.resource://" + getPackageName() + "/" + R.raw.demo_video);
                         imageMode=true;
                         break;
                     case 3:
+                        filePath="images/texture_360_n.jpg";
+                        imageMode=true;
+                        break;
+                    case 4:
                         filePath="http://cache.utovr.com/201508270528174780.m3u8";
                         if(windowMode.isChecked()){
                             intent.setClass(HomeActivity.this, PlanePlayerActivity.class);
                         }
                         break;
-                    case 4:
+                    case 5:
                         if(flag) throw new GirlFriendNotFoundException();
                         else {
                             Toast.makeText(HomeActivity.this,"再点会点坏的哦~",Toast.LENGTH_LONG).show();

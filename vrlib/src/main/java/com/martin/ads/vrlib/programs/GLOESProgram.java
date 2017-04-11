@@ -13,6 +13,7 @@ import com.martin.ads.vrlib.utils.ShaderUtils;
  */
 public class GLOESProgram extends GLAbsProgram{
 
+    private int uMVPMatrixHandle;
     private int muSTMatrixHandle;
     private int uTextureSamplerHandle;
 
@@ -31,6 +32,9 @@ public class GLOESProgram extends GLAbsProgram{
 
         uTextureSamplerHandle= GLES20.glGetUniformLocation(getProgramId(),"sTexture");
         ShaderUtils.checkGlError("glGetUniformLocation uniform samplerExternalOES sTexture");
+
+        uMVPMatrixHandle=GLES20.glGetUniformLocation(getProgramId(),"uMVPMatrix");
+        ShaderUtils.checkGlError("glGetUniformLocation uMVPMatrix");
     }
 
     public int getMuSTMatrixHandle() {
@@ -38,4 +42,8 @@ public class GLOESProgram extends GLAbsProgram{
     }
 
     public int getUTextureSamplerHandle() { return uTextureSamplerHandle; }
+
+    public int getMVPMatrixHandle() {
+        return uMVPMatrixHandle;
+    }
 }

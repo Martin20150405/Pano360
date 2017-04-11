@@ -47,6 +47,6 @@ class MxOneHashBaseFilter extends SimpleFragmentShaderFilter {
                 GLES20.GL_TEXTURE1,
                 uTextureSamplerHandle2,1);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-        plain.draw();
+        plane.draw();
     }
 }

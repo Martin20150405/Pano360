@@ -9,6 +9,10 @@ import com.martin.ads.vrlib.constant.AdjustingMode;
  */
 
 public class MatrixUtils {
+    public static float IDENTITY_MATRIX[]=new float[16];
+    static {
+        Matrix.setIdentityM(IDENTITY_MATRIX,0);
+    }
 
     public static void updateProjection(int imageWidth, int imageHeight,int surfaceWidth,int surfaceHeight,int adjustingMode,float[] projectionMatrix){
         switch (adjustingMode){

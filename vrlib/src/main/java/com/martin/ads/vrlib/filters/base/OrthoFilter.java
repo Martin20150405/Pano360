@@ -1,12 +1,10 @@
 package com.martin.ads.vrlib.filters.base;
 
-import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.martin.ads.vrlib.constant.AdjustingMode;
 import com.martin.ads.vrlib.constant.PanoMode;
-import com.martin.ads.vrlib.object.Plain;
+import com.martin.ads.vrlib.object.Plane;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.utils.MatrixUtils;
 import com.martin.ads.vrlib.utils.StatusHelper;
@@ -24,7 +22,7 @@ public class OrthoFilter extends AbsFilter {
     private int adjustingMode;
 
     private GLPassThroughProgram glPassThroughProgram;
-    private Plain plain;
+    private Plane plane;
 
     private float[] projectionMatrix = new float[16];
 
@@ -35,7 +33,7 @@ public class OrthoFilter extends AbsFilter {
     public OrthoFilter(StatusHelper statusHelper,int adjustingMode) {
         this.statusHelper=statusHelper;
         glPassThroughProgram=new GLPassThroughProgram(statusHelper.getContext());
-        plain=new Plain(true);
+        plane =new Plane(true);
         Matrix.setIdentityM(projectionMatrix,0);
         this.adjustingMode=adjustingMode;
     }
@@ -60,8 +58,8 @@ public class OrthoFilter extends AbsFilter {
                 adjustingMode,
                 projectionMatrix);
         glPassThroughProgram.use();
-        plain.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
-        plain.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
+        plane.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
+        plane.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
         GLES20.glUniformMatrix4fv(glPassThroughProgram.getMVPMatrixHandle(), 1, false, projectionMatrix, 0);
     }
 
@@ -76,12 +74,12 @@ public class OrthoFilter extends AbsFilter {
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glPassThroughProgram.getTextureSamplerHandle(),0);
         if (statusHelper.getPanoDisPlayMode()== PanoMode.DUAL_SCREEN){
             GLES20.glViewport(0,0,surfaceWidth/2,surfaceHeight);
-            plain.draw();
+            plane.draw();
             GLES20.glViewport(surfaceWidth/2,0,surfaceWidth-surfaceWidth/2,surfaceHeight);
-            plain.draw();
+            plane.draw();
         }else{
             GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-            plain.draw();
+            plane.draw();
         }
     }
 

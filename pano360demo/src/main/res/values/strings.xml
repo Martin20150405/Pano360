@@ -4,12 +4,14 @@
 
     <string name="title_1">Demo Video</string>
     <string name="title_2">Play Local Files</string>
-    <string name="title_3">Demo Image</string>
-    <string name="title_4">Play Online</string>
-    <string name="title_5">About</string>
+    <string name="title_3">VR Cinema</string>
+    <string name="title_4">Demo Image</string>
+    <string name="title_5">Play Online</string>
+    <string name="title_6">About</string>
     <string name="content_text_1">播放样例全景视频</string>
     <string name="content_text_2">选择本地视频播放</string>
-    <string name="content_text_3">播放样例全景图片</string>
-    <string name="content_text_4">播放在线视频，URL默认指向UtoVR的测试视频</string>
-    <string name="content_text_5">Email : Martin20150405@163.com</string>
+    <string name="content_text_3">2D Video VR Cinema imitating UtoVR</string>
+    <string name="content_text_4">播放样例全景图片</string>
+    <string name="content_text_5">播放在线视频，URL默认指向UtoVR的测试视频</string>
+    <string name="content_text_6">Email : Martin20150405@163.com</string>
 </resources>

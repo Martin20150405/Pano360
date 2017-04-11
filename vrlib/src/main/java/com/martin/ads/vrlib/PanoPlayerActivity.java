@@ -25,6 +25,7 @@ import com.martin.ads.vrlib.utils.UIUtils;
 public class PanoPlayerActivity extends Activity {
 
     public static final String FILE_PATH = "filePath";
+    public static final String VIDEO_HOTSPOT_PATH = "videoHotspotPath";
     public static final String IMAGE_MODE = "imageMode";
     public static final String PLANE_MODE = "planeMode";
     public static final String WINDOW_MODE = "windowMode";
@@ -47,7 +48,9 @@ public class PanoPlayerActivity extends Activity {
     }
 
     private void init(){
+        //TODO: consider using a builder
         String filePath = getIntent().getStringExtra(FILE_PATH);
+        String videoHotspotPath = getIntent().getStringExtra(VIDEO_HOTSPOT_PATH);
         boolean imageMode = getIntent().getBooleanExtra(IMAGE_MODE, false);
         boolean planeMode = getIntent().getBooleanExtra(PLANE_MODE, false);
         boolean windowMode = getIntent().getBooleanExtra(WINDOW_MODE, false);
@@ -71,6 +74,7 @@ public class PanoPlayerActivity extends Activity {
                 .setGlSurfaceView(glSurfaceView)
                 .setImageMode(imageMode)
                 .setPlaneMode(planeMode)
+                .setVideoHotspotPath(videoHotspotPath)
                 .init();
         if(removeHotspot) mPanoViewWrapper.removeDefaultHotSpot();
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.opengl.GLES20;
 
 import com.martin.ads.vrlib.filters.base.AbsFilter;
-import com.martin.ads.vrlib.object.Plain;
+import com.martin.ads.vrlib.object.Plane;
 import com.martin.ads.vrlib.programs.GLTwoInputProgram;
 import com.martin.ads.vrlib.textures.BitmapTexture;
 import com.martin.ads.vrlib.utils.BufferUtils;
-import com.martin.ads.vrlib.utils.PlainTextureRotationUtils;
+import com.martin.ads.vrlib.utils.PlaneTextureRotationUtils;
 import com.martin.ads.vrlib.utils.TextureUtils;
 
 import java.nio.FloatBuffer;
@@ -23,7 +23,7 @@ import java.nio.FloatBuffer;
  */
 
 abstract class MixBlendFilter extends AbsFilter {
-    private Plain plain;
+    private Plane plane;
     private GLTwoInputProgram twoInputProgram;
     private FloatBuffer mTexCoordinateBuffer2;
     private BitmapTexture bitmapTexture;
@@ -38,9 +38,9 @@ abstract class MixBlendFilter extends AbsFilter {
                           final String fragmentShaderPath,
                           float mMixturePercent) {
         this.context=context;
-        plain=new Plain(true);
+        plane =new Plane(true);
         twoInputProgram=new GLTwoInputProgram(context, "filter/vsh/two_input.glsl",fragmentShaderPath);
-        mTexCoordinateBuffer2= BufferUtils.getFloatBuffer(PlainTextureRotationUtils.TEXTURE_NO_ROTATION,0);
+        mTexCoordinateBuffer2= BufferUtils.getFloatBuffer(PlaneTextureRotationUtils.TEXTURE_NO_ROTATION,0);
         this.mMixturePercent=mMixturePercent;
         bitmapTexture=new BitmapTexture();
     }
@@ -64,8 +64,8 @@ abstract class MixBlendFilter extends AbsFilter {
         GLES20.glVertexAttribPointer(twoInputProgram.getMaTexture2Handle(), 2, GLES20.GL_FLOAT, false, 0, mTexCoordinateBuffer2);
         GLES20.glEnableVertexAttribArray(twoInputProgram.getMaTexture2Handle());
 
-        plain.uploadTexCoordinateBuffer(twoInputProgram.getTextureCoordinateHandle());
-        plain.uploadVerticesBuffer(twoInputProgram.getPositionHandle());
+        plane.uploadTexCoordinateBuffer(twoInputProgram.getTextureCoordinateHandle());
+        plane.uploadVerticesBuffer(twoInputProgram.getPositionHandle());
 
         GLES20.glUniform1f(mMixLocation,mMixturePercent);
     }
@@ -85,7 +85,7 @@ abstract class MixBlendFilter extends AbsFilter {
         TextureUtils.bindTexture2D(bitmapTexture.getImageTextureId(),GLES20.GL_TEXTURE1,textureHandle2,1);
 
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-        plain.draw();
+        plane.draw();
     }
 
     public void setMixturePercent(float mMixturePercent) {
