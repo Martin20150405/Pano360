@@ -8,7 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.martin.ads.vrlib.PanoPlayerActivity;
+import com.martin.ads.vrlib.ui.Pano360ConfigBundle;
+import com.martin.ads.vrlib.ui.PanoPlayerActivity;
 import com.martin.ads.vrlib.PanoViewWrapper;
 
 /**
@@ -34,16 +35,16 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
     }
 
     private void init(){
-
-        String filePath=getIntent().getStringExtra(PanoPlayerActivity.FILE_PATH);
+        Pano360ConfigBundle configBundle= (Pano360ConfigBundle) getIntent().getSerializableExtra(PanoPlayerActivity.CONFIG_BUNDLE);
+        if(configBundle==null){
+            configBundle=Pano360ConfigBundle.newInstance();
+        }
+        configBundle.setRemoveHotspot(true);
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
         panoViewWrapper =PanoViewWrapper.with(this)
-                .setFilePath(filePath)
+                .setConfig(configBundle)
                 .setGlSurfaceView(glSurfaceView)
-                .setImageMode(false)
-                .setPlaneMode(false)
-                .init()
-                .removeDefaultHotSpot();
+                .init();
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

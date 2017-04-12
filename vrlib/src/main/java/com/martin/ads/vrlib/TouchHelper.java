@@ -1,15 +1,12 @@
 package com.martin.ads.vrlib;
 
 import android.content.res.Resources;
-import android.opengl.GLSurfaceView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.widget.Toast;
 
 import com.martin.ads.vrlib.constant.PanoMode;
-import com.martin.ads.vrlib.utils.BitmapUtils;
+import com.martin.ads.vrlib.ui.PanoUIController;
 import com.martin.ads.vrlib.utils.StatusHelper;
 
 /**

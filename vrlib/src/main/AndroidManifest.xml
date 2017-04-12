@@ -7,7 +7,7 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
-        <activity android:name="com.martin.ads.vrlib.PanoPlayerActivity"
+        <activity android:name="com.martin.ads.vrlib.ui.PanoPlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
     </application>

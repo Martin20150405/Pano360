@@ -1,4 +1,4 @@
-package com.martin.ads.vrlib;
+package com.martin.ads.vrlib.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.martin.ads.vrlib.R;
 import com.martin.ads.vrlib.filters.advanced.FilterType;
 import com.martin.ads.vrlib.utils.UIUtils;
 

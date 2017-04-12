@@ -16,6 +16,7 @@ import com.martin.ads.vrlib.filters.vr.AbsHotspot;
 import com.martin.ads.vrlib.filters.vr.ImageHotspot;
 import com.martin.ads.vrlib.filters.vr.VideoHotspot;
 import com.martin.ads.vrlib.math.PositionOrientation;
+import com.martin.ads.vrlib.ui.Pano360ConfigBundle;
 import com.martin.ads.vrlib.utils.StatusHelper;
 import com.martin.ads.vrlib.utils.TextImageGenerator;
 
@@ -47,6 +48,14 @@ public class PanoViewWrapper {
     public PanoViewWrapper init(){
         Uri uri=Uri.parse(filePath);
         init(context,uri);
+        return this;
+    }
+
+    public PanoViewWrapper setConfig(Pano360ConfigBundle configBundle){
+        filePath=configBundle.getFilePath();
+        videoHotspotPath=configBundle.getVideoHotspotPath();
+        planeMode=configBundle.isPlaneModeEnabled();
+        imageMode=configBundle.isImageModeEnabled();
         return this;
     }
 
@@ -197,28 +206,8 @@ public class PanoViewWrapper {
         return touchHelper;
     }
 
-    public PanoViewWrapper setImageMode(boolean imageMode) {
-        this.imageMode = imageMode;
-        return this;
-    }
-
-    public PanoViewWrapper setPlaneMode(boolean planeMode) {
-        this.planeMode = planeMode;
-        return this;
-    }
-
     public PanoViewWrapper setGlSurfaceView(GLSurfaceView glSurfaceView) {
         this.glSurfaceView = glSurfaceView;
-        return this;
-    }
-
-    public PanoViewWrapper setFilePath(String filePath) {
-        this.filePath = filePath;
-        return this;
-    }
-
-    public PanoViewWrapper setVideoHotspotPath(String videoHotspotPath) {
-        this.videoHotspotPath = videoHotspotPath;
         return this;
     }
 

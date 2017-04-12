@@ -11,7 +11,8 @@ import android.widget.Toast;
 import com.github.rubensousa.viewpagercards.CardItem;
 import com.github.rubensousa.viewpagercards.CardPagerAdapter;
 import com.github.rubensousa.viewpagercards.ShadowTransformer;
-import com.martin.ads.vrlib.PanoPlayerActivity;
+import com.martin.ads.vrlib.ui.Pano360ConfigBundle;
+import com.martin.ads.vrlib.ui.PanoPlayerActivity;
 import com.martin.ads.vrlib.ext.GirlFriendNotFoundException;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
@@ -25,9 +26,12 @@ public class HomeActivity extends AppCompatActivity {
     private ShadowTransformer mCardShadowTransformer;
 
     private CheckBox planeMode;
-    private CheckBox windowMode;
-    private String filePath="~(～￣▽￣)～";
     private boolean flag;
+
+    private String filePath="~(～￣▽￣)～";
+    private String videoHotspotPath;
+    private boolean imageModeEnabled;
+    private boolean planeModeEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,38 +48,32 @@ public class HomeActivity extends AppCompatActivity {
         mCardAdapter.addCardItem(new CardItem(R.string.title_6, R.string.content_text_6));
 
         planeMode= (CheckBox) findViewById(R.id.plane_mode);
-        windowMode = (CheckBox) findViewById(R.id.window_mode);
 
         mCardAdapter.setOnClickCallback(new CardPagerAdapter.OnClickCallback() {
             @Override
             public void onClick(int position) {
-                boolean imageMode=false;
-                Intent intent=new Intent();
-                intent.setClass(HomeActivity.this, PanoPlayerActivity.class);
-                Log.d(TAG, "onClick: "+position);
+                imageModeEnabled=false;
+                videoHotspotPath=null;
                 switch (position){
                     case 0:
                         filePath= "android.resource://" + getPackageName() + "/" + R.raw.demo_video;
                         break;
                     case 1:
-                        intent.setClass(HomeActivity.this, FilePickerActivity.class);
+                        Intent intent=new Intent(HomeActivity.this, FilePickerActivity.class);
                         intent.putExtra(FilePickerActivity.ARG_FILTER, Pattern.compile("(.*\\.mp4$)||(.*\\.avi$)||(.*\\.wmv$)"));
                         startActivityForResult(intent, 1);
                         return;
                     case 2:
                         filePath="images/vr_cinema.jpg";
-                        intent.putExtra(PanoPlayerActivity.VIDEO_HOTSPOT_PATH, "android.resource://" + getPackageName() + "/" + R.raw.demo_video);
-                        imageMode=true;
+                        videoHotspotPath="android.resource://" + getPackageName() + "/" + R.raw.demo_video;
+                        imageModeEnabled=true;
                         break;
                     case 3:
                         filePath="images/texture_360_n.jpg";
-                        imageMode=true;
+                        imageModeEnabled=true;
                         break;
                     case 4:
                         filePath="http://cache.utovr.com/201508270528174780.m3u8";
-                        if(windowMode.isChecked()){
-                            intent.setClass(HomeActivity.this, PlanePlayerActivity.class);
-                        }
                         break;
                     case 5:
                         if(flag) throw new GirlFriendNotFoundException();
@@ -85,12 +83,8 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         return;
                 }
-                intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
-                intent.putExtra(PanoPlayerActivity.IMAGE_MODE, imageMode);
-                intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
-                intent.putExtra(PanoPlayerActivity.WINDOW_MODE, windowMode.isChecked());
-                intent.putExtra("removeHotspot", false);
-                startActivity(intent);
+                planeModeEnabled=planeMode.isChecked();
+                start(true);
             }
         });
         mCardShadowTransformer = new ShadowTransformer(mViewPager, mCardAdapter);
@@ -103,18 +97,30 @@ public class HomeActivity extends AppCompatActivity {
         mCardShadowTransformer.enableScaling(true);
     }
 
+    private void start(boolean usingDefaultActivity){
+        Pano360ConfigBundle configBundle=Pano360ConfigBundle
+                .newInstance()
+                .setFilePath(filePath)
+                .setImageModeEnabled(imageModeEnabled)
+                .setPlaneModeEnabled(planeModeEnabled)
+                .setRemoveHotspot(false)
+                .setVideoHotspotPath(videoHotspotPath);
+        if(usingDefaultActivity)
+            configBundle.startEmbeddedActivity(this);
+        else {
+            Intent intent=new Intent(this,DemoWithGLSurfaceView.class);
+            intent.putExtra(PanoPlayerActivity.CONFIG_BUNDLE,configBundle);
+            startActivity(intent);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            Intent intent=new Intent(HomeActivity.this,PanoPlayerActivity.class);
-            //Intent intent=new Intent(HomeActivity.this,DemoWithGLSurfaceView.class);
-            intent.putExtra(PanoPlayerActivity.FILE_PATH, filePath);
-            intent.putExtra(PanoPlayerActivity.IMAGE_MODE, false);
-            intent.putExtra(PanoPlayerActivity.PLANE_MODE, planeMode.isChecked());
-            intent.putExtra("removeHotspot", true);
-            startActivity(intent);
+            filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+            planeModeEnabled=planeMode.isChecked();
+            start(true);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.martin.ads.vrlib;
+package com.martin.ads.vrlib.ui;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.martin.ads.vrlib.PanoMediaPlayerWrapper;
+import com.martin.ads.vrlib.PanoViewWrapper;
+import com.martin.ads.vrlib.R;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
 import com.martin.ads.vrlib.filters.advanced.FilterType;
@@ -24,15 +27,12 @@ import com.martin.ads.vrlib.utils.UIUtils;
 //FIXME:looks so lame.
 public class PanoPlayerActivity extends Activity {
 
-    public static final String FILE_PATH = "filePath";
-    public static final String VIDEO_HOTSPOT_PATH = "videoHotspotPath";
-    public static final String IMAGE_MODE = "imageMode";
-    public static final String PLANE_MODE = "planeMode";
-    public static final String WINDOW_MODE = "windowMode";
+    public static final String CONFIG_BUNDLE = "configBundle";
 
     private PanoUIController mPanoUIController;
     private PanoViewWrapper mPanoViewWrapper;
     private ImageView mImgBufferAnim;
+    private Pano360ConfigBundle configBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,35 +48,30 @@ public class PanoPlayerActivity extends Activity {
     }
 
     private void init(){
-        //TODO: consider using a builder
-        String filePath = getIntent().getStringExtra(FILE_PATH);
-        String videoHotspotPath = getIntent().getStringExtra(VIDEO_HOTSPOT_PATH);
-        boolean imageMode = getIntent().getBooleanExtra(IMAGE_MODE, false);
-        boolean planeMode = getIntent().getBooleanExtra(PLANE_MODE, false);
-        boolean windowMode = getIntent().getBooleanExtra(WINDOW_MODE, false);
+        configBundle= (Pano360ConfigBundle) getIntent().getSerializableExtra(CONFIG_BUNDLE);
+        if(configBundle==null){
+            configBundle=Pano360ConfigBundle.newInstance();
+        }
 
-        findViewById(R.id.img_full_screen).setVisibility(windowMode ? View.VISIBLE : View.GONE);
+        findViewById(R.id.img_full_screen).setVisibility(configBundle.isWindowModeEnabled() ? View.VISIBLE : View.GONE);
 
         mImgBufferAnim = (ImageView) findViewById(R.id.activity_imgBuffer);
-        UIUtils.setBufferVisibility(mImgBufferAnim, !imageMode);
+        UIUtils.setBufferVisibility(mImgBufferAnim, !configBundle.isImageModeEnabled());
         mPanoUIController = new PanoUIController(
                 (RelativeLayout)findViewById(R.id.player_toolbar_control),
                 (RelativeLayout)findViewById(R.id.player_toolbar_progress),
-                this, imageMode);
+                this, configBundle.isImageModeEnabled());
 
         TextView title = (TextView) findViewById(R.id.video_title);
-        title.setText(Uri.parse(filePath).getLastPathSegment());
+        title.setText(Uri.parse(configBundle.getFilePath()).getLastPathSegment());
 
         GLSurfaceView glSurfaceView = (GLSurfaceView) findViewById(R.id.surface_view);
-        boolean removeHotspot=getIntent().getBooleanExtra("removeHotspot",false);
         mPanoViewWrapper = PanoViewWrapper.with(this)
-                .setFilePath(filePath)
+                .setConfig(configBundle)
                 .setGlSurfaceView(glSurfaceView)
-                .setImageMode(imageMode)
-                .setPlaneMode(planeMode)
-                .setVideoHotspotPath(videoHotspotPath)
                 .init();
-        if(removeHotspot) mPanoViewWrapper.removeDefaultHotSpot();
+        if(configBundle.isRemoveHotspot())
+            mPanoViewWrapper.removeDefaultHotSpot();
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -141,7 +136,7 @@ public class PanoPlayerActivity extends Activity {
         });
         mPanoViewWrapper.getTouchHelper().setPanoUIController(mPanoUIController);
 
-        if(!imageMode){
+        if(!configBundle.isImageModeEnabled()){
             mPanoViewWrapper.getMediaPlayer().setPlayerCallback(new PanoMediaPlayerWrapper.PlayerCallback() {
                 @Override
                 public void updateProgress() {
