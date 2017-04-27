@@ -2,8 +2,14 @@ package com.martin.ads.vrlib.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.util.SparseArray;
+
+import com.martin.ads.vrlib.constant.MimeType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ads on 2017/4/12.
@@ -16,8 +22,9 @@ public class Pano360ConfigBundle implements Serializable{
     private boolean planeModeEnabled;
     private boolean windowModeEnabled;
     private boolean removeHotspot;
+    private int mimeType;
 
-    public Pano360ConfigBundle() {
+    private Pano360ConfigBundle() {
         filePath=null;
         videoHotspotPath=null;
         imageModeEnabled=false;
@@ -33,6 +40,13 @@ public class Pano360ConfigBundle implements Serializable{
     public void startEmbeddedActivity(Context context){
         Intent intent=new Intent(context,PanoPlayerActivity.class);
         intent.putExtra(PanoPlayerActivity.CONFIG_BUNDLE,this);
+        context.startActivity(intent);
+    }
+
+    public void startEmbeddedActivityWithSpecifiedBitmap(Context context,Bitmap bitmap){
+        Intent intent=new Intent(context,PanoPlayerActivity.class);
+        intent.putExtra(PanoPlayerActivity.CONFIG_BUNDLE,this);
+        intent.putExtra("bitmap",bitmap);
         context.startActivity(intent);
     }
 
@@ -58,11 +72,6 @@ public class Pano360ConfigBundle implements Serializable{
         return imageModeEnabled;
     }
 
-    public Pano360ConfigBundle setImageModeEnabled(boolean imageModeEnabled) {
-        this.imageModeEnabled = imageModeEnabled;
-        return this;
-    }
-
     public boolean isPlaneModeEnabled() {
         return planeModeEnabled;
     }
@@ -83,5 +92,15 @@ public class Pano360ConfigBundle implements Serializable{
     public Pano360ConfigBundle setRemoveHotspot(boolean removeHotspot) {
         this.removeHotspot = removeHotspot;
         return this;
+    }
+
+    public Pano360ConfigBundle setMimeType(int mimeType) {
+        this.mimeType = mimeType;
+        imageModeEnabled=(mimeType & MimeType.PICTURE)!=0;
+        return this;
+    }
+
+    public int getMimeType() {
+        return mimeType;
     }
 }

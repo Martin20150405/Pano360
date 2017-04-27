@@ -34,7 +34,7 @@ public class ImageHotspot extends AbsHotspot {
         super.init();
         glPassThroughProgram.create();
         if(imagePath!=null)
-            bitmapTexture.loadWithFile(context,imagePath);
+            bitmapTexture.loadWithAssetFile(context,imagePath);
         else bitmapTexture.loadBitmap(bitmap);
 
         MatrixUtils.updateProjection(

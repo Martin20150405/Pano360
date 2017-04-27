@@ -1,5 +1,6 @@
 package com.martin.ads.vrlib;
 
+import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -78,6 +79,20 @@ public class PanoMediaPlayerWrapper implements
     public void setMediaPlayerFromUri(Uri uri){
         try{
             mMediaPlayer.setDataSource(statusHelper.getContext(),uri);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setLooping(true);
+    }
+
+    public void setMediaPlayerFromAssets(AssetFileDescriptor assetFileDescriptor){
+        try{
+            mMediaPlayer.setDataSource(
+                    assetFileDescriptor.getFileDescriptor(),
+                    assetFileDescriptor.getStartOffset(),
+                    assetFileDescriptor.getDeclaredLength()
+            );
         }catch (IOException e){
             e.printStackTrace();
         }

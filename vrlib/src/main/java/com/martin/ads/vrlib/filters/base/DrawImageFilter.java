@@ -1,6 +1,7 @@
 package com.martin.ads.vrlib.filters.base;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -19,21 +20,21 @@ public class DrawImageFilter extends PassThroughFilter {
 
     private Plane imagePlane;
     private BitmapTexture bitmapTexture;
-    private String imagePath;
+    private Bitmap bitmap;
     private int adjustingMode;
 
-    public DrawImageFilter(Context context, String imagePath,int adjustingMode) {
+    public DrawImageFilter(Context context,Bitmap bitmap,int adjustingMode) {
         super(context);
         bitmapTexture=new BitmapTexture();
-        this.imagePath=imagePath;
         imagePlane =new Plane(false);
+        this.bitmap=bitmap;
         this.adjustingMode=adjustingMode;
     }
 
     @Override
     public void init() {
         super.init();
-        bitmapTexture.loadWithFile(context,imagePath);
+        bitmapTexture.loadBitmap(bitmap);
     }
 
     @Override

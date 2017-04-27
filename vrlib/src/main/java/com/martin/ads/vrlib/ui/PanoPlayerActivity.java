@@ -2,6 +2,7 @@ package com.martin.ads.vrlib.ui;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.martin.ads.vrlib.PanoMediaPlayerWrapper;
 import com.martin.ads.vrlib.PanoViewWrapper;
 import com.martin.ads.vrlib.R;
+import com.martin.ads.vrlib.constant.MimeType;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
 import com.martin.ads.vrlib.filters.advanced.FilterType;
@@ -49,8 +51,9 @@ public class PanoPlayerActivity extends Activity {
 
     private void init(){
         configBundle= (Pano360ConfigBundle) getIntent().getSerializableExtra(CONFIG_BUNDLE);
+
         if(configBundle==null){
-            configBundle=Pano360ConfigBundle.newInstance();
+            throw new RuntimeException("config can't be null");
         }
 
         findViewById(R.id.img_full_screen).setVisibility(configBundle.isWindowModeEnabled() ? View.VISIBLE : View.GONE);
@@ -66,9 +69,15 @@ public class PanoPlayerActivity extends Activity {
         title.setText(Uri.parse(configBundle.getFilePath()).getLastPathSegment());
 
         GLSurfaceView glSurfaceView = (GLSurfaceView) findViewById(R.id.surface_view);
+
+        Bitmap bitmap=null;
+        if((configBundle.getMimeType() & MimeType.BITMAP)!=0){
+            bitmap=getIntent().getParcelableExtra("bitmap");
+        }
         mPanoViewWrapper = PanoViewWrapper.with(this)
                 .setConfig(configBundle)
                 .setGlSurfaceView(glSurfaceView)
+                .setBitmap(bitmap)
                 .init();
         if(configBundle.isRemoveHotspot())
             mPanoViewWrapper.removeDefaultHotSpot();

@@ -1,6 +1,7 @@
 package com.martin.ads.vrlib;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.martin.ads.vrlib.constant.MimeType;
 import com.martin.ads.vrlib.constant.PanoMode;
 import com.martin.ads.vrlib.constant.PanoStatus;
 import com.martin.ads.vrlib.filters.vr.AbsHotspot;
@@ -17,9 +19,11 @@ import com.martin.ads.vrlib.filters.vr.ImageHotspot;
 import com.martin.ads.vrlib.filters.vr.VideoHotspot;
 import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.ui.Pano360ConfigBundle;
+import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.martin.ads.vrlib.utils.StatusHelper;
 import com.martin.ads.vrlib.utils.TextImageGenerator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +44,9 @@ public class PanoViewWrapper {
     private Context context;
     private String filePath;
     private List<AbsHotspot> hotspotList;
+    private int mimeType;
+    private Pano360ConfigBundle configBundle;
+    private Bitmap bitmap;
 
     private PanoViewWrapper(Context context) {
         this.context=context;
@@ -52,10 +59,13 @@ public class PanoViewWrapper {
     }
 
     public PanoViewWrapper setConfig(Pano360ConfigBundle configBundle){
+        this.configBundle=configBundle;
         filePath=configBundle.getFilePath();
         videoHotspotPath=configBundle.getVideoHotspotPath();
         planeMode=configBundle.isPlaneModeEnabled();
         imageMode=configBundle.isImageModeEnabled();
+        mimeType=configBundle.getMimeType();
+        //Log.d(TAG, "setConfig: MimeType is "+mimeType);
         return this;
     }
 
@@ -67,7 +77,13 @@ public class PanoViewWrapper {
         if(!imageMode){
             mPnoVideoPlayer = new PanoMediaPlayerWrapper();
             mPnoVideoPlayer.setStatusHelper(statusHelper);
-            if (uri.toString().startsWith("http"))
+            if((mimeType & MimeType.ASSETS)!=0)
+                try {
+                    mPnoVideoPlayer.setMediaPlayerFromAssets(context.getAssets().openFd(uri.toString()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            else if((mimeType & MimeType.ONLINE)!=0)
                 mPnoVideoPlayer.openRemoteFile(uri.toString());
             else mPnoVideoPlayer.setMediaPlayerFromUri(uri);
             mPnoVideoPlayer.setRenderCallBack(new PanoViewWrapper.RenderCallBack() {
@@ -80,12 +96,23 @@ public class PanoViewWrapper {
             mPnoVideoPlayer.prepare();
         }
 
+        if(imageMode){
+            if((mimeType & MimeType.ASSETS)!=0)
+                bitmap=BitmapUtils.loadBitmapFromAssets(context,filePath);
+            else if((mimeType & MimeType.BITMAP)!=0);
+
+            else if((mimeType & MimeType.RAW)!=0)
+                bitmap= BitmapUtils.loadBitmapFromRaw(context,
+                        Integer.valueOf(uri.getLastPathSegment()));
+            else throw new RuntimeException("not implemented yet!");
+        }
+
         mRenderer = PanoRender.newInstance()
                 .setStatusHelper(statusHelper)
                 .setPanoMediaPlayerWrapper(mPnoVideoPlayer)
                 .setImageMode(imageMode)
                 .setPlaneMode(planeMode)
-                .setFilePath(uri.toString())
+                .setBitmap(bitmap)
                 .setFilterMode(PanoRender.FILTER_MODE_AFTER_PROJECTION)
                 .init();
 
@@ -215,6 +242,11 @@ public class PanoViewWrapper {
         if(hotspotList ==null) return false;
         hotspotList.clear();
         return true;
+    }
+
+    public PanoViewWrapper setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+        return this;
     }
 
     //TODO:add real interface to control hot spot

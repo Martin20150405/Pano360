@@ -1,5 +1,6 @@
 package com.martin.ads.vrlib;
 
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
@@ -41,8 +42,7 @@ public class PanoRender
     private int filterMode;
     private OrthoFilter orthoFilter;
     private FilterGroup customizedFilters;
-
-    private String filePath;
+    private Bitmap bitmap;
 
     private PanoRender() {
 
@@ -58,7 +58,7 @@ public class PanoRender
         }else{
             firstPassFilter=new DrawImageFilter(
                     statusHelper.getContext(),
-                    filePath,
+                    bitmap,
                     AdjustingMode.ADJUSTING_MODE_STRETCH);
         }
         filterGroup.addFilter(firstPassFilter);
@@ -168,8 +168,8 @@ public class PanoRender
         return this;
     }
 
-    public PanoRender setFilePath(String filePath) {
-        this.filePath = filePath;
+    public PanoRender setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
         return this;
     }
 
