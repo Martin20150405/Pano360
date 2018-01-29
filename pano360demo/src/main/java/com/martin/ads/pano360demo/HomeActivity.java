@@ -1,8 +1,9 @@
 package com.martin.ads.pano360demo;
 
+import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
@@ -12,14 +13,18 @@ import com.github.rubensousa.viewpagercards.CardItem;
 import com.github.rubensousa.viewpagercards.CardPagerAdapter;
 import com.github.rubensousa.viewpagercards.ShadowTransformer;
 import com.martin.ads.vrlib.constant.MimeType;
+import com.martin.ads.vrlib.ext.GirlFriendNotFoundException;
 import com.martin.ads.vrlib.ui.Pano360ConfigBundle;
 import com.martin.ads.vrlib.ui.PanoPlayerActivity;
-import com.martin.ads.vrlib.ext.GirlFriendNotFoundException;
 import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.util.regex.Pattern;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+
+@RuntimePermissions
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
 
@@ -38,12 +43,21 @@ public class HomeActivity extends AppCompatActivity {
 
     private int mimeType;
 
+
+    @NeedsPermission({
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET
+    })
+    void init(){
+        //fake method to require permissions
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        HomeActivityPermissionsDispatcher.initWithPermissionCheck(this);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
-
         mCardAdapter = new CardPagerAdapter();
         mCardAdapter.addCardItem(new CardItem(R.string.title_1, R.string.content_text_1));
         mCardAdapter.addCardItem(new CardItem(R.string.title_2, R.string.content_text_2));
@@ -147,4 +161,10 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        HomeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
 }

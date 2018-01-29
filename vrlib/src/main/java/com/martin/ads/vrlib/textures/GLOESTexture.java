@@ -15,6 +15,7 @@ public class GLOESTexture {
 
     private int textureId;
 
+    //TODO:delete it
     private boolean textureLoaded;
     public GLOESTexture() {
         textureId= GLEtc.NO_TEXTURE;
