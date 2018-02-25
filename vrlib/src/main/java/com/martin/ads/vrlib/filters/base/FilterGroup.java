@@ -76,6 +76,7 @@ public class FilterGroup extends AbsFilter {
                 }else{
                     filter.onDrawFrame(previousTexture);
                 }
+                fbo.unbind();
             }
         }
     }

@@ -130,7 +130,8 @@ public class HomeActivity extends AppCompatActivity {
                 .setFilePath(filePath)
                 .setMimeType(mimeType)
                 .setPlaneModeEnabled(planeModeEnabled)
-                .setRemoveHotspot(false)
+                //set it false to see default hotspot
+                .setRemoveHotspot(true)
                 .setVideoHotspotPath(videoHotspotPath);
 
         if((mimeType & MimeType.BITMAP)!=0){

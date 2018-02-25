@@ -123,8 +123,8 @@ public class PanoRender
             panoMediaPlayerWrapper.doTextureUpdate(((OESFilter)firstPassFilter).getSTMatrix());
         }
         filterGroup.drawToFBO(0,fbo);
-        fbo.unbind();
-        screenDrawer.onDrawFrame(fbo.getFrameBufferTextureId());
+        if(fbo!=null)
+            screenDrawer.onDrawFrame(fbo.getFrameBufferTextureId());
 
         if (saveImg){
             BitmapUtils.sendImage(surfaceWidth, surfaceHeight,statusHelper.getContext());
