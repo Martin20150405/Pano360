@@ -113,7 +113,6 @@ public class PanoViewWrapper {
                 .setImageMode(imageMode)
                 .setPlaneMode(planeMode)
                 .setBitmap(bitmap)
-                .setFilterMode(PanoRender.FILTER_MODE_AFTER_PROJECTION)
                 .setRenderSizeType(PanoRender.RENDER_SIZE_TEXTURE)
                 .init();
 

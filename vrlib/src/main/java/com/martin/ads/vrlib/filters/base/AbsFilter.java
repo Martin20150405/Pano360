@@ -31,12 +31,12 @@ public abstract class AbsFilter {
         this.surfaceHeight=surfaceHeight;
     }
 
-    public int getSurfaceWidth() {
-        return surfaceWidth;
+    void setViewport(){
+        GLES20.glViewport(0, 0, surfaceWidth, surfaceHeight);
     }
 
-    public int getSurfaceHeight() {
-        return surfaceHeight;
+    public FBO createFBO(){
+        return FBO.newInstance().create(surfaceWidth,surfaceHeight);
     }
 
     abstract public void onDrawFrame(final int textureId);

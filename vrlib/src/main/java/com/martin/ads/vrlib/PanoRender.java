@@ -9,6 +9,7 @@ import com.martin.ads.vrlib.constant.AdjustingMode;
 import com.martin.ads.vrlib.filters.advanced.FilterFactory;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 import com.martin.ads.vrlib.filters.base.DrawImageFilter;
+import com.martin.ads.vrlib.filters.base.FBO;
 import com.martin.ads.vrlib.filters.base.FilterGroup;
 import com.martin.ads.vrlib.filters.base.OESFilter;
 import com.martin.ads.vrlib.filters.base.OrthoFilter;
@@ -27,10 +28,6 @@ public class PanoRender
         implements GLSurfaceView.Renderer {
     public static String TAG = "PanoRender";
 
-    public static final int FILTER_MODE_NONE=0x0001;
-    public static final int FILTER_MODE_BEFORE_PROJECTION=0x0002;
-    public static final int FILTER_MODE_AFTER_PROJECTION=0x0003;
-
     //If set to RENDER_SIZE_TEXTURE, the rendering window except the last filter
     //will be resized to fit the size of input texture.
     public static final int RENDER_SIZE_VIEW=0x0004;
@@ -44,11 +41,13 @@ public class PanoRender
     private int surfaceWidth, surfaceHeight;
     private int textureWidth, textureHeight;
 
+    private FBO fbo;
+    private PassThroughFilter screenDrawer;
+
     private boolean imageMode;
     private boolean planeMode;
     private boolean saveImg;
-    private int filterMode;
-    private AbsFilter customizedFilter;
+    private FilterGroup customizedFilters;
     private Bitmap bitmap;
     private int renderSizeType;
 
@@ -59,7 +58,7 @@ public class PanoRender
     public PanoRender init(){
         saveImg=false;
         filterGroup=new FilterGroup();
-        customizedFilter=new PassThroughFilter(statusHelper.getContext());
+        customizedFilters=new FilterGroup();
 
         if(!imageMode) {
             firstPassFilter = new OESFilter(statusHelper.getContext());
@@ -77,11 +76,9 @@ public class PanoRender
             });
         }
         filterGroup.addFilter(firstPassFilter);
-        if(filterMode==FILTER_MODE_BEFORE_PROJECTION){
-            //the code is becoming more and more messy ┗( T﹏T )┛
-            filterGroup.addFilter(customizedFilter);
-        }
+
         spherePlugin=new Sphere2DPlugin(statusHelper);
+
         //TODO: this should be adjustable
         final OrthoFilter orthoFilter=new OrthoFilter(statusHelper,
                 AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN);
@@ -99,21 +96,15 @@ public class PanoRender
         }else{
             filterGroup.addFilter(orthoFilter);
         }
-        if(filterMode==FILTER_MODE_AFTER_PROJECTION){
-            filterGroup.addFilter(customizedFilter);
-            filterGroup.addPreDrawTask(new Runnable() {
-                @Override
-                public void run() {
-                    customizedFilter=new PassThroughFilter(statusHelper.getContext());
-                    alignRenderingAreaWithTexture();
-                }
-            });
-        }
+        customizedFilters.addFilter(new PassThroughFilter(statusHelper.getContext()));
+        filterGroup.addFilter(customizedFilters);
+        screenDrawer=new PassThroughFilter(statusHelper.getContext());
         return this;
     }
     @Override
     public void onSurfaceCreated(GL10 glUnused,EGLConfig config) {
         filterGroup.init();
+        screenDrawer.init();
         if(!imageMode)
             panoMediaPlayerWrapper.setSurface(((OESFilter)firstPassFilter).getGlOESTexture().getTextureId());
     }
@@ -131,7 +122,9 @@ public class PanoRender
         if(!imageMode){
             panoMediaPlayerWrapper.doTextureUpdate(((OESFilter)firstPassFilter).getSTMatrix());
         }
-        filterGroup.onDrawFrame(0);
+        filterGroup.drawToFBO(0,fbo);
+        fbo.unbind();
+        screenDrawer.onDrawFrame(fbo.getFrameBufferTextureId());
 
         if (saveImg){
             BitmapUtils.sendImage(surfaceWidth, surfaceHeight,statusHelper.getContext());
@@ -146,23 +139,40 @@ public class PanoRender
     public void onSurfaceChanged(GL10 glUnused, int surfaceWidth, int surfaceHeight) {
         this.surfaceWidth =surfaceWidth;
         this.surfaceHeight =surfaceHeight;
+        screenDrawer.onFilterChanged(surfaceWidth,surfaceHeight);
         alignRenderingAreaWithTexture();
     }
 
     public void onTextureSizeChanged(int textureWidth,int textureHeight){
-        Log.d(TAG, "onTextureSizeChanged: "+textureWidth+" "+textureHeight);
         this.textureWidth=textureWidth;
         this.textureHeight=textureHeight;
         alignRenderingAreaWithTexture();
     }
 
-    public void alignRenderingAreaWithTexture(){
-        if(renderSizeType==PanoRender.RENDER_SIZE_TEXTURE && textureWidth>surfaceWidth) {
+    private int resolvedWidth, resolvedHeight;
+
+    private void alignRenderingAreaWithTexture(){
+        if(surfaceWidth==0 && textureWidth==0) throw new RuntimeException();
+        else if(surfaceWidth==0 || textureWidth==0) return;
+        if(renderSizeType==PanoRender.RENDER_SIZE_TEXTURE) {
             double ratio=(double)textureWidth/surfaceWidth;
-            filterGroup.onFilterChanged(textureWidth, (int) (surfaceHeight*ratio));
-            AbsFilter filter=filterGroup.getLastFilter();
-            if(filter!=null) filter.onFilterChanged(surfaceWidth,surfaceHeight);
-        }else filterGroup.onFilterChanged(surfaceWidth,surfaceHeight);
+            resolvedWidth=textureWidth;
+            resolvedHeight=(int) (surfaceHeight*ratio);
+        }else{
+            resolvedWidth =surfaceWidth;
+            resolvedHeight =surfaceHeight;
+        }
+        filterGroup.addPreDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                //only can run in gl thread
+                //create here will cause flashing on drawing
+                fbo=FBO.newInstance().create(resolvedWidth, resolvedHeight);
+                filterGroup.onFilterChanged(resolvedWidth, resolvedHeight);
+            }
+        });
+
+        Log.d(TAG, "alignRenderingAreaWithTexture: "+surfaceWidth+" "+surfaceHeight+" "+textureWidth+" "+textureHeight+" "+ resolvedWidth +" "+ resolvedHeight);
     }
 
     public void saveImg(){
@@ -197,11 +207,6 @@ public class PanoRender
         return this;
     }
 
-    public PanoRender setFilterMode(int filterMode) {
-        this.filterMode = filterMode;
-        return this;
-    }
-
     public PanoRender setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
         return this;
@@ -220,7 +225,7 @@ public class PanoRender
         filterGroup.addPreDrawTask(new Runnable() {
             @Override
             public void run() {
-                customizedFilter=FilterFactory.randomlyCreateFilter(statusHelper.getContext());
+                customizedFilters.switchLastFilter(FilterFactory.randomlyCreateFilter(statusHelper.getContext()));
                 alignRenderingAreaWithTexture();
             }
         });

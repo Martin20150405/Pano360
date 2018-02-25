@@ -15,9 +15,8 @@ import java.util.List;
 
 public class FilterGroup extends AbsFilter {
     private static final String TAG = "FilterGroup";
-    private int[] frameBuffers = null;
-    private int[] frameBufferTextures = null;
-    private List<AbsFilter> filters;
+    private FBO[] fboList;
+    protected List<AbsFilter> filters;
     private boolean isRunning;
 
     public FilterGroup() {
@@ -34,10 +33,6 @@ public class FilterGroup extends AbsFilter {
     }
 
     @Override
-    public void onPreDrawElements() {
-    }
-
-    @Override
     public void destroy() {
         destroyFrameBuffers();
         for (AbsFilter filter : filters) {
@@ -48,24 +43,39 @@ public class FilterGroup extends AbsFilter {
 
     @Override
     public void onDrawFrame(int textureId) {
+        throw new RuntimeException("Illegal call");
+    }
+
+    public void drawToFBO(int textureId,FBO fbo) {
         runPreDrawTasks();
-        if (frameBuffers == null || frameBufferTextures == null) {
-            return ;
+        if (fboList==null || fbo==null) {
+            return;
         }
         int size = filters.size();
         int previousTexture = textureId;
         for (int i = 0; i < size; i++) {
             AbsFilter filter = filters.get(i);
-            GLES20.glViewport(0, 0, filter.getSurfaceWidth(), filter.getSurfaceHeight());
-            Log.d(TAG, "onDrawFrame: "+i+" "+filter.getClass().getSimpleName()+" "+filter.getSurfaceWidth()+" "+filter.getSurfaceHeight());
+            Log.d(TAG, "onDrawFrame: "+i+" / "+size +" "+filter.getClass().getSimpleName()+" "+
+                    filter.surfaceWidth+" "+filter.surfaceHeight);
             if (i < size - 1) {
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffers[i]);
+                filter.setViewport();
+                fboList[i].bind();
                 GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-                filter.onDrawFrame(previousTexture);
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-                previousTexture = frameBufferTextures[i];
+                if(filter instanceof FilterGroup){
+                    ((FilterGroup) filter).drawToFBO(previousTexture,fboList[i]);
+                }else{
+                    filter.onDrawFrame(previousTexture);
+                }
+                fboList[i].unbind();
+                previousTexture = fboList[i].getFrameBufferTextureId();
             }else{
-                filter.onDrawFrame(previousTexture);
+                fbo.bind();
+                filter.setViewport();
+                if(filter instanceof FilterGroup){
+                    ((FilterGroup) filter).drawToFBO(previousTexture,fbo);
+                }else{
+                    filter.onDrawFrame(previousTexture);
+                }
             }
         }
     }
@@ -77,60 +87,112 @@ public class FilterGroup extends AbsFilter {
         for (int i = 0; i < size; i++) {
             filters.get(i).onFilterChanged(surfaceWidth, surfaceHeight);
         }
-        if(frameBuffers != null){
+        if(fboList != null){
             destroyFrameBuffers();
+            fboList=null;
         }
-        if (frameBuffers == null) {
-            frameBuffers = new int[size-1];
-            frameBufferTextures = new int[size-1];
-
+        if (fboList == null) {
+            fboList = new FBO[size-1];
             for (int i = 0; i < size-1; i++) {
-                GLES20.glGenFramebuffers(1, frameBuffers, i);
-
-                GLES20.glGenTextures(1, frameBufferTextures, i);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, frameBufferTextures[i]);
-                GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, surfaceWidth, surfaceHeight, 0,
-                        GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffers[i]);
-                GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                        GLES20.GL_TEXTURE_2D, frameBufferTextures[i], 0);
-
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                AbsFilter filter=filters.get(i);
+                fboList[i]=filter.createFBO();
             }
         }
     }
 
     private void destroyFrameBuffers() {
-        if (frameBufferTextures != null) {
-            GLES20.glDeleteTextures(frameBufferTextures.length, frameBufferTextures, 0);
-            frameBufferTextures = null;
-        }
-        if (frameBuffers != null) {
-            GLES20.glDeleteFramebuffers(frameBuffers.length, frameBuffers, 0);
-            frameBuffers = null;
-        }
+        for(FBO fbo:fboList)
+            fbo.destroy();
     }
 
     public void addFilter(final AbsFilter filter){
+        if (filter==null) return;
+        //If one filter is added multiple times,
+        //it will execute the same times
+        //BTW: Pay attention to the order of execution
         if (!isRunning){
             filters.add(filter);
         }
+        else
+            addPreDrawTask(new Runnable() {
+                @Override
+                public void run() {
+                    filter.init();
+                    filters.add(filter);
+                    onFilterChanged(surfaceWidth,surfaceHeight);
+                }
+            });
     }
 
-    public AbsFilter getLastFilter(){
-        if(filters.size()==0) return null;
-        AbsFilter filter=filters.get(filters.size()-1);
-        if(filter instanceof FilterGroup) return ((FilterGroup) filter).getLastFilter();
-        return filter;
+    public void addFilterList(final List<AbsFilter> filterList){
+        if (filterList==null) return;
+        //If one filter is added multiple times,
+        //it will execute the same times
+        //BTW: Pay attention to the order of execution
+        if (!isRunning){
+            for(AbsFilter filter:filterList){
+                filters.add(filter);
+            }
+        }
+        else
+            addPreDrawTask(new Runnable() {
+                @Override
+                public void run() {
+                    for(AbsFilter filter:filterList){
+                        filter.init();
+                        filters.add(filter);
+                    }
+                    onFilterChanged(surfaceWidth,surfaceHeight);
+                }
+            });
+    }
+
+    public void switchLastFilter(final AbsFilter filter){
+        if (filter==null) return;
+        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
+        if (!isRunning){
+            if(filters.size()>0) {
+                filters.remove(filters.size()-1)
+                        .destroy();
+            }
+            filters.add(filter);
+        }
+        else
+            addPreDrawTask(new Runnable() {
+                @Override
+                public void run() {
+                    if(filters.size()>0) {
+                        filters.remove(filters.size()-1)
+                                .destroy();
+                    }
+                    filter.init();
+                    filters.add(filter);
+                    onFilterChanged(surfaceWidth,surfaceHeight);
+                }
+            });
+    }
+
+    public void switchFilterAt(final AbsFilter filter,final int pos){
+        if (filter==null || pos>=filters.size()) return;
+        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
+        addPreDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                filter.init();
+                List<AbsFilter> tmpList=new ArrayList<AbsFilter>();
+                for(int i=0;i<filters.size();i++){
+                    AbsFilter curFilter=filters.get(i);
+                    if(i==pos) {
+                        tmpList.add(filter);
+                        curFilter.destroy();
+                    }
+                    else tmpList.add(curFilter);
+                }
+                filters.clear();
+                for(AbsFilter curFilter:tmpList)
+                    filters.add(curFilter);
+                onFilterChanged(surfaceWidth,surfaceHeight);
+            }
+        });
     }
 }
