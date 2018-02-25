@@ -122,22 +122,9 @@ public class FilterGroup extends AbsFilter {
     }
 
     public void addFilter(final AbsFilter filter){
-        if (filter==null) return;
-        //If one filter is added multiple times,
-        //it will execute the same times
-        //BTW: Pay attention to the order of execution
         if (!isRunning){
             filters.add(filter);
         }
-        else
-            addPreDrawTask(new Runnable() {
-            @Override
-            public void run() {
-                filter.init();
-                filters.add(filter);
-                onFilterChanged(surfaceWidth,surfaceHeight);
-            }
-        });
     }
 
     public AbsFilter getLastFilter(){
@@ -146,22 +133,4 @@ public class FilterGroup extends AbsFilter {
         if(filter instanceof FilterGroup) return ((FilterGroup) filter).getLastFilter();
         return filter;
     }
-
-    public void randomSwitchFilter(Context context){
-        final AbsFilter filter= FilterFactory.randomlyCreateFilter(context);
-
-        addPreDrawTask(new Runnable() {
-            @Override
-            public void run() {
-                for(AbsFilter absFilter:filters){
-                    absFilter.destroy();
-                }
-                filters.clear();
-                filter.init();
-                filters.add(filter);
-                onFilterChanged(surfaceWidth,surfaceHeight);
-            }
-        });
-    }
-
 }

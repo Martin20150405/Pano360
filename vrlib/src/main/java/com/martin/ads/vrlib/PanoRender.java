@@ -3,8 +3,10 @@ package com.martin.ads.vrlib;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import com.martin.ads.vrlib.constant.AdjustingMode;
+import com.martin.ads.vrlib.filters.advanced.FilterFactory;
 import com.martin.ads.vrlib.filters.base.AbsFilter;
 import com.martin.ads.vrlib.filters.base.DrawImageFilter;
 import com.martin.ads.vrlib.filters.base.FilterGroup;
@@ -46,7 +48,7 @@ public class PanoRender
     private boolean planeMode;
     private boolean saveImg;
     private int filterMode;
-    private FilterGroup customizedFilters;
+    private AbsFilter customizedFilter;
     private Bitmap bitmap;
     private int renderSizeType;
 
@@ -57,49 +59,55 @@ public class PanoRender
     public PanoRender init(){
         saveImg=false;
         filterGroup=new FilterGroup();
-        customizedFilters=new FilterGroup();
+        customizedFilter=new PassThroughFilter(statusHelper.getContext());
 
         if(!imageMode) {
             firstPassFilter = new OESFilter(statusHelper.getContext());
         }else{
-            firstPassFilter=new DrawImageFilter(
+            DrawImageFilter drawImageFilter=new DrawImageFilter(
                     statusHelper.getContext(),
                     bitmap,
                     AdjustingMode.ADJUSTING_MODE_STRETCH);
+            firstPassFilter=drawImageFilter;
+            drawImageFilter.setOnTextureSizeChangedCallback(new OnTextureSizeChangedCallback() {
+                @Override
+                public void notifyTextureSizeChanged(int width, int height) {
+                    onTextureSizeChanged(width,height);
+                }
+            });
         }
         filterGroup.addFilter(firstPassFilter);
         if(filterMode==FILTER_MODE_BEFORE_PROJECTION){
             //the code is becoming more and more messy ┗( T﹏T )┛
-            filterGroup.addFilter(customizedFilters);
+            filterGroup.addFilter(customizedFilter);
         }
         spherePlugin=new Sphere2DPlugin(statusHelper);
         //TODO: this should be adjustable
         final OrthoFilter orthoFilter=new OrthoFilter(statusHelper,
                 AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN);
-        OnTextureSizeChangedCallback onTextureSizeChangedCallback=new OnTextureSizeChangedCallback() {
-            @Override
-            public void notifyTextureSizeChanged(int width, int height) {
-                onTextureSizeChanged(width,height);
-                orthoFilter.updateProjection(width,height);
-            }
-        };
         if(panoMediaPlayerWrapper!=null){
-            panoMediaPlayerWrapper.setOnTextureSizeChangedCallback(onTextureSizeChangedCallback);
+            panoMediaPlayerWrapper.setOnTextureSizeChangedCallback(new OnTextureSizeChangedCallback() {
+                @Override
+                public void notifyTextureSizeChanged(int width, int height) {
+                    onTextureSizeChanged(width,height);
+                    orthoFilter.updateProjection(width,height);
+                }
+            });
         }
-        if(firstPassFilter instanceof DrawImageFilter){
-            ((DrawImageFilter)firstPassFilter).setOnTextureSizeChangedCallback(onTextureSizeChangedCallback);
-        }
-
         if(!planeMode){
             filterGroup.addFilter(spherePlugin);
         }else{
             filterGroup.addFilter(orthoFilter);
         }
         if(filterMode==FILTER_MODE_AFTER_PROJECTION){
-            filterGroup.addFilter(customizedFilters);
-        }
-        if(filterMode!=FILTER_MODE_NONE){
-            customizedFilters.addFilter(new PassThroughFilter(statusHelper.getContext()));
+            filterGroup.addFilter(customizedFilter);
+            filterGroup.addPreDrawTask(new Runnable() {
+                @Override
+                public void run() {
+                    customizedFilter=new PassThroughFilter(statusHelper.getContext());
+                    alignRenderingAreaWithTexture();
+                }
+            });
         }
         return this;
     }
@@ -142,6 +150,7 @@ public class PanoRender
     }
 
     public void onTextureSizeChanged(int textureWidth,int textureHeight){
+        Log.d(TAG, "onTextureSizeChanged: "+textureWidth+" "+textureHeight);
         this.textureWidth=textureWidth;
         this.textureHeight=textureHeight;
         alignRenderingAreaWithTexture();
@@ -151,7 +160,8 @@ public class PanoRender
         if(renderSizeType==PanoRender.RENDER_SIZE_TEXTURE && textureWidth>surfaceWidth) {
             double ratio=(double)textureWidth/surfaceWidth;
             filterGroup.onFilterChanged(textureWidth, (int) (surfaceHeight*ratio));
-            filterGroup.getLastFilter().onFilterChanged(surfaceWidth,surfaceHeight);
+            AbsFilter filter=filterGroup.getLastFilter();
+            if(filter!=null) filter.onFilterChanged(surfaceWidth,surfaceHeight);
         }else filterGroup.onFilterChanged(surfaceWidth,surfaceHeight);
     }
 
@@ -207,10 +217,13 @@ public class PanoRender
     }
 
     public void switchFilter(){
-        if(customizedFilters!=null){
-            customizedFilters.randomSwitchFilter(statusHelper.getContext());
-            alignRenderingAreaWithTexture();
-        }
+        filterGroup.addPreDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                customizedFilter=FilterFactory.randomlyCreateFilter(statusHelper.getContext());
+                alignRenderingAreaWithTexture();
+            }
+        });
     }
 
     public interface OnTextureSizeChangedCallback{
