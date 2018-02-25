@@ -49,8 +49,4 @@ public class PassThroughFilter extends AbsFilter {
         plane.draw();
     }
 
-    @Override
-    public void onFilterChanged(int surfaceWidth, int surfaceHeight) {
-        super.onFilterChanged(surfaceWidth, surfaceHeight);
-    }
 }

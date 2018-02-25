@@ -31,6 +31,14 @@ public abstract class AbsFilter {
         this.surfaceHeight=surfaceHeight;
     }
 
+    public int getSurfaceWidth() {
+        return surfaceWidth;
+    }
+
+    public int getSurfaceHeight() {
+        return surfaceHeight;
+    }
+
     abstract public void onDrawFrame(final int textureId);
 
 

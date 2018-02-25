@@ -5,7 +5,7 @@ Pure Java library to play 360 degree panorama video (VR video) on Android. Using
   
 Pano 360 是一个Android平台下纯Java的全景（360度/VR）视频播放库，使用OpenGL ES 2.0来进行视频渲染，没有使用第三方库
 
-**Demo App [在这里下](https://raw.githubusercontent.com/Martin20150405/Pano360/master/pano360demo/pano360demo-release.apk)~**
+**Demo App [在这里下](https://raw.githubusercontent.com/Martin20150405/Pano360/master/pano360demo/release/pano360demo-release.apk)~**
 
 ### Read this in other languages: [English](README.en.md)
 

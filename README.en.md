@@ -3,7 +3,7 @@
 
 Pure Java library to play 360 degree panorama video (VR video) on Android. Using OpenGL ES 2.0 
 
-**Download Demo App [HERE](https://raw.githubusercontent.com/Martin20150405/Pano360/master/pano360demo/pano360demo-release.apk)~**
+**Download Demo App [HERE](https://raw.githubusercontent.com/Martin20150405/Pano360/master/pano360demo/release/pano360demo-release.apk)~**
 
 ## Platform Requirements
 * OpenGL ES 2.0 

@@ -29,20 +29,26 @@ public class PanoRender
     public static final int FILTER_MODE_BEFORE_PROJECTION=0x0002;
     public static final int FILTER_MODE_AFTER_PROJECTION=0x0003;
 
+    //If set to RENDER_SIZE_TEXTURE, the rendering window except the last filter
+    //will be resized to fit the size of input texture.
+    public static final int RENDER_SIZE_VIEW=0x0004;
+    public static final int RENDER_SIZE_TEXTURE=0x0005;
+
     private StatusHelper statusHelper;
     private PanoMediaPlayerWrapper panoMediaPlayerWrapper;
     private Sphere2DPlugin spherePlugin;
     private FilterGroup filterGroup;
     private AbsFilter firstPassFilter;
-    private int width,height;
+    private int surfaceWidth, surfaceHeight;
+    private int textureWidth, textureHeight;
 
     private boolean imageMode;
     private boolean planeMode;
     private boolean saveImg;
     private int filterMode;
-    private OrthoFilter orthoFilter;
     private FilterGroup customizedFilters;
     private Bitmap bitmap;
+    private int renderSizeType;
 
     private PanoRender() {
 
@@ -67,21 +73,27 @@ public class PanoRender
             filterGroup.addFilter(customizedFilters);
         }
         spherePlugin=new Sphere2DPlugin(statusHelper);
+        //TODO: this should be adjustable
+        final OrthoFilter orthoFilter=new OrthoFilter(statusHelper,
+                AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN);
+        OnTextureSizeChangedCallback onTextureSizeChangedCallback=new OnTextureSizeChangedCallback() {
+            @Override
+            public void notifyTextureSizeChanged(int width, int height) {
+                onTextureSizeChanged(width,height);
+                orthoFilter.updateProjection(width,height);
+            }
+        };
+        if(panoMediaPlayerWrapper!=null){
+            panoMediaPlayerWrapper.setOnTextureSizeChangedCallback(onTextureSizeChangedCallback);
+        }
+        if(firstPassFilter instanceof DrawImageFilter){
+            ((DrawImageFilter)firstPassFilter).setOnTextureSizeChangedCallback(onTextureSizeChangedCallback);
+        }
+
         if(!planeMode){
             filterGroup.addFilter(spherePlugin);
         }else{
-            //TODO: this should be adjustable
-            orthoFilter=new OrthoFilter(statusHelper,
-                    AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN);
-            if(panoMediaPlayerWrapper!=null){
-                panoMediaPlayerWrapper.setVideoSizeCallback(new PanoMediaPlayerWrapper.VideoSizeCallback() {
-                    @Override
-                    public void notifyVideoSizeChanged(int width, int height) {
-                        orthoFilter.updateProjection(width,height);
-                    }
-                });
-                filterGroup.addFilter(orthoFilter);
-            }
+            filterGroup.addFilter(orthoFilter);
         }
         if(filterMode==FILTER_MODE_AFTER_PROJECTION){
             filterGroup.addFilter(customizedFilters);
@@ -114,7 +126,7 @@ public class PanoRender
         filterGroup.onDrawFrame(0);
 
         if (saveImg){
-            BitmapUtils.sendImage(width,height,statusHelper.getContext());
+            BitmapUtils.sendImage(surfaceWidth, surfaceHeight,statusHelper.getContext());
             saveImg=false;
         }
 
@@ -123,12 +135,24 @@ public class PanoRender
     }
 
     @Override
-    public void onSurfaceChanged(GL10 glUnused, int width, int height) {
-        this.width=width;
-        this.height=height;
+    public void onSurfaceChanged(GL10 glUnused, int surfaceWidth, int surfaceHeight) {
+        this.surfaceWidth =surfaceWidth;
+        this.surfaceHeight =surfaceHeight;
+        alignRenderingAreaWithTexture();
+    }
 
-        GLES20.glViewport(0,0,width,height);
-        filterGroup.onFilterChanged(width,height);
+    public void onTextureSizeChanged(int textureWidth,int textureHeight){
+        this.textureWidth=textureWidth;
+        this.textureHeight=textureHeight;
+        alignRenderingAreaWithTexture();
+    }
+
+    public void alignRenderingAreaWithTexture(){
+        if(renderSizeType==PanoRender.RENDER_SIZE_TEXTURE && textureWidth>surfaceWidth) {
+            double ratio=(double)textureWidth/surfaceWidth;
+            filterGroup.onFilterChanged(textureWidth, (int) (surfaceHeight*ratio));
+            filterGroup.getLastFilter().onFilterChanged(surfaceWidth,surfaceHeight);
+        }else filterGroup.onFilterChanged(surfaceWidth,surfaceHeight);
     }
 
     public void saveImg(){
@@ -177,10 +201,20 @@ public class PanoRender
         return new PanoRender();
     }
 
+    public PanoRender setRenderSizeType(int renderSizeType) {
+        this.renderSizeType = renderSizeType;
+        return this;
+    }
+
     public void switchFilter(){
         if(customizedFilters!=null){
             customizedFilters.randomSwitchFilter(statusHelper.getContext());
+            alignRenderingAreaWithTexture();
         }
+    }
+
+    public interface OnTextureSizeChangedCallback{
+        void notifyTextureSizeChanged(int width,int height);
     }
 
     public void addFilter(){

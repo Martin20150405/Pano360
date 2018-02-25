@@ -89,9 +89,4 @@ public class OrthoFilter extends AbsFilter {
         //TODO:it's not the right way to switch mode.
     }
 
-    @Override
-    public void onFilterChanged(int width, int height) {
-        super.onFilterChanged(width, height);
-        updateProjection(videoWidth,videoHeight);
-    }
 }

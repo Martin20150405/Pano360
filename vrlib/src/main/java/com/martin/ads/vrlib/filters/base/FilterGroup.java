@@ -2,6 +2,7 @@ package com.martin.ads.vrlib.filters.base;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.martin.ads.vrlib.filters.advanced.FilterFactory;
 
@@ -55,15 +56,15 @@ public class FilterGroup extends AbsFilter {
         int previousTexture = textureId;
         for (int i = 0; i < size; i++) {
             AbsFilter filter = filters.get(i);
+            GLES20.glViewport(0, 0, filter.getSurfaceWidth(), filter.getSurfaceHeight());
+            Log.d(TAG, "onDrawFrame: "+i+" "+filter.getClass().getSimpleName()+" "+filter.getSurfaceWidth()+" "+filter.getSurfaceHeight());
             if (i < size - 1) {
-                GLES20.glViewport(0, 0, surfaceWidth, surfaceHeight);
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffers[i]);
                 GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 filter.onDrawFrame(previousTexture);
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
                 previousTexture = frameBufferTextures[i];
             }else{
-                GLES20.glViewport(0, 0 ,surfaceWidth, surfaceHeight);
                 filter.onDrawFrame(previousTexture);
             }
         }
@@ -137,6 +138,13 @@ public class FilterGroup extends AbsFilter {
                 onFilterChanged(surfaceWidth,surfaceHeight);
             }
         });
+    }
+
+    public AbsFilter getLastFilter(){
+        if(filters.size()==0) return null;
+        AbsFilter filter=filters.get(filters.size()-1);
+        if(filter instanceof FilterGroup) return ((FilterGroup) filter).getLastFilter();
+        return filter;
     }
 
     public void randomSwitchFilter(Context context){

@@ -5,13 +5,9 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.opengl.Matrix;
-import android.util.Log;
 import android.view.Surface;
 
-
 import com.martin.ads.vrlib.constant.PanoStatus;
-import com.martin.ads.vrlib.filters.vr.AbsHotspot;
 import com.martin.ads.vrlib.utils.StatusHelper;
 
 import java.io.IOException;
@@ -39,7 +35,7 @@ public class PanoMediaPlayerWrapper implements
 
     private PlayerCallback playerCallback;
 
-    private VideoSizeCallback videoSizeCallback;
+    private PanoRender.OnTextureSizeChangedCallback onTextureSizeChangedCallback;
 
     public PanoMediaPlayerWrapper() {
         mMediaPlayer=new MediaPlayer();
@@ -186,8 +182,8 @@ public class PanoMediaPlayerWrapper implements
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        if(videoSizeCallback!=null)
-            videoSizeCallback.notifyVideoSizeChanged(width,height);
+        if(onTextureSizeChangedCallback!=null)
+            onTextureSizeChangedCallback.notifyTextureSizeChanged(width,height);
     }
 
     public void seekTo(int pos){
@@ -233,11 +229,7 @@ public class PanoMediaPlayerWrapper implements
         this.playerCallback = playerCallback;
     }
 
-    interface VideoSizeCallback{
-        void notifyVideoSizeChanged(int width,int height);
-    }
-
-    public void setVideoSizeCallback(VideoSizeCallback videoSizeCallback) {
-        this.videoSizeCallback = videoSizeCallback;
+    public void setOnTextureSizeChangedCallback(PanoRender.OnTextureSizeChangedCallback onTextureSizeChangedCallback) {
+        this.onTextureSizeChangedCallback = onTextureSizeChangedCallback;
     }
 }

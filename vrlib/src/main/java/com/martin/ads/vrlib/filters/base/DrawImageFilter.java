@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.martin.ads.vrlib.PanoRender;
 import com.martin.ads.vrlib.constant.AdjustingMode;
 import com.martin.ads.vrlib.object.Plane;
 import com.martin.ads.vrlib.textures.BitmapTexture;
@@ -23,6 +24,8 @@ public class DrawImageFilter extends PassThroughFilter {
     private Bitmap bitmap;
     private int adjustingMode;
 
+    private PanoRender.OnTextureSizeChangedCallback onTextureSizeChangedCallback;
+
     public DrawImageFilter(Context context,Bitmap bitmap,int adjustingMode) {
         super(context);
         bitmapTexture=new BitmapTexture();
@@ -35,6 +38,8 @@ public class DrawImageFilter extends PassThroughFilter {
     public void init() {
         super.init();
         bitmapTexture.loadBitmap(bitmap);
+        if(onTextureSizeChangedCallback!=null)
+            onTextureSizeChangedCallback.notifyTextureSizeChanged(bitmapTexture.getImageWidth(),bitmapTexture.getImageHeight());
     }
 
     @Override
@@ -66,8 +71,7 @@ public class DrawImageFilter extends PassThroughFilter {
         GLES20.glDisable(GLES20.GL_BLEND);
     }
 
-    @Override
-    public void onFilterChanged(int surfaceWidth, int surfaceHeight) {
-        super.onFilterChanged(surfaceWidth, surfaceHeight);
+    public void setOnTextureSizeChangedCallback(PanoRender.OnTextureSizeChangedCallback onTextureSizeChangedCallback) {
+        this.onTextureSizeChangedCallback = onTextureSizeChangedCallback;
     }
 }
