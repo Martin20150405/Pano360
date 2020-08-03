@@ -1,12 +1,15 @@
 package com.martin.ads.vrlib.math;
 
+import android.graphics.YuvImage;
 import android.opengl.Matrix;
+import android.util.Log;
 
 /**
  * Created by Ads on 2017/3/11.
  */
 
 public class PositionOrientation {
+
     private float mX;
     private float mY;
     private float mZ;
@@ -14,9 +17,56 @@ public class PositionOrientation {
     private float mAngleY;
     private float mAngleZ;
 
+    private float yaw;
+    private float pitch;
+
+    public PositionOrientation fromTriangularSystem(float yaw, float pitch ,float radius) {
+
+        this.yaw=yaw;
+        this.pitch=pitch;
+
+        mAngleX = pitch;
+//        mAngleY = mX > 0? 90 : -90;
+        mAngleY = 90 + yaw;
+        mAngleZ = 0;
+
+        pitch= (float) Math.toRadians(pitch);
+        yaw= (float) Math.toRadians(yaw);
+
+        this.mZ = (float) (radius * Math.sin(yaw));
+        this.mY = (float) (radius * Math.sin(pitch));
+        Log.e("degree", (radius * Math.cos(pitch))+"pitch");
+        Log.e("degree",(radius * Math.cos(yaw))+"yaw");
+
+        this.mX = (float) (radius * Math.cos(yaw));
+//        this.mX = (float) (radius * Math.cos(pitch));
+//        this.mX = (float) (mY * Math.tan(yaw));
+
+        return this;
+    }
+
+    public boolean aroundPosition(float mYaw, float mPitch,float searchArea){
+        mYaw = mYaw - 90;// to sync two systems ...
+        mYaw = mYaw<0?360+mYaw:mYaw;
+        mPitch=-mPitch;
+
+        if (yaw > (mYaw-searchArea) && yaw < (mYaw+searchArea)
+                && pitch > (mPitch-searchArea) && pitch < (mPitch+searchArea)
+        ) return true;
+        else return false;
+    }
+
+
     private PositionOrientation() {
         mX = mY = mZ = 0;
         mAngleX = mAngleY = mAngleZ = 0;
+        mX = 30;
+    }
+
+    private PositionOrientation(float mX, float mY, float mZ) {
+        this.mX = mX;
+        this.mY = mY;
+        this.mZ = mZ;
     }
 
     public float getX() {
