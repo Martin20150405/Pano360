@@ -77,6 +77,7 @@ public class MyHomeActivity extends AppCompatActivity {
     }
 
     private void launch(){
+
         Pano360ConfigBundle configBundle=Pano360ConfigBundle
                 .newInstance()
                 .setFilePath(filePath)
@@ -108,9 +109,8 @@ public class MyHomeActivity extends AppCompatActivity {
         panoViewWrapper.getStatusHelper().setPanoDisPlayMode(PanoMode.SINGLE_SCREEN);
         panoViewWrapper.getStatusHelper().setPanoInteractiveMode(PanoMode.TOUCH);
         panoViewWrapper.addHotspot(ImageHotspot.with(this)
-                .setPositionOrientation(
-                        PositionOrientation.newInstance().fromTriangularSystem(180,10,30)
-                ).setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.home_logo)));
+                .setPositionOrientation(PositionOrientation.newInstance().fromTriangularSystem(180,10,30))
+                .setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.img_58c6f9963d50e)));
 
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -9,6 +9,7 @@ import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.object.Plane;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.textures.BitmapTexture;
+import com.martin.ads.vrlib.utils.DimenUtils;
 import com.martin.ads.vrlib.utils.MatrixUtils;
 import com.martin.ads.vrlib.utils.TextureUtils;
 
@@ -30,7 +31,8 @@ public class ImageHotspot extends AbsHotspot {
     }
 
     public float[] getVisibleArea(){
-        return new float[]{bitmapTexture.getImageWidth(),bitmapTexture.getImageHeight()};
+//        return new float[]{DimenUtils.px2dp(context,bitmapTexture.getImageWidth()) , DimenUtils.px2dp(context, bitmapTexture.getImageHeight())};
+        return new float[]{8,8};
     }
 
     @Override
