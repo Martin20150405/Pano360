@@ -19,39 +19,35 @@ public class PositionOrientation {
 
     private float yaw;
     private float pitch;
+    private float[] visibleArea;
+    private float distance;
 
-    public PositionOrientation fromTriangularSystem(float yaw, float pitch ,float radius) {
-
+    public PositionOrientation fromTriangularSystem(float yaw, float pitch, float distance) {
         this.yaw=yaw;
         this.pitch=pitch;
+        this.distance=distance;
 
         mAngleX = pitch;
-//        mAngleY = mX > 0? 90 : -90;
         mAngleY = 90 + yaw;
         mAngleZ = 0;
 
         pitch= (float) Math.toRadians(pitch);
         yaw= (float) Math.toRadians(yaw);
 
-        this.mZ = (float) (radius * Math.sin(yaw));
-        this.mY = (float) (radius * Math.sin(pitch));
-        Log.e("degree", (radius * Math.cos(pitch))+"pitch");
-        Log.e("degree",(radius * Math.cos(yaw))+"yaw");
-
-        this.mX = (float) (radius * Math.cos(yaw));
-//        this.mX = (float) (radius * Math.cos(pitch));
-//        this.mX = (float) (mY * Math.tan(yaw));
+        this.mZ = (float) (distance * Math.sin(yaw));
+        this.mY = (float) (distance * Math.sin(pitch));
+        this.mX = (float) (distance * Math.cos(yaw));
 
         return this;
     }
 
-    public boolean aroundPosition(float mYaw, float mPitch,float searchArea){
+    public boolean aroundPosition(float mYaw, float mPitch){
         mYaw = mYaw - 90;// to sync two systems ...
         mYaw = mYaw<0?360+mYaw:mYaw;
         mPitch=-mPitch;
 
-        if (yaw > (mYaw-searchArea) && yaw < (mYaw+searchArea)
-                && pitch > (mPitch-searchArea) && pitch < (mPitch+searchArea)
+        if (yaw > (mYaw-visibleArea[0]) && yaw < (mYaw+visibleArea[0])
+                && pitch > (mPitch-visibleArea[1]) && pitch < (mPitch+visibleArea[1])
         ) return true;
         else return false;
     }
@@ -60,7 +56,11 @@ public class PositionOrientation {
     private PositionOrientation() {
         mX = mY = mZ = 0;
         mAngleX = mAngleY = mAngleZ = 0;
-        mX = 30;
+    }
+
+    public PositionOrientation config(float[] visibleArea) {
+        this.visibleArea=visibleArea;
+        return this;
     }
 
     private PositionOrientation(float mX, float mY, float mZ) {

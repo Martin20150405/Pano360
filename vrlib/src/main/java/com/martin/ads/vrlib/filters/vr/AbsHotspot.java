@@ -79,9 +79,7 @@ public abstract class AbsHotspot extends AbsFilter{
     }
 
 
-    public PositionOrientation getPositionOrientation() {
-        return this.positionOrientation;
-    }
+
 
     public void setModelMatrix(float[] modelMatrix) {
         System.arraycopy(modelMatrix,

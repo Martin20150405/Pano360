@@ -7,7 +7,6 @@ import java.util.List;
 
 public abstract class PanoramaInteraction {
     private List<AbsHotspot> hotspotList;
-    private float searchArea = 10;// Hotspot drawable's max width
 
     public void setHotspotList(List<AbsHotspot> hotspotList) {
         this.hotspotList = hotspotList;
@@ -15,13 +14,14 @@ public abstract class PanoramaInteraction {
 
     abstract public void createHotspot(float yaw,float pinch);
 
-    public abstract void hotspotClicked(AbsHotspot hotspot);
+    public abstract void hotspotClicked(ImageHotspot hotspot);
 
     void checkClickArea(float yaw, float pinch){
-        for (AbsHotspot absHotspot : hotspotList) {
-            if (absHotspot.getPositionOrientation().aroundPosition(yaw,pinch,searchArea))
-            {
-                hotspotClicked(absHotspot);
+        for (AbsHotspot abs : hotspotList) {
+            ImageHotspot hotspot= (ImageHotspot) abs;
+
+            if (hotspot.getPositionOrientation().aroundPosition(yaw,pinch)) {
+                hotspotClicked(hotspot);
                 return;
             }
         }

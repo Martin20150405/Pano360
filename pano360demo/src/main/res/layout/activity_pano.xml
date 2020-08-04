@@ -4,27 +4,18 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="#03A9F4">
-
-    <LinearLayout
+    <FrameLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="match_parent">
 
-        <ImageView
+        <android.opengl.GLSurfaceView
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/surface_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/home_logo"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:textColor="#fff"
-            android:text="@string/app_name"
-            android:textSize="24sp"
-            />
-    </LinearLayout>
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

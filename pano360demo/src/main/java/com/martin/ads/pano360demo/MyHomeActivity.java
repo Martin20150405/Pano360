@@ -2,24 +2,27 @@ package com.martin.ads.pano360demo;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.BitmapFactory;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.CheckBox;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.github.rubensousa.viewpagercards.CardItem;
-import com.github.rubensousa.viewpagercards.CardPagerAdapter;
-import com.github.rubensousa.viewpagercards.ShadowTransformer;
+import com.martin.ads.vrlib.PanoViewWrapper;
+import com.martin.ads.vrlib.PanoramaInteraction;
 import com.martin.ads.vrlib.constant.MimeType;
-import com.martin.ads.vrlib.ext.GirlFriendNotFoundException;
+import com.martin.ads.vrlib.constant.PanoMode;
+import com.martin.ads.vrlib.filters.vr.ImageHotspot;
+import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.ui.Pano360ConfigBundle;
 import com.martin.ads.vrlib.ui.PanoPlayerActivity;
 import com.martin.ads.vrlib.utils.BitmapUtils;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
-
-import java.util.regex.Pattern;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -27,6 +30,9 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class MyHomeActivity extends AppCompatActivity {
     private static final String TAG = "MyHomeActivity";
+
+    private PanoViewWrapper panoViewWrapper;
+
 
     private boolean USE_DEFAULT_ACTIVITY =true;
 
@@ -46,6 +52,10 @@ public class MyHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if(this.getSupportActionBar()!=null)this.getSupportActionBar().hide();
+
         setContentView(R.layout.activity_pano);
         MyHomeActivityPermissionsDispatcher.initWithPermissionCheck(this);
 
@@ -59,32 +69,56 @@ public class MyHomeActivity extends AppCompatActivity {
         mimeType= MimeType.ASSETS | MimeType.PICTURE;
         USE_DEFAULT_ACTIVITY=false;
 
-        start();
+        launch();
+
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+        getWindow().setAttributes(params);
     }
 
-    private void start(){
+    private void launch(){
         Pano360ConfigBundle configBundle=Pano360ConfigBundle
                 .newInstance()
                 .setFilePath(filePath)
                 .setMimeType(mimeType)
                 .setPlaneModeEnabled(false)
                 //set it false to see default hotspot
+
                 .setRemoveHotspot(false);
 
-        if((mimeType & MimeType.BITMAP)!=0){
-            //add your own picture here
-            // this interface may be removed in future version.
-            configBundle.startEmbeddedActivityWithSpecifiedBitmap(this,BitmapUtils.loadBitmapFromRaw(this,R.mipmap.ic_launcher));
-            return;
-        }
+        GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
 
-        if(USE_DEFAULT_ACTIVITY)
-            configBundle.startEmbeddedActivity(this);
-        else {
-            Intent intent=new Intent(this,DemoWithGLSurfaceView.class);
-            intent.putExtra(PanoPlayerActivity.CONFIG_BUNDLE,configBundle);
-            startActivity(intent);
-        }
+        panoViewWrapper =PanoViewWrapper.with(this)
+                .setConfig(configBundle)
+                .setGlSurfaceView(glSurfaceView)
+                .setPanoramaInteraction(new PanoramaInteraction() {
+
+                    @Override
+                    public void createHotspot(float yaw, float pinch) {
+
+                    }
+
+                    @Override
+                    public void hotspotClicked(ImageHotspot hotspot) {
+                        Toast.makeText(MyHomeActivity.this, "Click grabbed", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .init();
+
+        panoViewWrapper.getStatusHelper().setPanoDisPlayMode(PanoMode.SINGLE_SCREEN);
+        panoViewWrapper.getStatusHelper().setPanoInteractiveMode(PanoMode.TOUCH);
+        panoViewWrapper.addHotspot(ImageHotspot.with(this)
+                .setPositionOrientation(
+                        PositionOrientation.newInstance().fromTriangularSystem(180,10,30)
+                ).setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.home_logo)));
+
+        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //Logger.logTouchEvent(v,event);
+                return panoViewWrapper.handleTouchEvent(event);
+            }
+        });
     }
 
     @Override
@@ -93,7 +127,7 @@ public class MyHomeActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             mimeType= MimeType.LOCAL_FILE | MimeType.VIDEO;
-            start();
+            launch();
         }
     }
 

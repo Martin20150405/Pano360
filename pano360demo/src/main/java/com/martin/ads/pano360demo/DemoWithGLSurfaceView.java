@@ -48,7 +48,6 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
         if(configBundle==null){
             configBundle=Pano360ConfigBundle.newInstance();
         }
-        configBundle.setRemoveHotspot(true);
         GLSurfaceView glSurfaceView=(GLSurfaceView) findViewById(R.id.surface_view);
         panoViewWrapper =PanoViewWrapper.with(this)
                 .setConfig(configBundle)
@@ -61,20 +60,18 @@ public class DemoWithGLSurfaceView extends AppCompatActivity {
                     }
 
                     @Override
-                    public void hotspotClicked(AbsHotspot hotspot) {
+                    public void hotspotClicked(ImageHotspot hotspot) {
                         Toast.makeText(DemoWithGLSurfaceView.this, "Click grabbed", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .init();
+
         panoViewWrapper.getStatusHelper().setPanoDisPlayMode(PanoMode.SINGLE_SCREEN);
         panoViewWrapper.getStatusHelper().setPanoInteractiveMode(PanoMode.TOUCH);
         panoViewWrapper.addHotspot(ImageHotspot.with(this)
                 .setPositionOrientation(
-
-                        PositionOrientation.newInstance().fromTriangularSystem(180,-15,30)
-
-                )
-                .setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.home_logo)));
+                        PositionOrientation.newInstance().fromTriangularSystem(180,10,3000)//Hotspot distance from camera
+                ).setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.home_logo)));
 
         glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -123,7 +123,7 @@ public class PanoViewWrapper {
                 .init();
 
 
-
+/*
         if(videoHotspotPath!=null && !videoHotspotPath.isEmpty()){
             hotspotList.add(VideoHotspot.with(statusHelper.getContext())
                     .setPositionOrientation(
@@ -133,7 +133,7 @@ public class PanoViewWrapper {
                     .setUri(Uri.parse(videoHotspotPath))
                     .setAssumedScreenSize(2.0f,1.0f)
             );
-        }else{
+        }else{*/
            /* hotspotList.add(ImageHotspot.with(statusHelper.getContext())
                     .setPositionOrientation(
                             PositionOrientation.newInstance()
@@ -150,10 +150,10 @@ public class PanoViewWrapper {
                             .setTextSize(55)
                             .addTextToImage("I'm a text hotspot~")
                     )
-            );*/
+            );
         }
 
-       /* hotspotList.add(ImageHotspot.with(statusHelper.getContext())
+        hotspotList.add(ImageHotspot.with(statusHelper.getContext())
                 .setPositionOrientation(
                         PositionOrientation.newInstance()
                                 .setY(-15).setAngleX(-90).setAngleY(-90)
