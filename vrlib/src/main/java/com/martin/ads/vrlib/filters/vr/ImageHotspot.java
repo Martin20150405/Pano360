@@ -31,6 +31,7 @@ public class ImageHotspot extends AbsHotspot {
     }
 
     public float[] getVisibleArea(){
+        // Temporarly disabled.
 //        return new float[]{DimenUtils.px2dp(context,bitmapTexture.getImageWidth()) , DimenUtils.px2dp(context, bitmapTexture.getImageHeight())};
         return new float[]{8,8};
     }
