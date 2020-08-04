@@ -55,8 +55,8 @@ public class FilterGroup extends AbsFilter {
         int previousTexture = textureId;
         for (int i = 0; i < size; i++) {
             AbsFilter filter = filters.get(i);
-            Log.d(TAG, "onDrawFrame: "+i+" / "+size +" "+filter.getClass().getSimpleName()+" "+
-                    filter.surfaceWidth+" "+filter.surfaceHeight);
+            /*Log.d(TAG, "onDrawFrame: "+i+" / "+size +" "+filter.getClass().getSimpleName()+" "+
+                    filter.surfaceWidth+" "+filter.surfaceHeight);*/
             if (i < size - 1) {
                 filter.setViewport();
                 fboList[i].bind();
@@ -150,7 +150,7 @@ public class FilterGroup extends AbsFilter {
 
     public void switchLastFilter(final AbsFilter filter){
         if (filter==null) return;
-        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
+//        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
         if (!isRunning){
             if(filters.size()>0) {
                 filters.remove(filters.size()-1)
@@ -175,7 +175,7 @@ public class FilterGroup extends AbsFilter {
 
     public void switchFilterAt(final AbsFilter filter,final int pos){
         if (filter==null || pos>=filters.size()) return;
-        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
+//        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
         addPreDrawTask(new Runnable() {
             @Override
             public void run() {

@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#03A9F4">
     <FrameLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.opengl.GLSurfaceView
+            android:clickable="true"
+            android:focusable="true"
             android:id="@+id/surface_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
 
-    <View
-        android:background="#ff0000"
-        android:elevation="10dp"
-        android:layout_centerInParent="true"
-        android:layout_width="10dp"
-        android:layout_height="10dp"/>
 
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

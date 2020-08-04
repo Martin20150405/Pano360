@@ -78,6 +78,9 @@ public abstract class AbsHotspot extends AbsFilter{
         System.arraycopy(projectionMatrix,0,this.projectionMatrix,0,this.projectionMatrix.length);
     }
 
+
+
+
     public void setModelMatrix(float[] modelMatrix) {
         System.arraycopy(modelMatrix,
                 0,

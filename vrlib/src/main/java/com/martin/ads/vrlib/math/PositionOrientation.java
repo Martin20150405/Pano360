@@ -1,12 +1,15 @@
 package com.martin.ads.vrlib.math;
 
+import android.graphics.YuvImage;
 import android.opengl.Matrix;
+import android.util.Log;
 
 /**
  * Created by Ads on 2017/3/11.
  */
 
 public class PositionOrientation {
+
     private float mX;
     private float mY;
     private float mZ;
@@ -14,9 +17,56 @@ public class PositionOrientation {
     private float mAngleY;
     private float mAngleZ;
 
+    private float yaw;
+    private float pitch;
+    private float[] visibleArea;
+    private float distance;
+
+    public PositionOrientation fromTriangularSystem(float yaw, float pitch, float distance) {
+        this.yaw=yaw;
+        this.pitch=pitch;
+        this.distance=distance;
+
+        mAngleX = pitch;
+        mAngleY = 90 + yaw;
+        mAngleZ = 0;
+
+        pitch= (float) Math.toRadians(pitch);
+        yaw= (float) Math.toRadians(yaw);
+
+        this.mZ = (float) (distance * Math.sin(yaw));
+        this.mY = (float) (distance * Math.sin(pitch));
+        this.mX = (float) (distance * Math.cos(yaw));
+
+        return this;
+    }
+
+    public boolean aroundPosition(float mYaw, float mPitch){
+        mYaw = mYaw - 90;// to sync two systems ...
+        mYaw = mYaw<0?360+mYaw:mYaw;
+        mPitch=-mPitch;
+
+        if (yaw > (mYaw-visibleArea[0]) && yaw < (mYaw+visibleArea[0])
+                && pitch > (mPitch-visibleArea[1]) && pitch < (mPitch+visibleArea[1])
+        ) return true;
+        else return false;
+    }
+
+
     private PositionOrientation() {
         mX = mY = mZ = 0;
         mAngleX = mAngleY = mAngleZ = 0;
+    }
+
+    public PositionOrientation config(float[] visibleArea) {
+        this.visibleArea=visibleArea;
+        return this;
+    }
+
+    private PositionOrientation(float mX, float mY, float mZ) {
+        this.mX = mX;
+        this.mY = mY;
+        this.mZ = mZ;
     }
 
     public float getX() {

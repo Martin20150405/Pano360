@@ -9,6 +9,7 @@ import com.martin.ads.vrlib.math.PositionOrientation;
 import com.martin.ads.vrlib.object.Plane;
 import com.martin.ads.vrlib.programs.GLPassThroughProgram;
 import com.martin.ads.vrlib.textures.BitmapTexture;
+import com.martin.ads.vrlib.utils.DimenUtils;
 import com.martin.ads.vrlib.utils.MatrixUtils;
 import com.martin.ads.vrlib.utils.TextureUtils;
 
@@ -29,6 +30,12 @@ public class ImageHotspot extends AbsHotspot {
         glPassThroughProgram=new GLPassThroughProgram(context);
     }
 
+    public float[] getVisibleArea(){
+        // Temporarly disabled.
+//        return new float[]{DimenUtils.px2dp(context,bitmapTexture.getImageWidth()) , DimenUtils.px2dp(context, bitmapTexture.getImageHeight())};
+        return new float[]{8,8};
+    }
+
     @Override
     public void init() {
         super.init();
@@ -44,6 +51,9 @@ public class ImageHotspot extends AbsHotspot {
                 (int)(DEFAULT_SCALE_FACTOR*assumedScreenHeight),
                 AdjustingMode.ADJUSTING_MODE_FIT_TO_SCREEN,
                 hotspotOrthoProjectionMatrix);
+
+        if (positionOrientation!=null)
+            positionOrientation.config(getVisibleArea());
     }
 
     @Override
@@ -93,5 +103,9 @@ public class ImageHotspot extends AbsHotspot {
 
     public static ImageHotspot with(Context context){
         return new ImageHotspot(context);
+    }
+
+    public PositionOrientation getPositionOrientation() {
+        return this.positionOrientation;
     }
 }

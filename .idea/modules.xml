@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Pano360.iml" filepath="$PROJECT_DIR$/Pano360.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/filepicker/Pano360-filepicker.iml" filepath="$PROJECT_DIR$/.idea/modules/filepicker/Pano360-filepicker.iml" group="Pano360/filepicker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pano360demo/Pano360-pano360demo.iml" filepath="$PROJECT_DIR$/.idea/modules/pano360demo/Pano360-pano360demo.iml" group="Pano360/pano360demo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/vrlib/Pano360-vrlib.iml" filepath="$PROJECT_DIR$/.idea/modules/vrlib/Pano360-vrlib.iml" group="Pano360/vrlib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/StudioProjects-Pano360.iml" filepath="$PROJECT_DIR$/.idea/modules/StudioProjects-Pano360.iml" group="Pano360" />
       <module fileurl="file://$PROJECT_DIR$/filepicker/filepicker.iml" filepath="$PROJECT_DIR$/filepicker/filepicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/pano360demo/pano360demo.iml" filepath="$PROJECT_DIR$/pano360demo/pano360demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/vrlib/vrlib.iml" filepath="$PROJECT_DIR$/vrlib/vrlib.iml" />

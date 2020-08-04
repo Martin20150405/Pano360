@@ -18,6 +18,7 @@ public class BitmapTexture {
 
     public BitmapTexture() {
         imageSize=new int[2];
+
     }
 
     public BitmapTexture loadWithAssetFile(Context context, String filePath){

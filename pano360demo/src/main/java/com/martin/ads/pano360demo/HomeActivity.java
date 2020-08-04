@@ -95,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
 
                         //mimeType= MimeType.BITMAP | MimeType.PICTURE;
 
-                        filePath="images/texture_360_n.jpg";
+                        filePath="images/360_pano.jpg";
                         mimeType= MimeType.ASSETS | MimeType.PICTURE;
                         break;
                     case 4:

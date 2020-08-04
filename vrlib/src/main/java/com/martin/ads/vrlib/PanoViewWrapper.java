@@ -46,10 +46,12 @@ public class PanoViewWrapper {
     private List<AbsHotspot> hotspotList;
     private int mimeType;
     private Pano360ConfigBundle configBundle;
+    private PanoramaInteraction panoramaInteraction;
     private Bitmap bitmap;
 
     private PanoViewWrapper(Context context) {
         this.context=context;
+        hotspotList =new ArrayList<>();
     }
 
     public PanoViewWrapper init(){
@@ -69,6 +71,10 @@ public class PanoViewWrapper {
         return this;
     }
 
+    public PanoViewWrapper addHotspot(AbsHotspot absHotspot){
+        hotspotList.add(absHotspot);
+        return this;
+    }
     private void init(Context context, Uri uri){
         glSurfaceView.setEGLContextClientVersion(2);
 
@@ -116,8 +122,8 @@ public class PanoViewWrapper {
                 .setRenderSizeType(PanoRender.RENDER_SIZE_TEXTURE)
                 .init();
 
-        hotspotList =new ArrayList<>();
 
+/*
         if(videoHotspotPath!=null && !videoHotspotPath.isEmpty()){
             hotspotList.add(VideoHotspot.with(statusHelper.getContext())
                     .setPositionOrientation(
@@ -127,8 +133,8 @@ public class PanoViewWrapper {
                     .setUri(Uri.parse(videoHotspotPath))
                     .setAssumedScreenSize(2.0f,1.0f)
             );
-        }else{
-            hotspotList.add(ImageHotspot.with(statusHelper.getContext())
+        }else{*/
+           /* hotspotList.add(ImageHotspot.with(statusHelper.getContext())
                     .setPositionOrientation(
                             PositionOrientation.newInstance()
                                     .setY(15).setAngleX(90).setAngleY(-90)
@@ -153,10 +159,10 @@ public class PanoViewWrapper {
                                 .setY(-15).setAngleX(-90).setAngleY(-90)
                 )
                 .setImagePath("imgs/hotspot_logo.png")
-        );
+        );*/
 
         mRenderer.getSpherePlugin().setHotspotList(hotspotList);
-
+        panoramaInteraction.setHotspotList(hotspotList);
         glSurfaceView.setRenderer(mRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
@@ -170,7 +176,7 @@ public class PanoViewWrapper {
         statusHelper.setPanoDisPlayMode(PanoMode.DUAL_SCREEN);
         statusHelper.setPanoInteractiveMode(PanoMode.MOTION);
 
-        touchHelper=new TouchHelper(statusHelper,mRenderer);
+        touchHelper = new TouchHelper(statusHelper,mRenderer,panoramaInteraction);
 
     }
 
@@ -253,6 +259,11 @@ public class PanoViewWrapper {
     // & head pose control
     public PanoViewWrapper removeDefaultHotSpot(){
         clearHotSpot();
+        return this;
+    }
+
+    public PanoViewWrapper setPanoramaInteraction(PanoramaInteraction panoramaInteraction) {
+        this.panoramaInteraction = panoramaInteraction;
         return this;
     }
 
