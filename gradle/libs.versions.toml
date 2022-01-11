@@ -1,0 +1,41 @@
+[versions]
+compileSdk = "31"
+minSdk = "24"
+targetSdk = "29"
+
+gradleBuildTools = "7.0.4"
+gradleVersionPlugin = "0.39.0"
+jetpackCompose = "1.1.0-rc01"
+kotlin = "1.6.0"
+accompanist = "0.22.0-rc"
+[libraries]
+gradle-plugin-buildtools = { module = "com.android.tools.build:gradle", version.ref = "gradleBuildTools" }
+gradle-plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+compose-ui-ui = { module = "androidx.compose.ui:ui", version.ref = "jetpackCompose" }
+compose-materialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "jetpackCompose" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "jetpackCompose" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "jetpackCompose" }
+compose-foundationLayout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "jetpackCompose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "jetpackCompose" }
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "jetpackCompose" }
+compose-activityCompose = "androidx.activity:activity-compose:1.4.0"
+
+accompanist-permissions = {module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist"}
+
+timber = "com.jakewharton.timber:timber:5.0.1"
+
+androidx-appcompat = "androidx.appcompat:appcompat:1.4.0"
+androidx-coreKtx = "androidx.core:core-ktx:1.7.0"
+
+[bundles]
+composeAll = [
+    "compose-materialIcons",
+    "compose-ui-ui",
+    "compose-ui-graphics",
+    "compose-ui-tooling",
+    "compose-foundationLayout",
+    "compose-material",
+    "compose-runtime",
+    "compose-activityCompose",
+]
